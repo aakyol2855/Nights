@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Erişim İzni Bekleniyor";
+}
+
+<div style="max-width: 650px; margin: 3rem auto;">
+    <div class="ottoman-frame" style="text-align: center; padding: 3.5rem 2rem;">
+        <span class="ottoman-corner corner-tl"></span>
+        <span class="ottoman-corner corner-tr"></span>
+        <span class="ottoman-corner corner-bl"></span>
+        <span class="ottoman-corner corner-br"></span>
+
+        <span style="font-size: 3rem; color: var(--accent-gold); display: block; margin-bottom: 1rem;">۞</span>
+        
+        <h1 style="font-size: 1.85rem; color: var(--accent-sapphire); margin-bottom: 0.8rem;">
+            Özel Not Defteri Erişimi
+        </h1>
+
+        <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin-bottom: 1.75rem;">
+            Giriş yapmış durumdasınız (<strong>@User.Identity?.Name</strong>); ancak bu özel not alanı yalnızca yöneticinin onayladığı kişilere açıktır.
+            Lütfen notları okumak ve katkı sunmak için site yöneticisinden erişim yetkisi talep ediniz.
+        </p>
+
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="btn-ottoman">
+                Ana Sayfaya Dön
+            </a>
+            <a asp-area="" asp-controller="Projects" asp-action="Index" class="btn-ottoman-outline">
+                Projeleri İncele
+            </a>
+        </div>
+    </div>
+</div>

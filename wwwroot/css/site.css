@@ -1,0 +1,636 @@
+/* ==========================================================================
+   OSMANLI MİNİMALİZMİ - GELİŞMİŞ TASARIM SİSTEMİ (DESIGN TOKENS & ORNAMENTS)
+   ========================================================================== */
+:root {
+    /* Renk Paleti: Tezhip, Hat, Çini ve Parşömen */
+    --bg-parchment: #FAF7F0;          /* Sıcak Fildişi / Mat Parşömen Zemin */
+    --surface-card: #FFFFFF;          /* Temiz Mat Yüzey */
+    --text-charcoal: #1D232A;         /* Hat Mürekkebi / Mat Kömür */
+    --text-muted: #5E6672;            /* Güvercin Grisi */
+    --accent-sapphire: #142236;       /* Safir / Osmanlı Lâciverdi */
+    --accent-sapphire-light: #203554;
+    --accent-gold: #C5A059;           /* Mat Tezhip Altını / Tunç Vurgusu */
+    --accent-gold-light: #E0C382;
+    --accent-gold-soft: rgba(197, 160, 89, 0.15);
+    --accent-gold-border: rgba(197, 160, 89, 0.45);
+    --accent-tile: #205349;           /* Mat İznik Çini Yeşili */
+    --border-light: #E8E2D5;          /* İnce Parşömen Çizgisi */
+    --border-cetvel: rgba(197, 160, 89, 0.35); /* Tezhip Cetvel Çizgisi */
+    --danger-rose: #9E2A2B;           /* Mat Lal Kırmızı */
+    
+    /* Ölçüler & Gölgeler */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --shadow-subtle: 0 4px 20px rgba(20, 34, 54, 0.05);
+    --shadow-hover: 0 10px 30px rgba(20, 34, 54, 0.11);
+    --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Sıfırlama ve Temel Yapı */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-parchment);
+    color: var(--text-charcoal);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Times New Roman", serif;
+    line-height: 1.65;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-image: radial-gradient(rgba(197, 160, 89, 0.04) 1px, transparent 0);
+    background-size: 24px 24px;
+}
+
+a {
+    color: var(--accent-sapphire);
+    text-decoration: none;
+    transition: var(--transition);
+}
+a:hover {
+    color: var(--accent-gold);
+}
+
+/* ==========================================================================
+   OSMANLI KÖŞE SÜSLEMELERİ (KÖŞEBENT / CORNER ORNAMENTS)
+   ========================================================================== */
+.ottoman-frame {
+    position: relative;
+    background: var(--surface-card);
+    border: 1px solid var(--border-cetvel);
+    box-shadow: var(--shadow-subtle), inset 0 0 0 1px rgba(197, 160, 89, 0.18);
+    border-radius: var(--radius-md);
+    padding: 2.25rem;
+}
+
+/* 4 Köşeye yerleşen Rumi/Palmet köşebent motifleri */
+.ottoman-corner {
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: 2;
+    opacity: 0.85;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 46V14C2 7.37 7.37 2 14 2H46' stroke='%23C5A059' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M6 46V18C6 11.37 11.37 6 18 6H46' stroke='%23142236' stroke-width='1' opacity='0.7'/%3E%3Cpath d='M2 2C16 2 26 12 26 26C20 20 12 18 2 22' fill='none' stroke='%23C5A059' stroke-width='1.5'/%3E%3Cpath d='M10 2C10 10 18 18 18 26C15 20 13 15 2 13' fill='%23C5A059' opacity='0.25'/%3E%3Ccircle cx='9' cy='9' r='2.5' fill='%23142236'/%3E%3Ccircle cx='9' cy='9' r='1.2' fill='%23C5A059'/%3E%3Ccircle cx='42' cy='2' r='2' fill='%23C5A059'/%3E%3Ccircle cx='2' cy='42' r='2' fill='%23C5A059'/%3E%3C/svg%3E");
+}
+
+.ottoman-corner.corner-tl {
+    top: 6px;
+    left: 6px;
+}
+.ottoman-corner.corner-tr {
+    top: 6px;
+    right: 6px;
+    transform: scaleX(-1);
+}
+.ottoman-corner.corner-bl {
+    bottom: 6px;
+    left: 6px;
+    transform: scaleY(-1);
+}
+.ottoman-corner.corner-br {
+    bottom: 6px;
+    right: 6px;
+    transform: scale(-1);
+}
+
+/* Kartlar için daha zarif mini köşe tezhipleri */
+.ottoman-mini-corner {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    pointer-events: none;
+    opacity: 0.65;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 23V8C1 4.13 4.13 1 8 1H23' stroke='%23C5A059' stroke-width='1.5'/%3E%3Ccircle cx='5' cy='5' r='2' fill='%23142236'/%3E%3C/svg%3E");
+}
+.ottoman-mini-corner.corner-tl { top: 6px; left: 6px; }
+.ottoman-mini-corner.corner-tr { top: 6px; right: 6px; transform: scaleX(-1); }
+.ottoman-mini-corner.corner-bl { bottom: 6px; left: 6px; transform: scaleY(-1); }
+.ottoman-mini-corner.corner-br { bottom: 6px; right: 6px; transform: scale(-1); }
+
+/* ==========================================================================
+   OSMANLI BÖLÜM AYIRICI (ZENCİREK & RUMİ MOTİF)
+   ========================================================================== */
+.ottoman-divider {
+    height: 24px;
+    width: 100%;
+    margin: 2.5rem 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ottoman-divider::before, .ottoman-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+}
+.ottoman-divider-crest {
+    padding: 0 1.25rem;
+    color: var(--accent-gold);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+}
+.ottoman-divider-crest span {
+    color: var(--accent-sapphire);
+    font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   HEADER & NAVBAR
+   ========================================================================== */
+.header-ottoman {
+    background: var(--surface-card);
+    border-bottom: 1px solid var(--border-cetvel);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 14px rgba(20, 34, 54, 0.04);
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.9rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent-sapphire);
+    letter-spacing: 0.5px;
+}
+
+.brand-crest {
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid var(--accent-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-gold);
+    background-color: var(--accent-sapphire);
+    font-size: 0.95rem;
+    box-shadow: 0 2px 6px rgba(197, 160, 89, 0.3);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    list-style: none;
+}
+
+.nav-link-item {
+    font-weight: 500;
+    color: var(--text-charcoal);
+    padding: 0.45rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+}
+
+.nav-link-item:hover, .nav-link-item.active {
+    color: var(--accent-sapphire);
+    background-color: var(--accent-gold-soft);
+}
+
+/* Mobil Hamburger */
+.mobile-nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: var(--accent-sapphire);
+}
+
+/* ==========================================================================
+   LAYOUT VE GENEL BİLEŞENLER
+   ========================================================================== */
+.site-main {
+    flex: 1;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2.25rem 1.5rem;
+}
+
+.site-footer {
+    background: var(--surface-card);
+    border-top: 1px solid var(--border-cetvel);
+    padding: 2.5rem 1.5rem 2rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+/* Butonlar - Osmanlı Zarafeti & Min 44px Dokunma Alanı */
+.btn-ottoman {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.65rem 1.6rem;
+    background: var(--accent-sapphire);
+    color: #FFFFFF !important;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border: 1px solid var(--accent-gold);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(20, 34, 54, 0.12);
+    transition: var(--transition);
+}
+.btn-ottoman:hover {
+    background: var(--accent-sapphire-light);
+    border-color: var(--accent-gold-light);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 16px rgba(197, 160, 89, 0.25);
+}
+.btn-ottoman:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-ottoman-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.65rem 1.5rem;
+    background: transparent;
+    color: var(--accent-sapphire);
+    border: 1px solid var(--border-cetvel);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+}
+.btn-ottoman-outline:hover {
+    border-color: var(--accent-gold);
+    background-color: var(--surface-card);
+    color: var(--accent-gold);
+}
+
+.btn-ottoman-tile {
+    background: var(--accent-tile);
+    border-color: var(--accent-tile);
+    color: #fff !important;
+}
+.btn-ottoman-tile:hover {
+    background: #173d36;
+    border-color: var(--accent-gold);
+}
+
+.btn-danger-soft {
+    background: transparent;
+    color: var(--danger-rose);
+    border: 1px solid var(--danger-rose);
+    min-height: 40px;
+    padding: 0.5rem 1.1rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+}
+.btn-danger-soft:hover {
+    background: var(--danger-rose);
+    color: #fff;
+}
+
+/* Şemse / Rozet Etiketler */
+.badge-ottoman {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: var(--accent-gold-soft);
+    color: var(--accent-sapphire);
+    border: 1px solid var(--accent-gold-border);
+    border-radius: 50px;
+    letter-spacing: 0.4px;
+}
+
+/* ==========================================================================
+   ANILAR (MEMORIES) KARTLARI & FORMU
+   ========================================================================== */
+.memories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 2rem;
+}
+
+.memory-card {
+    position: relative;
+    background: var(--surface-card);
+    border: 1px solid var(--border-cetvel);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-subtle);
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition);
+}
+.memory-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--accent-gold);
+}
+
+.memory-thumb-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: #ECE7DC;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.memory-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.memory-card:hover .memory-thumb {
+    transform: scale(1.04);
+}
+
+.memory-body {
+    padding: 1.4rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.memory-caption {
+    font-size: 0.95rem;
+    color: var(--text-charcoal);
+    line-height: 1.55;
+}
+
+.memory-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.2rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--border-light);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+/* Hatıra Yükleme Kartı (Ornate) */
+.upload-box {
+    margin-bottom: 3rem;
+}
+
+.form-group {
+    margin-bottom: 1.35rem;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.92rem;
+    margin-bottom: 0.45rem;
+    color: var(--accent-sapphire);
+}
+
+.form-control {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.95rem;
+    background-color: var(--bg-parchment);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    color: var(--text-charcoal);
+    outline: none;
+    transition: var(--transition);
+}
+.form-control:focus {
+    border-color: var(--accent-gold);
+    background-color: #fff;
+    box-shadow: 0 0 0 3px var(--accent-gold-soft);
+}
+
+/* ==========================================================================
+   PROJELER & CANLI DEMO / CONTAINER SHOWCASE
+   ========================================================================== */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2.25rem;
+}
+
+.project-card {
+    position: relative;
+    background: var(--surface-card);
+    border: 1px solid var(--border-cetvel);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--shadow-subtle);
+    transition: var(--transition);
+}
+.project-card:hover {
+    border-color: var(--accent-gold);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-3px);
+}
+
+.project-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--accent-sapphire);
+    margin-bottom: 0.65rem;
+}
+
+.project-summary {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.35rem;
+    flex: 1;
+}
+
+.tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-bottom: 1.6rem;
+}
+
+.tech-tag {
+    font-size: 0.76rem;
+    background: var(--bg-parchment);
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    color: var(--text-muted);
+    border: 1px solid var(--border-light);
+}
+
+/* Canlı Container Showcase Ekranı */
+.showcase-container {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 2.25rem;
+    align-items: start;
+}
+
+.demo-screen-box {
+    background: var(--surface-card);
+    border: 1px solid var(--border-cetvel);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-subtle);
+}
+
+.demo-screen-header {
+    background: var(--accent-sapphire);
+    color: #fff;
+    padding: 0.85rem 1.4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.88rem;
+    border-bottom: 2px solid var(--accent-gold);
+}
+
+.demo-iframe {
+    width: 100%;
+    height: 620px;
+    border: none;
+    background: #fff;
+}
+
+.tutorial-panel {
+    background: var(--surface-card);
+    border: 1px solid var(--border-cetvel);
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-subtle);
+}
+
+.tutorial-step-card {
+    border-left: 3px solid var(--accent-gold);
+    padding-left: 1.1rem;
+    margin-bottom: 1.75rem;
+}
+
+.tutorial-step-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--accent-sapphire);
+    margin-bottom: 0.45rem;
+}
+
+.tutorial-markdown-body {
+    font-size: 0.92rem;
+    color: var(--text-charcoal);
+}
+.tutorial-markdown-body code {
+    background: var(--bg-parchment);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.86rem;
+    border: 1px solid var(--border-light);
+}
+
+/* ==========================================================================
+   TOAST VE BİLDİRİM SİSTEMİ
+   ========================================================================== */
+#app-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--accent-sapphire);
+    color: #FFFFFF;
+    padding: 14px 22px;
+    border-left: 4px solid var(--accent-gold);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+    display: none;
+    z-index: 99999;
+    font-size: 0.92rem;
+    max-width: 400px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   RESPONSIVE UYUMLULUK
+   ========================================================================== */
+@media (max-width: 992px) {
+    .showcase-container {
+        grid-template-columns: 1fr;
+    }
+    .demo-iframe {
+        height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .mobile-nav-toggle {
+        display: block;
+    }
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: var(--surface-card);
+        border-bottom: 1px solid var(--border-cetvel);
+        padding: 1.25rem 1.5rem;
+        box-shadow: var(--shadow-subtle);
+    }
+    .nav-links.open {
+        display: flex;
+    }
+    .memories-grid, .projects-grid {
+        grid-template-columns: 1fr;
+    }
+    .demo-iframe {
+        height: 400px;
+    }
+    .ottoman-frame {
+        padding: 1.5rem;
+    }
+}

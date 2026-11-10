@@ -1,0 +1,73 @@
+@model IEnumerable<Nights.Models.Entities.Project>
+@{
+    ViewData["Title"] = "Projeler Yönetimi";
+}
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <h1 style="font-size: 1.85rem; color: var(--accent-sapphire);">Proje ve Canlı Sistem Yönetimi</h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Canlı container yönlendirmeleri, test senaryoları ve rehber adımları</p>
+    </div>
+
+    <a asp-area="Admin" asp-action="Create" class="btn-ottoman">
+        + Yeni Proje Ekle
+    </a>
+</div>
+
+<div class="ottoman-frame" style="padding: 1.5rem; overflow-x: auto;">
+    <span class="ottoman-corner corner-tl"></span>
+    <span class="ottoman-corner corner-tr"></span>
+    <span class="ottoman-corner corner-bl"></span>
+    <span class="ottoman-corner corner-br"></span>
+
+    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
+        <thead>
+            <tr style="background: var(--bg-parchment); border-bottom: 1px solid var(--border-cetvel); color: var(--accent-sapphire);">
+                <th style="padding: 1rem 1.25rem;">Sıra</th>
+                <th style="padding: 1rem 1.25rem;">Proje Başlığı</th>
+                <th style="padding: 1rem 1.25rem;">Rozet</th>
+                <th style="padding: 1rem 1.25rem;">Rehber Adımları</th>
+                <th style="padding: 1rem 1.25rem;">Durum</th>
+                <th style="padding: 1rem 1.25rem; text-align: right;">Aksiyonlar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr id="project-row-@p.Id" style="border-bottom: 1px solid var(--border-light);">
+                    <td style="padding: 1rem 1.25rem; font-weight: 600;">#@p.DisplayOrder</td>
+                    <td style="padding: 1rem 1.25rem;">
+                        <strong>@p.Title</strong>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">@p.TechStack</div>
+                    </td>
+                    <td style="padding: 1rem 1.25rem;">
+                        <span class="badge-ottoman">✦ @p.BadgeText</span>
+                    </td>
+                    <td style="padding: 1rem 1.25rem;">
+                        <span style="font-weight: 600;">@p.Tutorials.Count</span> Adım
+                    </td>
+                    <td style="padding: 1rem 1.25rem;">
+                        @if (p.IsActive)
+                        {
+                            <span style="color: #137333; font-weight: 600; font-size: 0.85rem;">Aktif</span>
+                        }
+                        else
+                        {
+                            <span style="color: #c5221f; font-weight: 600; font-size: 0.85rem;">Pasif</span>
+                        }
+                    </td>
+                    <td style="padding: 1rem 1.25rem; text-align: right;">
+                        <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                            <a asp-area="Admin" asp-action="Edit" asp-route-id="@p.Id" class="btn-ottoman-outline" style="min-height: 36px; padding: 0.35rem 0.8rem; font-size: 0.85rem;">
+                                Düzenle &amp; Rehber
+                            </a>
+                            <button type="button" class="btn-danger-soft" data-project-delete data-id="@p.Id" style="min-height: 36px; padding: 0.35rem 0.8rem; font-size: 0.85rem;">
+                                Sil
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,100 @@
+@model Nights.Models.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Kontrol Paneli";
+}
+
+<div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 1.85rem; color: var(--accent-sapphire);">Yönetim Paneli Özeti</h1>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">Sistem istatistikleri ve onay bekleyen ziyaretçi katkıları</p>
+</div>
+
+<!-- İstatistik Kartları -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+    <div class="ottoman-frame" style="padding: 1.75rem;">
+        <span class="ottoman-mini-corner corner-tl"></span>
+        <span class="ottoman-mini-corner corner-tr"></span>
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">ONAY BEKLEYEN ANILAR</span>
+        <div style="font-size: 2.3rem; font-weight: 700; color: var(--accent-sapphire); margin-top: 0.3rem;">
+            @Model.PendingMemoriesCount
+        </div>
+        <a asp-area="Admin" asp-controller="AdminMemories" asp-action="Index" style="font-size: 0.88rem; color: var(--accent-gold); font-weight: 600; display: inline-block; margin-top: 0.6rem;">
+            İncele ve Onayla &rarr;
+        </a>
+    </div>
+
+    <div class="ottoman-frame" style="padding: 1.75rem;">
+        <span class="ottoman-mini-corner corner-tl"></span>
+        <span class="ottoman-mini-corner corner-tr"></span>
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">YAYINDAKİ ANILAR</span>
+        <div style="font-size: 2.3rem; font-weight: 700; color: var(--accent-sapphire); margin-top: 0.3rem;">
+            @Model.ApprovedMemoriesCount
+        </div>
+        <span style="font-size: 0.85rem; color: var(--text-muted); display: inline-block; margin-top: 0.6rem;">
+            Cache ile sunuluyor
+        </span>
+    </div>
+
+    <div class="ottoman-frame" style="padding: 1.75rem;">
+        <span class="ottoman-mini-corner corner-tl"></span>
+        <span class="ottoman-mini-corner corner-tr"></span>
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">TOPLAM PROJE</span>
+        <div style="font-size: 2.3rem; font-weight: 700; color: var(--accent-sapphire); margin-top: 0.3rem;">
+            @Model.ProjectsCount
+        </div>
+        <a asp-area="Admin" asp-controller="AdminProjects" asp-action="Index" style="font-size: 0.88rem; color: var(--accent-sapphire); font-weight: 600; display: inline-block; margin-top: 0.6rem;">
+            Projeleri Yönet &rarr;
+        </a>
+    </div>
+</div>
+
+<div class="ottoman-divider">
+    <div class="ottoman-divider-crest">
+        <span>✦</span> ۞ <span>✦</span>
+    </div>
+</div>
+
+<!-- Son Bekleyen Anılar -->
+<div class="ottoman-frame" style="padding: 2rem;">
+    <span class="ottoman-corner corner-tl"></span>
+    <span class="ottoman-corner corner-tr"></span>
+    <span class="ottoman-corner corner-bl"></span>
+    <span class="ottoman-corner corner-br"></span>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.35rem; color: var(--accent-sapphire);">Onay Bekleyen Son Anılar</h2>
+        <a asp-area="Admin" asp-controller="AdminMemories" asp-action="Index" class="btn-ottoman" style="min-height: 36px; padding: 0.4rem 1rem; font-size: 0.85rem;">
+            Tüm Onay Bekleyenler
+        </a>
+    </div>
+
+    @if (!Model.RecentPendingMemories.Any())
+    {
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Şu an onay bekleyen herhangi bir anı bulunmuyor.</p>
+    }
+    else
+    {
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            @foreach (var memory in Model.RecentPendingMemories)
+            {
+                <div id="pending-card-@memory.Id" style="display: flex; align-items: center; gap: 1.25rem; padding: 1rem; background: var(--bg-parchment); border-radius: var(--radius-sm); border: 1px solid var(--border-light); flex-wrap: wrap;">
+                    <img src="@Url.Action("PreviewPendingImage", "AdminMemories", new { f = memory.ImageFileName, area = "Admin" })" 
+                         alt="Önizleme" style="width: 80px; height: 60px; object-fit: cover; border-radius: var(--radius-sm);" />
+                    
+                    <div style="flex: 1; min-width: 200px;">
+                        <p style="font-size: 0.95rem; font-weight: 500; color: var(--text-charcoal);">@memory.Description</p>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Gönderilme: @memory.CreatedAt.ToString("g")</span>
+                    </div>
+
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button type="button" class="btn-ottoman btn-ottoman-tile" data-admin-action="approve" data-id="@memory.Id" style="min-height: 38px; padding: 0.4rem 0.85rem;">
+                            Onayla
+                        </button>
+                        <button type="button" class="btn-danger-soft" data-admin-action="reject" data-id="@memory.Id" style="min-height: 38px; padding: 0.4rem 0.85rem;">
+                            Reddet
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

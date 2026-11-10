@@ -1,0 +1,129 @@
+@{
+    ViewData["Title"] = "Ana Sayfa";
+    var featuredProjects = ViewBag.FeaturedProjects as List<Nights.Models.Entities.Project> ?? new();
+    var recentMemories = ViewBag.RecentMemories as List<Nights.Models.Entities.Memory> ?? new();
+}
+
+<!-- Osmanlı Tezhip Çerçeveli Hero Alanı -->
+<div class="ottoman-frame hero-section" style="text-align: center; margin-bottom: 2.5rem; padding: 3.5rem 2rem;">
+    <!-- 4 Köşe Süslemesi (Köşebent) -->
+    <span class="ottoman-corner corner-tl"></span>
+    <span class="ottoman-corner corner-tr"></span>
+    <span class="ottoman-corner corner-bl"></span>
+    <span class="ottoman-corner corner-br"></span>
+
+    <span class="badge-ottoman" style="margin-bottom: 1.25rem;">
+        <span>۞</span> Sadakat &amp; Zarafet <span>۞</span>
+    </span>
+
+    <h1 style="font-size: 2.35rem; font-weight: 700; color: var(--accent-sapphire); margin-bottom: 0.9rem; letter-spacing: -0.5px;">
+        Osmanlı Minimalizmi ile Tasarlanmış Dijital Sergi
+    </h1>
+    
+    <p style="max-width: 700px; margin: 0 auto 2rem; color: var(--text-muted); font-size: 1.05rem;">
+        Düşük donanımlı ve zorlu ağ koşullarına sahip sunucular için optimize edilmiş, MSSQL tabanlı, sıfır bellek sızıntılı ve yüksek performanslı kişisel portfolyo ve anı paylaşım platformu.
+    </p>
+
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a asp-area="" asp-controller="Projects" asp-action="Index" class="btn-ottoman">
+            <span>Projeleri İncele</span> <span>&rarr;</span>
+        </a>
+        <a asp-area="" asp-controller="Memories" asp-action="Index" class="btn-ottoman-outline">
+            <span>Bir Hatıra Bırak</span>
+        </a>
+    </div>
+</div>
+
+<div class="ottoman-divider">
+    <div class="ottoman-divider-crest">
+        <span>✦</span> ۞ <span>✦</span>
+    </div>
+</div>
+
+<!-- Öne Çıkan Projeler -->
+<section style="margin-bottom: 3.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.75rem;">
+        <div>
+            <h2 style="font-size: 1.55rem; color: var(--accent-sapphire);">Seçilmiş Çalışmalar &amp; Canlı Sistemler</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Doğrudan tarayıcı içerisinden test edebileceğiniz canlı demo uygulamaları</p>
+        </div>
+        <a asp-area="" asp-controller="Projects" asp-action="Index" style="font-weight: 600; font-size: 0.92rem; color: var(--accent-gold);">Tümünü Gör &rarr;</a>
+    </div>
+
+    <div class="projects-grid">
+        @foreach (var project in featuredProjects)
+        {
+            <div class="project-card">
+                <!-- Mini Köşe Tezhipleri -->
+                <span class="ottoman-mini-corner corner-tl"></span>
+                <span class="ottoman-mini-corner corner-tr"></span>
+                <span class="ottoman-mini-corner corner-bl"></span>
+                <span class="ottoman-mini-corner corner-br"></span>
+
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.9rem;">
+                        <span class="badge-ottoman">✦ @project.BadgeText</span>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">@project.CreatedAt.ToString("yyyy")</span>
+                    </div>
+                    <h3 class="project-title">@project.Title</h3>
+                    <p class="project-summary">@project.Summary</p>
+                    <div class="tech-tags">
+                        @foreach (var tech in project.TechStack.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            <span class="tech-tag">@tech</span>
+                        }
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem;">
+                    <a asp-area="" asp-controller="Projects" asp-action="Detail" asp-route-id="@project.Id" class="btn-ottoman" style="flex: 1;">
+                        Rehber &amp; Canlı Demo
+                    </a>
+                    @if (!string.IsNullOrEmpty(project.GitHubUrl))
+                    {
+                        <a href="@project.GitHubUrl" target="_blank" rel="noopener noreferrer" class="btn-ottoman-outline" title="GitHub Kaynak Kodu">
+                            GitHub
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Son Ziyaretçi Hatıraları -->
+@if (recentMemories.Any())
+{
+    <section>
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.75rem;">
+            <div>
+                <h2 style="font-size: 1.55rem; color: var(--accent-sapphire);">Ziyaretçilerden Kalan Hatıralar</h2>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Ziyaretçilerin bıraktığı onaylı anılar ve izlenimler</p>
+            </div>
+            <a asp-area="" asp-controller="Memories" asp-action="Index" style="font-weight: 600; font-size: 0.92rem; color: var(--accent-gold);">Hatıra Defteri &rarr;</a>
+        </div>
+
+        <div class="memories-grid">
+            @foreach (var item in recentMemories)
+            {
+                <div class="memory-card">
+                    <!-- Mini Köşe Tezhipleri -->
+                    <span class="ottoman-mini-corner corner-tl"></span>
+                    <span class="ottoman-mini-corner corner-tr"></span>
+
+                    <div class="memory-thumb-wrapper">
+                        <img src="@Url.Action("Image", "Memories", new { f = item.ImageFileName, area = "" })" 
+                             alt="Hatıra" class="memory-thumb" loading="lazy" />
+                    </div>
+                    <div class="memory-body">
+                        <p class="memory-caption">@item.Description</p>
+                        <div class="memory-footer">
+                            <span>✦ Misafir Anısı</span>
+                            <time>@item.CreatedAt.ToString("dd.MM.yyyy")</time>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+}

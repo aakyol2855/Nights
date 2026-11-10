@@ -1,0 +1,99 @@
+@model IEnumerable<Nights.Models.Entities.Memory>
+@{
+    ViewData["Title"] = "Hatıra Defteri & Anılar";
+}
+
+<div style="max-width: 950px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 2.25rem;">
+        <span class="badge-ottoman">
+            <span>۞</span> Yâd-ı Cemîl <span>۞</span>
+        </span>
+        <h1 style="font-size: 2.1rem; color: var(--accent-sapphire); margin: 0.6rem 0;">Ziyaretçi Hatıraları</h1>
+        <p style="color: var(--text-muted); font-size: 1.05rem;">
+            Ziyaretinizden geriye hoş bir sadâ bırakmak için fotoğraf ve birkaç cümlelik not ekleyebilirsiniz.
+        </p>
+    </div>
+
+    <!-- Hatıra Bırakma Kutusu (Osmanlı Köşe Tezhipli) -->
+    <div class="ottoman-frame upload-box">
+        <span class="ottoman-corner corner-tl"></span>
+        <span class="ottoman-corner corner-tr"></span>
+        <span class="ottoman-corner corner-bl"></span>
+        <span class="ottoman-corner corner-br"></span>
+
+        <h3 style="color: var(--accent-sapphire); margin-bottom: 0.4rem; font-size: 1.25rem;">
+            ✦ Bir Hatıra Bırakın
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.5rem;">
+            Görseliniz güvenle WebP formatına dönüştürülecek, EXIF kodlarından arındırılacak ve yönetici onayının ardından burada yayınlanacaktır. (Maksimum 5MB)
+        </p>
+
+        <form id="memoryUploadForm">
+            <div class="form-group">
+                <label for="memoryDescInput" class="form-label">Kısa Hatıra Notu (1-2 Cümle):</label>
+                <input type="text" id="memoryDescInput" class="form-control" maxlength="280" required
+                       placeholder="Örn: Bu güzel günü ve hoş sohbeti unutmayacağım..." />
+            </div>
+
+            <div class="form-group">
+                <label for="memoryFileInput" class="form-label">Fotoğraf (JPG, PNG veya WebP):</label>
+                <input type="file" id="memoryFileInput" class="form-control" accept="image/jpeg,image/png,image/webp" required />
+            </div>
+
+            <div style="display: flex; justify-content: flex-end;">
+                <button type="submit" id="memorySubmitBtn" class="btn-ottoman">
+                    <span>✦ Hatırayı Kaydet</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="ottoman-divider">
+        <div class="ottoman-divider-crest">
+            <span>✦</span> ۞ <span>✦</span>
+        </div>
+    </div>
+
+    <h2 style="font-size: 1.4rem; color: var(--accent-sapphire); margin-bottom: 1.75rem;">
+        Onaylanmış Hatıralar (@Model.Count())
+    </h2>
+
+    @if (!Model.Any())
+    {
+        <div class="ottoman-frame" style="text-align: center; padding: 3rem 1.5rem;">
+            <span class="ottoman-mini-corner corner-tl"></span>
+            <span class="ottoman-mini-corner corner-tr"></span>
+            <span class="ottoman-mini-corner corner-bl"></span>
+            <span class="ottoman-mini-corner corner-br"></span>
+            <p style="color: var(--text-muted);">Henüz yayınlanmış bir anı bulunmuyor. İlk hatırayı yukarıdaki formdan siz bırakabilirsiniz!</p>
+        </div>
+    }
+    else
+    {
+        <div class="memories-grid">
+            @foreach (var memory in Model)
+            {
+                <div class="memory-card">
+                    <span class="ottoman-mini-corner corner-tl"></span>
+                    <span class="ottoman-mini-corner corner-tr"></span>
+
+                    <div class="memory-thumb-wrapper">
+                        <img src="@Url.Action("Image", "Memories", new { f = memory.ImageFileName, area = "" })" 
+                             alt="Hatıra" class="memory-thumb" loading="lazy" />
+                    </div>
+                    <div class="memory-body">
+                        <p class="memory-caption">@memory.Description</p>
+                        <div class="memory-footer">
+                            <span>✦ Misafir Anısı</span>
+                            <time>@memory.CreatedAt.ToString("dd MMMM yyyy")</time>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/memories.js" asp-append-version="true"></script>
+}

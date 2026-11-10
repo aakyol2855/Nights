@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Yönetim Paneli</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body style="background: #FAF7F0;">
+    @Html.AntiForgeryToken()
+
+    <header class="header-ottoman" style="border-bottom: 2px solid var(--accent-gold);">
+        <div class="header-container">
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="brand-link">
+                <span class="brand-crest">۞</span>
+                <span>Yönetim Paneli</span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="nav-link-item">Özet</a></li>
+                <li><a asp-area="Admin" asp-controller="AdminMemories" asp-action="Index" class="nav-link-item">Onay Bekleyen Anılar</a></li>
+                <li><a asp-area="Admin" asp-controller="AdminProjects" asp-action="Index" class="nav-link-item">Projeler &amp; Rehberler</a></li>
+                <li><a asp-area="Admin" asp-controller="AdminUsers" asp-action="Index" class="nav-link-item">Kullanıcı İzinleri</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link-item" target="_blank">Siteye Git &nearr;</a></li>
+                <li>
+                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" style="display:inline;">
+                        <button type="submit" class="btn-danger-soft" style="min-height: 36px; padding: 0.3rem 0.8rem; font-size: 0.85rem;">Çıkış</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="site-main" style="max-width: 1200px;">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div style="background: #e6f4ea; color: #137333; padding: 1rem 1.25rem; border-radius: var(--radius-sm); border-left: 4px solid #137333; margin-bottom: 1.5rem;">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div style="background: #fce8e6; color: #c5221f; padding: 1rem 1.25rem; border-radius: var(--radius-sm); border-left: 4px solid #c5221f; margin-bottom: 1.5rem;">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        @RenderBody()
+    </main>
+
+    <div id="app-toast"></div>
+
+    <script src="~/js/main.js" asp-append-version="true"></script>
+    <script src="~/js/admin.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

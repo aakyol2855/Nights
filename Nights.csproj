@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>aspnet-Nights-563985ef-2d01-41a2-a0d8-72b944bf1cab</UserSecretsId>
+        <NoWarn>$(NoWarn);NU1900;NU1902;NU1903</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Markdig" Version="1.5.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.14" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.14" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.14" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.14" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.14" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
+    </ItemGroup>
+
+</Project>

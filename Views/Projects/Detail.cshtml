@@ -1,0 +1,106 @@
+@model Nights.Models.ViewModels.ProjectDetailViewModel
+@{
+    ViewData["Title"] = Model.Project.Title + " - Canlı Demo & Rehber";
+}
+
+<div style="max-width: 1200px; margin: 0 auto;">
+    <div style="margin-bottom: 1.75rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <a asp-area="" asp-action="Index" style="font-size: 0.92rem; color: var(--accent-gold); font-weight: 500;">&larr; Projelere Dön</a>
+            <h1 style="font-size: 2rem; color: var(--accent-sapphire); margin-top: 0.4rem;">@Model.Project.Title</h1>
+            <p style="color: var(--text-muted); font-size: 1rem;">@Model.Project.Summary</p>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+            @if (!string.IsNullOrEmpty(Model.Project.GitHubUrl))
+            {
+                <a href="@Model.Project.GitHubUrl" target="_blank" rel="noopener noreferrer" class="btn-ottoman-outline">
+                    GitHub Kaynak Kodu
+                </a>
+            }
+            @if (!string.IsNullOrEmpty(Model.Project.LiveDemoUrl))
+            {
+                <a href="@Model.Project.LiveDemoUrl" target="_blank" rel="noopener noreferrer" class="btn-ottoman">
+                    Yeni Sekmede Aç &nearr;
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="ottoman-divider">
+        <div class="ottoman-divider-crest">
+            <span>✦</span> ۞ <span>✦</span>
+        </div>
+    </div>
+
+    <div class="showcase-container">
+        <!-- Sol: Canlı Demo Ekranı (iFrame / Container) -->
+        <div class="demo-screen-box">
+            <div class="demo-screen-header">
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #22c55e;"></span>
+                    <span style="font-weight: 600;">Canlı Ortam: @Model.Project.BadgeText</span>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn-ottoman-outline" data-demo-reload style="min-height: 32px; padding: 0.2rem 0.6rem; color: #fff; border-color: rgba(255,255,255,0.3); font-size: 0.8rem;">
+                        Yenile
+                    </button>
+                    <button class="btn-ottoman-outline" data-demo-fullscreen style="min-height: 32px; padding: 0.2rem 0.6rem; color: #fff; border-color: rgba(255,255,255,0.3); font-size: 0.8rem;">
+                        Tam Ekran
+                    </button>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Project.LiveDemoUrl))
+            {
+                <iframe src="@Model.Project.LiveDemoUrl" class="demo-iframe" title="@Model.Project.Title" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+            }
+            else
+            {
+                <div style="height: 480px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #FAF7F0; text-align: center; padding: 2rem;">
+                    <span style="font-size: 2.5rem; color: var(--accent-gold); margin-bottom: 0.6rem;">۞</span>
+                    <h3 style="color: var(--accent-sapphire); margin-bottom: 0.4rem;">Canlı Demo URL Tanımlanmamış</h3>
+                    <p style="color: var(--text-muted); max-width: 420px; font-size: 0.92rem;">
+                        Bu proje yerel bir servis veya henüz dışarıya açılmamış bir container üzerinde çalışıyor olabilir. Lütfen sağ taraftaki kullanım kılavuzunu inceleyiniz.
+                    </p>
+                </div>
+            }
+        </div>
+
+        <!-- Sağ: Rehber / Öğretici & Test Senaryoları (Tutorials) -->
+        <div class="tutorial-panel ottoman-frame">
+            <span class="ottoman-corner corner-tr"></span>
+            <span class="ottoman-corner corner-br"></span>
+
+            <h3 style="font-size: 1.2rem; color: var(--accent-sapphire); margin-bottom: 0.4rem;">
+                ✦ Nasıl Kullanılır / Test Rehberi
+            </h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.6rem;">
+                Projeyi deneyimlerken aşağıdaki adımları ve test senaryolarını takip edebilirsiniz.
+            </p>
+
+            @if (!Model.RenderedTutorials.Any())
+            {
+                <p style="color: var(--text-muted); font-size: 0.92rem; font-style: italic;">
+                    Bu proje için henüz rehber adımı eklenmemiş.
+                </p>
+            }
+            else
+            {
+                @foreach (var tutorial in Model.RenderedTutorials)
+                {
+                    <div class="tutorial-step-card">
+                        <h4 class="tutorial-step-title">@tutorial.StepTitle</h4>
+                        <div class="tutorial-markdown-body">
+                            @Html.Raw(tutorial.ContentHtml)
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/projects.js" asp-append-version="true"></script>
+}

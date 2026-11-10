@@ -1,0 +1,144 @@
+@model Nights.Models.ViewModels.ProjectEditViewModel
+@{
+    ViewData["Title"] = "Projeyi ve Rehberleri Düzenle";
+    var tutorials = ViewBag.Tutorials as List<Nights.Models.Entities.ProjectTutorial> ?? new();
+}
+
+<div style="max-width: 950px; margin: 0 auto;">
+    <div style="margin-bottom: 1.5rem;">
+        <a asp-area="Admin" asp-action="Index" style="font-size: 0.92rem; color: var(--accent-gold); font-weight: 500;">&larr; Projelere Dön</a>
+        <h1 style="font-size: 1.85rem; color: var(--accent-sapphire); margin-top: 0.3rem;">Projeyi Düzenle: @Model.Title</h1>
+    </div>
+
+    <!-- Proje Temel Bilgileri Formu -->
+    <div class="ottoman-frame" style="padding: 2.25rem; margin-bottom: 2.5rem;">
+        <span class="ottoman-corner corner-tl"></span>
+        <span class="ottoman-corner corner-tr"></span>
+        <span class="ottoman-corner corner-bl"></span>
+        <span class="ottoman-corner corner-br"></span>
+
+        <h2 style="font-size: 1.3rem; color: var(--accent-sapphire); margin-bottom: 1.25rem;">✦ Temel Bilgiler</h2>
+        <form asp-area="Admin" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="All" style="color: var(--danger-rose); margin-bottom: 1rem; font-size: 0.9rem;"></div>
+
+            <div class="form-group">
+                <label asp-for="Title" class="form-label">Proje Başlığı</label>
+                <input asp-for="Title" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Summary" class="form-label">Kısa Özet</label>
+                <textarea asp-for="Summary" class="form-control" rows="2" required></textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label asp-for="LiveDemoUrl" class="form-label">Canlı Demo / iFrame URL</label>
+                    <input asp-for="LiveDemoUrl" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="GitHubUrl" class="form-label">GitHub URL</label>
+                    <input asp-for="GitHubUrl" class="form-control" />
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label asp-for="BadgeText" class="form-label">Rozet Metni</label>
+                    <input asp-for="BadgeText" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="TechStack" class="form-label">Teknoloji Yığını</label>
+                    <input asp-for="TechStack" class="form-control" />
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label asp-for="DisplayOrder" class="form-label">Sıralama Önceliği</label>
+                    <input asp-for="DisplayOrder" type="number" class="form-control" />
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.8rem;">
+                    <input asp-for="IsActive" type="checkbox" style="width: 20px; height: 20px;" />
+                    <label asp-for="IsActive" style="font-weight: 600;">Aktif</label>
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.8rem;">
+                    <input asp-for="IsFeatured" type="checkbox" style="width: 20px; height: 20px;" />
+                    <label asp-for="IsFeatured" style="font-weight: 600;">Öne Çıkan</label>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+                <button type="submit" class="btn-ottoman">Değişiklikleri Kaydet</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Rehber / Test Senaryosu Yönetimi -->
+    <div class="ottoman-frame" style="padding: 2.25rem;">
+        <span class="ottoman-corner corner-tl"></span>
+        <span class="ottoman-corner corner-tr"></span>
+        <span class="ottoman-corner corner-bl"></span>
+        <span class="ottoman-corner corner-br"></span>
+
+        <h2 style="font-size: 1.3rem; color: var(--accent-sapphire); margin-bottom: 0.5rem;">
+            ✦ Öğretici &amp; Test Rehberi Adımları (Markdown)
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.5rem;">
+            Bu adımlar ziyaretçinin canlı demo alanını nasıl test edeceğini adım adım gösterir.
+        </p>
+
+        <!-- Mevcut Adımlar Listesi -->
+        @if (tutorials.Any())
+        {
+            <div style="margin-bottom: 2rem; display: flex; flex-direction: column; gap: 1rem;">
+                @foreach (var step in tutorials)
+                {
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 1.1rem; background: var(--bg-parchment); border-radius: var(--radius-sm); border: 1px solid var(--border-light);">
+                        <div>
+                            <span class="badge-ottoman" style="margin-bottom: 0.35rem;">✦ Adım #@step.StepOrder</span>
+                            <h4 style="color: var(--accent-sapphire); margin: 0.4rem 0;">@step.StepTitle</h4>
+                            <div style="font-size: 0.88rem; color: var(--text-muted); font-family: monospace; white-space: pre-wrap; max-height: 100px; overflow: hidden;">@step.ContentMarkdown</div>
+                        </div>
+
+                        <form asp-area="Admin" asp-action="DeleteTutorial" method="post">
+                            <input type="hidden" name="tutorialId" value="@step.Id" />
+                            <input type="hidden" name="projectId" value="@Model.Id" />
+                            <button type="submit" class="btn-danger-soft" onclick="return confirm('Bu adımı silmek istiyor musunuz?')">
+                                Adımı Sil
+                            </button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+
+        <!-- Yeni Adım Ekle Formu -->
+        <div style="background: var(--bg-parchment); padding: 1.5rem; border-radius: var(--radius-sm); border: 1px dashed var(--accent-gold);">
+            <h3 style="font-size: 1.1rem; color: var(--accent-sapphire); margin-bottom: 1rem;">+ Yeni Rehber Adımı Ekle</h3>
+            <form asp-area="Admin" asp-action="AddTutorial" method="post">
+                <input type="hidden" name="ProjectId" value="@Model.Id" />
+
+                <div style="display: grid; grid-template-columns: 1fr 120px; gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label class="form-label">Adım Başlığı</label>
+                        <input type="text" name="StepTitle" class="form-control" required placeholder="Örn: 1. Test Kullanıcısı ile Giriş" />
+                    </div>
+                    <div>
+                        <label class="form-label">Sıra</label>
+                        <input type="number" name="StepOrder" class="form-control" value="@(tutorials.Count + 1)" required />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">İçerik (Markdown Destekli)</label>
+                    <textarea name="ContentMarkdown" class="form-control" rows="5" required 
+                              placeholder="Kullanıcıya adımları anlatın:&#10;&#10;- **Kullanıcı:** `test@example.com`&#10;- Sağ üstten `Yeni Kayıt` butonuna basın..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-ottoman">Rehber Adımını Kaydet</button>
+            </form>
+        </div>
+    </div>
+</div>

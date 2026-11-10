@@ -1,0 +1,73 @@
+@model Nights.Models.ViewModels.ProjectEditViewModel
+@{
+    ViewData["Title"] = "Yeni Proje Ekle";
+}
+
+<div style="max-width: 850px; margin: 0 auto;">
+    <div style="margin-bottom: 1.5rem;">
+        <a asp-area="Admin" asp-action="Index" style="font-size: 0.92rem; color: var(--accent-gold); font-weight: 500;">&larr; Projelere Dön</a>
+        <h1 style="font-size: 1.85rem; color: var(--accent-sapphire); margin-top: 0.3rem;">Yeni Proje Ekle</h1>
+    </div>
+
+    <div class="ottoman-frame" style="padding: 2.25rem;">
+        <span class="ottoman-corner corner-tl"></span>
+        <span class="ottoman-corner corner-tr"></span>
+        <span class="ottoman-corner corner-bl"></span>
+        <span class="ottoman-corner corner-br"></span>
+
+        <form asp-area="Admin" asp-action="Create" method="post">
+            <div asp-validation-summary="All" style="color: var(--danger-rose); margin-bottom: 1rem; font-size: 0.9rem;"></div>
+
+            <div class="form-group">
+                <label asp-for="Title" class="form-label">Proje Başlığı *</label>
+                <input asp-for="Title" class="form-control" required placeholder="Örn: DİTİB Cemaat Portalı" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Summary" class="form-label">Kısa Özet (Kart Görünümü) *</label>
+                <textarea asp-for="Summary" class="form-control" rows="3" required placeholder="Projenin amacı ve ana yetenekleri..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LiveDemoUrl" class="form-label">Canlı Demo / iFrame URL (Opsiyonel)</label>
+                <input asp-for="LiveDemoUrl" class="form-control" placeholder="https://demo.example.com veya container subdomain" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GitHubUrl" class="form-label">GitHub URL (Opsiyonel)</label>
+                <input asp-for="GitHubUrl" class="form-control" placeholder="https://github.com/..." />
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label asp-for="BadgeText" class="form-label">Rozet Metni</label>
+                    <input asp-for="BadgeText" class="form-control" placeholder="Örn: DİTİB, Canlı Demo, Microservice" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="TechStack" class="form-label">Teknoloji Yığını</label>
+                    <input asp-for="TechStack" class="form-control" placeholder=".NET, MSSQL, Tailwind" />
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label asp-for="DisplayOrder" class="form-label">Sıralama Önceliği</label>
+                    <input asp-for="DisplayOrder" type="number" class="form-control" />
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.8rem;">
+                    <input asp-for="IsActive" type="checkbox" style="width: 20px; height: 20px;" />
+                    <label asp-for="IsActive" style="font-weight: 600;">Aktif</label>
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.8rem;">
+                    <input asp-for="IsFeatured" type="checkbox" style="width: 20px; height: 20px;" />
+                    <label asp-for="IsFeatured" style="font-weight: 600;">Öne Çıkan</label>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+                <a asp-area="Admin" asp-action="Index" class="btn-ottoman-outline">İptal</a>
+                <button type="submit" class="btn-ottoman">Projeyi Kaydet &amp; Devam Et</button>
+            </div>
+        </form>
+    </div>
+</div>

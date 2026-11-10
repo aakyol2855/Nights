@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Kişisel Web & Sergi</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    @Html.AntiForgeryToken()
+
+    <header class="header-ottoman">
+        <div class="header-container">
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-link">
+                <span class="brand-crest">۞</span>
+                <span>Kişisel Sergi</span>
+            </a>
+
+            <button class="mobile-nav-toggle" data-nav-toggle aria-label="Menüyü Aç/Kapat">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <ul class="nav-links">
+                <li><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link-item">Giriş</a></li>
+                <li><a asp-area="" asp-controller="Projects" asp-action="Index" class="nav-link-item">Projeler & Canlı Demo</a></li>
+                <li><a asp-area="" asp-controller="Memories" asp-action="Index" class="nav-link-item">Anılar & Hatıralar</a></li>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <li><a asp-area="" asp-controller="Notes" asp-action="Index" class="nav-link-item">Özel Notlar</a></li>
+                }
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="badge-ottoman" style="color: var(--accent-sapphire);">✦ Yönetim Paneli</a></li>
+                }
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <li>
+                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" style="display:inline;">
+                            <button type="submit" class="btn-ottoman-outline" style="min-height: 36px; padding: 0.3rem 0.8rem; font-size: 0.85rem;">Çıkış</button>
+                        </form>
+                    </li>
+                }
+                else
+                {
+                    <li><a asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="/Admin" class="nav-link-item" style="font-size: 0.88rem; opacity: 0.8;">Yönetici Girişi</a></li>
+                }
+            </ul>
+        </div>
+    </header>
+
+    <main class="site-main" role="main">
+        @RenderBody()
+    </main>
+
+    <div id="app-toast"></div>
+
+    <footer class="site-footer">
+        <div class="header-container" style="justify-content: center; flex-direction: column; gap: 0.6rem;">
+            <div class="ottoman-divider" style="margin: 0 0 1.25rem 0;">
+                <div class="ottoman-divider-crest">
+                    <span>✦</span> ۞ <span>✦</span>
+                </div>
+            </div>
+            <p>&copy; @DateTime.UtcNow.Year - Kişisel Web & Sergi Portalı. Geleneksel zarafet, modern performans.</p>
+        </div>
+    </footer>
+
+    <script src="~/js/main.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

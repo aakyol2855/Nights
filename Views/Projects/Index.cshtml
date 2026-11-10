@@ -1,0 +1,63 @@
+@model IEnumerable<Nights.Models.Entities.Project>
+@{
+    ViewData["Title"] = "Projeler & Canlı Demo";
+}
+
+<div style="max-width: 1100px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 2.25rem;">
+        <span class="badge-ottoman">
+            <span>۞</span> Eserler &amp; Sistemler <span>۞</span>
+        </span>
+        <h1 style="font-size: 2.1rem; color: var(--accent-sapphire); margin: 0.6rem 0;">Geliştirilen Projeler</h1>
+        <p style="color: var(--text-muted); font-size: 1.05rem;">
+            Doğrudan canlı container üzerinde test edebileceğiniz veya kullanım kılavuzunu inceleyebileceğiniz yazılım projeleri.
+        </p>
+    </div>
+
+    <div class="ottoman-divider">
+        <div class="ottoman-divider-crest">
+            <span>✦</span> ۞ <span>✦</span>
+        </div>
+    </div>
+
+    <div class="projects-grid">
+        @foreach (var project in Model)
+        {
+            <div class="project-card">
+                <span class="ottoman-mini-corner corner-tl"></span>
+                <span class="ottoman-mini-corner corner-tr"></span>
+                <span class="ottoman-mini-corner corner-bl"></span>
+                <span class="ottoman-mini-corner corner-br"></span>
+
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.9rem;">
+                        <span class="badge-ottoman">✦ @project.BadgeText</span>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Sıra: #@project.DisplayOrder</span>
+                    </div>
+
+                    <h2 class="project-title">@project.Title</h2>
+                    <p class="project-summary">@project.Summary</p>
+
+                    <div class="tech-tags">
+                        @foreach (var tech in project.TechStack.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            <span class="tech-tag">@tech</span>
+                        }
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem;">
+                    <a asp-area="" asp-action="Detail" asp-route-id="@project.Id" class="btn-ottoman" style="flex: 1;">
+                        Canlı Demo &amp; Rehber
+                    </a>
+                    @if (!string.IsNullOrEmpty(project.GitHubUrl))
+                    {
+                        <a href="@project.GitHubUrl" target="_blank" rel="noopener noreferrer" class="btn-ottoman-outline" title="GitHub">
+                            GitHub
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,59 @@
+@model IEnumerable<Nights.Models.Entities.Memory>
+@{
+    ViewData["Title"] = "Onay Bekleyen Anılar";
+}
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <h1 style="font-size: 1.85rem; color: var(--accent-sapphire);">Onay Bekleyen Ziyaretçi Anıları</h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Ziyaretçiler tarafından yüklenen görseller izole <code>uploads/pending/</code> dizinindedir. Onaylananlar <code>approved/</code> dizinine taşınır ve cache tazelenir.
+        </p>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="ottoman-frame" style="padding: 3.5rem; text-align: center;">
+        <span class="ottoman-mini-corner corner-tl"></span>
+        <span class="ottoman-mini-corner corner-tr"></span>
+        <span class="ottoman-mini-corner corner-bl"></span>
+        <span class="ottoman-mini-corner corner-br"></span>
+        <span style="font-size: 2.2rem; color: var(--accent-gold); display: block; margin-bottom: 0.5rem;">۞</span>
+        <h3 style="color: var(--accent-sapphire); margin-bottom: 0.5rem;">Bekleyen Anı Yok</h3>
+        <p style="color: var(--text-muted);">Tüm ziyaretçi anıları incelenmiş ve onaylanmış durumda.</p>
+    </div>
+}
+else
+{
+    <div class="memories-grid">
+        @foreach (var memory in Model)
+        {
+            <div class="memory-card" id="pending-card-@memory.Id">
+                <span class="ottoman-mini-corner corner-tl"></span>
+                <span class="ottoman-mini-corner corner-tr"></span>
+
+                <div class="memory-thumb-wrapper">
+                    <img src="@Url.Action("PreviewPendingImage", "AdminMemories", new { f = memory.ImageFileName, area = "Admin" })" 
+                         alt="Onay Bekleyen Anı" class="memory-thumb" />
+                </div>
+                <div class="memory-body">
+                    <p class="memory-caption">@memory.Description</p>
+                    <div class="memory-footer">
+                        <span>IP: @(memory.SubmitterIpHash.Length > 8 ? memory.SubmitterIpHash[..8] : memory.SubmitterIpHash)...</span>
+                        <time>@memory.CreatedAt.ToString("g")</time>
+                    </div>
+
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1.25rem;">
+                        <button type="button" class="btn-ottoman btn-ottoman-tile" data-admin-action="approve" data-id="@memory.Id" style="flex: 1;">
+                            ✓ Onayla
+                        </button>
+                        <button type="button" class="btn-danger-soft" data-admin-action="reject" data-id="@memory.Id" style="flex: 1;">
+                            ✕ Reddet & Sil
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
