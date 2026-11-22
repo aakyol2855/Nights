@@ -1,6 +1,8 @@
 @model IEnumerable<Nights.Models.Entities.Memory>
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
     ViewData["Title"] = "Hatıra Defteri & Anılar";
+    var turnstileSiteKey = Configuration["CloudflareTurnstile:SiteKey"] ?? "1x00000000000000000000AA";
 }
 
 <div style="max-width: 950px; margin: 0 auto;">
@@ -38,6 +40,11 @@
             <div class="form-group">
                 <label for="memoryFileInput" class="form-label">Fotoğraf (JPG, PNG veya WebP):</label>
                 <input type="file" id="memoryFileInput" class="form-control" accept="image/jpeg,image/png,image/webp" required />
+            </div>
+
+            <!-- Cloudflare Turnstile Bot Koruması -->
+            <div style="margin: 1.25rem 0;">
+                <div class="cf-turnstile" data-sitekey="@turnstileSiteKey" data-theme="light"></div>
             </div>
 
             <div style="display: flex; justify-content: flex-end;">
@@ -95,5 +102,6 @@
 </div>
 
 @section Scripts {
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script src="~/js/memories.js" asp-append-version="true"></script>
 }

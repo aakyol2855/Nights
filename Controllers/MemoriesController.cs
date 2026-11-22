@@ -10,15 +10,18 @@ public class MemoriesController : Controller
 {
     private readonly IMemoryService _memoryService;
     private readonly IImageService _imageService;
+    private readonly ITurnstileService _turnstileService;
     private readonly ILogger<MemoriesController> _logger;
 
     public MemoriesController(
         IMemoryService memoryService,
         IImageService imageService,
+        ITurnstileService turnstileService,
         ILogger<MemoriesController> logger)
     {
         _memoryService = memoryService;
         _imageService = imageService;
+        _turnstileService = turnstileService;
         _logger = logger;
     }
 
@@ -45,6 +48,16 @@ public class MemoriesController : Controller
             return Json(new { success = false, message = firstError });
         }
 
+        var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+        // Cloudflare Turnstile Bot Doğrulaması
+        var isTurnstileValid = await _turnstileService.VerifyTokenAsync(model.TurnstileToken, ip);
+        if (!isTurnstileValid)
+        {
+            _logger.LogWarning("[MemoriesController] Turnstile bot doğrulaması başarısız oldu. IP: {Ip}", ip);
+            return Json(new { success = false, message = "Güvenlik doğrulaması (Turnstile) başarısız oldu veya süresi doldu." });
+        }
+
         if (model.File == null || model.File.Length == 0)
         {
             return Json(new { success = false, message = "Lütfen bir resim dosyası seçiniz." });
@@ -52,7 +65,6 @@ public class MemoriesController : Controller
 
         try
         {
-            var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
             await _memoryService.AddPendingMemoryAsync(model.Description, model.File, ip);
 
             _logger.LogInformation("[MemoriesController] Yeni anı gönderimi başarılı. IP: {Ip}", ip);

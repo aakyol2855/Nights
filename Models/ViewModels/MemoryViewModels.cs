@@ -16,4 +16,9 @@ public class MemorySubmitInputModel
 
     [Required(ErrorMessage = "Lütfen bir fotoğraf seçiniz.")]
     public IFormFile? File { get; set; }
+
+    /// <summary>
+    /// Cloudflare Turnstile token değeri (Bot koruması)
+    /// </summary>
+    public string? TurnstileToken { get; set; }
 }

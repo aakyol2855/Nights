@@ -1,0 +1,45 @@
+# ==============================================================================
+# Nights - İzole & Düşük Kaynak Tüketimli Demo Container Şablonu
+# Eski Debian Ev Sunucusu için Özel Optimize Edilmiştir (RAM/CPU Limitli & Zero-Trust)
+# ==============================================================================
+
+version: '3.8'
+
+services:
+  # Örnek Vitrin Uygulaması: DİTİB Yönetim & Cemaat Portalı Demo
+  ditib-demo-app:
+    image: mcr.microsoft.com/dotnet/samples:aspnetapp # Kendi demo imajınızla değiştirin
+    container_name: ditib-showcase-demo
+    restart: unless-stopped
+    
+    # 1. Güvenlik: Salt Okunur Dosya Sistemi (Container içine shell/script yazılamaz)
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+    # 2. Geçici Dosya Alanı (Yalnızca RAM'de 32MB limitli /tmp)
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m
+
+    # 3. Donanım Koruma Sınırları (Isınmayı ve CPU boğulmasını engeller)
+    deploy:
+      resources:
+        limits:
+          cpus: '0.40'             # Azami %40 CPU kullanımı
+          memory: 256M             # Azami 256MB RAM (OOM koruması)
+        reservations:
+          memory: 64M
+
+    # 4. Ağ İzolasyonu: Sadece yerel sunucu dinler (Public porta açılmaz)
+    ports:
+      - "127.0.0.1:8081:80"
+
+    networks:
+      - demo-isolated-net
+
+networks:
+  demo-isolated-net:
+    driver: bridge
+    internal: true                 # Dış internete çıkış tamamen kapalıdır (İzole)

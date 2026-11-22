@@ -1,6 +1,6 @@
 /**
  * Nights - Anılar Modülü (Memories Module)
- * Dosya yükleme, progress ve kart etkileşimleri
+ * Dosya yükleme, Cloudflare Turnstile token toplama ve kart etkileşimleri
  */
 document.addEventListener('DOMContentLoaded', () => {
     const memoryForm = document.getElementById('memoryUploadForm');
@@ -30,14 +30,19 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Cloudflare Turnstile token kontrolü
+        const turnstileInput = document.querySelector('[name="cf-turnstile-response"]');
+        const turnstileToken = turnstileInput ? turnstileInput.value : '';
+
         const formData = new FormData();
         formData.append('Description', desc);
         formData.append('File', file);
+        formData.append('TurnstileToken', turnstileToken);
         formData.append('__RequestVerificationToken', NightsApp.getToken());
 
         const originalBtnText = submitBtn.innerHTML;
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span>İşleniyor & Yükleniyor...</span>';
+        submitBtn.innerHTML = '<span>İşleniyor &amp; Yükleniyor...</span>';
 
         try {
             const response = await fetch('/Memories/Submit', {
@@ -54,6 +59,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.success) {
                 NightsApp.notify(data.message, false);
                 memoryForm.reset();
+                // Turnstile widget'ını sıfırla (eğer tanımlıysa)
+                if (window.turnstile) {
+                    try { window.turnstile.reset(); } catch {}
+                }
             } else {
                 NightsApp.notify(data.message || 'Yükleme sırasında hata oluştu.', true);
             }
