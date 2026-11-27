@@ -1,0 +1,154 @@
+@model Nights.Services.Interfaces.TrashBinOverviewDto
+@{
+    ViewData["Title"] = "Çöp Kutusu (Soft-Delete)";
+    var activeFilter = (ViewBag.ActiveTypeFilter as string) ?? "All";
+    var totalCount = Model.MemoryCount + Model.ProjectCount + Model.NoteCount;
+}
+
+<div class="divan-container" style="padding: 2rem 1rem 4rem;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.75rem;">
+        <div>
+            <span class="badge-ottoman" style="margin-bottom: 0.45rem;">✦ Yumuşak Silme &amp; Karantina</span>
+            <h2 style="font-family: var(--font-serif); font-size: 2rem; color: var(--text-white); margin: 0;">
+                Çöp Kutusu
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.92rem; margin: 0.35rem 0 0;">
+                Silinen kayıtlar <strong>@Model.RetentionDays gün</strong> boyunca güvenle saklanır. Anı görselleri <code>uploads/trash/</code> karantina klasöründe tutulur.
+            </p>
+        </div>
+
+        <button type="button"
+                class="btn-ottoman-outline"
+                data-maintenance-action
+                data-action-url="@Url.Action("PurgeExpired", "AdminTrash", new { area = "Admin" })"
+                data-confirm-title="Süresi Dolanları Temizle"
+                data-confirm-body="@Model.RetentionDays günden uzun süredir çöp kutusunda bekleyen tüm kayıtlar ve ilişkili dosyalar kalıcı olarak temizlenecektir. Devam etmek istiyor musunuz?"
+                style="font-size: 0.85rem;">
+            🧹 Süresi Dolanları Şimdi Temizle
+        </button>
+    </div>
+
+    <!-- Bildirim Alanı -->
+    <div id="adminActionBanner" style="display: none; margin-bottom: 1.25rem; padding: 0.85rem 1.15rem; border-radius: var(--radius-sm); font-size: 0.9rem;"></div>
+
+    <!-- Özet Kartları & Tür Filtreleri -->
+    <div style="display: flex; gap: 0.65rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+        <a asp-area="Admin" asp-controller="AdminTrash" asp-action="Index" asp-route-type="All"
+           class="@(activeFilter == "All" ? "btn-divan-primary" : "btn-ottoman-outline")" style="font-size: 0.84rem; padding: 0.45rem 0.95rem;">
+            Tümü (@totalCount)
+        </a>
+        <a asp-area="Admin" asp-controller="AdminTrash" asp-action="Index" asp-route-type="Memory"
+           class="@(activeFilter == "Memory" ? "btn-divan-primary" : "btn-ottoman-outline")" style="font-size: 0.84rem; padding: 0.45rem 0.95rem;">
+            Anılar (@Model.MemoryCount)
+        </a>
+        <a asp-area="Admin" asp-controller="AdminTrash" asp-action="Index" asp-route-type="Project"
+           class="@(activeFilter == "Project" ? "btn-divan-primary" : "btn-ottoman-outline")" style="font-size: 0.84rem; padding: 0.45rem 0.95rem;">
+            Projeler (@Model.ProjectCount)
+        </a>
+        <a asp-area="Admin" asp-controller="AdminTrash" asp-action="Index" asp-route-type="Note"
+           class="@(activeFilter == "Note" ? "btn-divan-primary" : "btn-ottoman-outline")" style="font-size: 0.84rem; padding: 0.45rem 0.95rem;">
+            Varaklar / Notlar (@Model.NoteCount)
+        </a>
+    </div>
+
+    <!-- Çöp Kutusu Tablosu -->
+    <div class="divan-corner-box" style="padding: 1.25rem; overflow-x: auto;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
+
+        @if (!Model.Items.Any())
+        {
+            <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+                <div style="font-size: 2.2rem; color: var(--gold-primary); margin-bottom: 0.5rem;">۞</div>
+                <p style="margin: 0; font-size: 0.96rem;">Çöp kutusu şu anda tamamen temiz.</p>
+            </div>
+        }
+        else
+        {
+            <table style="width: 100%; border-collapse: collapse; min-width: 680px;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--gold-border); text-align: left; color: var(--gold-bright); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em;">
+                        <th style="padding: 0.75rem 0.65rem;">Tür</th>
+                        <th style="padding: 0.75rem 0.65rem;">Kayıt</th>
+                        <th style="padding: 0.75rem 0.65rem;">Silen / Tarih</th>
+                        <th style="padding: 0.75rem 0.65rem;">Kalan Süre</th>
+                        <th style="padding: 0.75rem 0.65rem; text-align: right;">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr data-trash-row="@item.EntityType-@item.Id" style="border-bottom: 1px solid rgba(197, 160, 89, 0.14);">
+                            <td style="padding: 0.85rem 0.65rem; vertical-align: middle;">
+                                <span class="badge-ottoman" style="font-size: 0.74rem;">@item.EntityTypeDisplay #@item.Id</span>
+                            </td>
+                            <td style="padding: 0.85rem 0.65rem; vertical-align: middle;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    @if (!string.IsNullOrWhiteSpace(item.PreviewImageFileName))
+                                    {
+                                        <img src="@Url.Action("PreviewTrashImage", "AdminTrash", new { area = "Admin", f = item.PreviewImageFileName })"
+                                             alt="Önizleme"
+                                             style="width: 48px; height: 48px; object-fit: cover; border-radius: 4px; border: 1px solid var(--gold-border);" />
+                                    }
+                                    <div>
+                                        <div style="color: var(--text-white); font-weight: 600; font-size: 0.92rem;">@item.Title</div>
+                                        <div style="color: var(--text-muted); font-size: 0.78rem;">@item.Subtitle</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding: 0.85rem 0.65rem; vertical-align: middle; font-size: 0.84rem; color: var(--text-main);">
+                                <div>@item.DeletedBy</div>
+                                <div style="color: var(--text-muted); font-size: 0.76rem;">@item.DeletedAtUtc.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</div>
+                            </td>
+                            <td style="padding: 0.85rem 0.65rem; vertical-align: middle;">
+                                <span style="font-size: 0.82rem; font-weight: 600; color: @(item.DaysRemaining <= 5 ? "var(--danger-rose)" : "var(--gold-bright)");">
+                                    @item.DaysRemaining gün
+                                </span>
+                            </td>
+                            <td style="padding: 0.85rem 0.65rem; vertical-align: middle; text-align: right; white-space: nowrap;">
+                                <button type="button"
+                                        class="btn-ottoman-outline"
+                                        data-trash-restore
+                                        data-url="@Url.Action("Restore", "AdminTrash", new { area = "Admin" })"
+                                        data-entity-type="@item.EntityType"
+                                        data-entity-id="@item.Id"
+                                        data-item-title="@item.Title"
+                                        style="font-size: 0.78rem; padding: 0.35rem 0.75rem; margin-right: 0.35rem; border-color: #2ecc71; color: #2ecc71;">
+                                    ↺ Geri Getir
+                                </button>
+                                <button type="button"
+                                        class="btn-ottoman-outline"
+                                        data-trash-hard-delete
+                                        data-url="@Url.Action("HardDelete", "AdminTrash", new { area = "Admin" })"
+                                        data-entity-type="@item.EntityType"
+                                        data-entity-id="@item.Id"
+                                        data-item-title="@item.Title"
+                                        style="font-size: 0.78rem; padding: 0.35rem 0.75rem; border-color: var(--danger-rose); color: var(--danger-rose);">
+                                    ✕ Kalıcı Sil
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+<!-- Merkezi Onay Modalı (Sıfır Inline Script) -->
+<div id="divanConfirmModal" style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(4, 8, 15, 0.78); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem;">
+    <div class="divan-corner-box" style="max-width: 460px; width: 100%; padding: 1.75rem; background: var(--bg-card);">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
+        <h3 id="divanConfirmTitle" style="font-family: var(--font-serif); color: var(--gold-bright); margin: 0 0 0.65rem; font-size: 1.35rem;">Onay</h3>
+        <p id="divanConfirmBody" style="color: var(--text-main); font-size: 0.92rem; line-height: 1.6; margin: 0 0 1.4rem;"></p>
+        <div style="display: flex; justify-content: flex-end; gap: 0.65rem;">
+            <button type="button" id="divanConfirmCancel" class="btn-ottoman-outline" style="font-size: 0.84rem; padding: 0.45rem 1rem;">Vazgeç</button>
+            <button type="button" id="divanConfirmAccept" class="btn-divan-primary" style="font-size: 0.84rem; padding: 0.45rem 1.15rem;">Onayla</button>
+        </div>
+    </div>
+</div>

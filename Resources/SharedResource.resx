@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Nav_Home" xml:space="preserve"><value>Ana Sayfa</value></data>
+  <data name="Nav_Projects" xml:space="preserve"><value>Projeler</value></data>
+  <data name="Nav_Memories" xml:space="preserve"><value>Hatıralar</value></data>
+  <data name="Nav_Games" xml:space="preserve"><value>Oyunhane</value></data>
+  <data name="Nav_Journal" xml:space="preserve"><value>Günlük</value></data>
+  <data name="Nav_AdminPanel" xml:space="preserve"><value>✦ Yönetim Paneli</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>Giriş</value></data>
+  <data name="Nav_LoginTitle" xml:space="preserve"><value>Giriş Yap</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>🚪 Güvenli Çıkış</value></data>
+  <data name="Nav_MyNotes" xml:space="preserve"><value>✍ Not Defterim</value></data>
+  <data name="Nav_SysAdmin" xml:space="preserve"><value>✦ Sistem Yöneticisi</value></data>
+  <data name="Nav_SignedIn" xml:space="preserve"><value>Giriş Yapıldı</value></data>
+  <data name="Nav_SiteSettings" xml:space="preserve"><value>⚙ Site Ayarları</value></data>
+  <data name="Nav_UserPermissions" xml:space="preserve"><value>👥 Kullanıcı İzinleri</value></data>
+  <data name="Nav_ProjectsGuides" xml:space="preserve"><value>📁 Projeler &amp; Rehberler</value></data>
+  <data name="Nav_PendingMemories" xml:space="preserve"><value>📷 Onay Bekleyen Anılar</value></data>
+  <data name="Nav_ThemeToggle" xml:space="preserve"><value>Karanlık / Aydınlık Mod</value></data>
+  <data name="Nav_Menu" xml:space="preserve"><value>Menü</value></data>
+  <data name="Nav_AccountMenu" xml:space="preserve"><value>Hesap Menüsü</value></data>
+  <data name="Nav_LangSwitchTitle" xml:space="preserve"><value>Dili Değiştir (Türkçe / English)</value></data>
+  <data name="Footer_Tagline" xml:space="preserve"><value>EST. 2026 • ŞAHSÎ DİJİTAL ALAN</value></data>
+
+  <data name="Home_Title" xml:space="preserve"><value>Ana Sayfa</value></data>
+  <data name="Home_HeroLine1" xml:space="preserve"><value>Biraz geçmiş,</value></data>
+  <data name="Home_HeroLine2" xml:space="preserve"><value>biraz gelecek.</value></data>
+  <data name="Home_HeroDesc" xml:space="preserve"><value>Kodların, hatıraların, düşüncelerin ve küçük keşiflerin bir araya geldiği şahsî dijital dünyama hoş geldin.</value></data>
+  <data name="Home_EnterArchive" xml:space="preserve"><value>✦ ARŞİVE GİR</value></data>
+  <data name="Home_LeaveMemory" xml:space="preserve"><value>Bir Hatıra Bırak →</value></data>
+  <data name="Home_Card1Title" xml:space="preserve"><value>İmalathane</value></data>
+  <data name="Home_Card1Sub" xml:space="preserve"><value>Projeler</value></data>
+  <data name="Home_Card1Desc" xml:space="preserve"><value>Geliştirdiğim projelere, demo ve kaynaklara göz at.</value></data>
+  <data name="Home_Card2Title" xml:space="preserve"><value>Albüm-i Hâtıra</value></data>
+  <data name="Home_Card2Sub" xml:space="preserve"><value>Hatıralar</value></data>
+  <data name="Home_Card2Desc" xml:space="preserve"><value>Paylaştığımız anılar, özel fotoğraflar ve daha fazlası.</value></data>
+  <data name="Home_Card3Title" xml:space="preserve"><value>Oyunhane</value></data>
+  <data name="Home_Card3Sub" xml:space="preserve"><value>Oyunlar</value></data>
+  <data name="Home_Card3Desc" xml:space="preserve"><value>Zeka, strateji ve nostalji dolu küçük deneyler.</value></data>
+  <data name="Home_Card4Title" xml:space="preserve"><value>Varaklar</value></data>
+  <data name="Home_Card4Sub" xml:space="preserve"><value>Günlük</value></data>
+  <data name="Home_Card4Desc" xml:space="preserve"><value>Düşüncelerim, yazılarım ve iç dünyam.</value></data>
+  <data name="Home_Explore" xml:space="preserve"><value>Keşfet →</value></data>
+  <data name="Home_RecentNotes" xml:space="preserve"><value>✍ Son Yazılar</value></data>
+  <data name="Home_ViewAll" xml:space="preserve"><value>Tümünü Gör →</value></data>
+  <data name="Home_NoNotes" xml:space="preserve"><value>Henüz yayınlanmış bir not veya yazı bulunmuyor.</value></data>
+  <data name="Home_QuickAccess" xml:space="preserve"><value>⚡ Hızlı Erişim</value></data>
+  <data name="Home_TerminalSoon" xml:space="preserve"><value>Terminal (Yakında)</value></data>
+  <data name="Home_Presentations" xml:space="preserve"><value>Sunumlar</value></data>
+  <data name="Home_Archive" xml:space="preserve"><value>Arşiv</value></data>
+  <data name="Home_Contact" xml:space="preserve"><value>İletişim</value></data>
+
+  <data name="Projects_PageTitle" xml:space="preserve"><value>Projeler &amp; Canlı Demo</value></data>
+  <data name="Projects_Badge" xml:space="preserve"><value>İMALATHANE &amp; ESERLER</value></data>
+  <data name="Projects_Heading" xml:space="preserve"><value>Geliştirilen Projeler &amp; Canlı Sistemler</value></data>
+  <data name="Projects_Subtitle" xml:space="preserve"><value>Doğrudan canlı container üzerinde test edebileceğiniz veya kullanım kılavuzunu inceleyebileceğiniz yazılım projeleri.</value></data>
+  <data name="Projects_Empty" xml:space="preserve"><value>Henüz vitrinde sergilenen bir proje bulunmuyor.</value></data>
+  <data name="Projects_Order" xml:space="preserve"><value>Sıra</value></data>
+  <data name="Projects_LiveDemoGuide" xml:space="preserve"><value>Canlı Demo &amp; Rehber</value></data>
+
+  <data name="Detail_BackToProjects" xml:space="preserve"><value>← Tüm Projelere Dön</value></data>
+  <data name="Detail_OnDemandSleep" xml:space="preserve"><value>On-Demand Container (Uyku Modunda)</value></data>
+  <data name="Detail_LiveEnv" xml:space="preserve"><value>Canlı Ortam</value></data>
+  <data name="Detail_SleepLabel" xml:space="preserve"><value>⏱ Uyku:</value></data>
+  <data name="Detail_OpenNewTab" xml:space="preserve"><value>Yeni Sekmede Aç</value></data>
+  <data name="Detail_Reload" xml:space="preserve"><value>Yenile</value></data>
+  <data name="Detail_Fullscreen" xml:space="preserve"><value>Tam Ekran</value></data>
+  <data name="Detail_LauncherTitle" xml:space="preserve"><value>İsteğe Bağlı (On-Demand) Canlı Demo</value></data>
+  <data name="Detail_LauncherDesc" xml:space="preserve"><value>Ev sunucusunun kaynaklarını korumak adına demo ortamı yalnızca siz istediğinizde izole bir Docker container içinde ayağa kaldırılır ve 15 dakika hareketsizlikte otomatik olarak uykuya geçer.</value></data>
+  <data name="Detail_BadgeRam" xml:space="preserve"><value>İzole Container</value></data>
+  <data name="Detail_BadgeReadOnly" xml:space="preserve"><value>Read-Only Kök Dosya Sistemi</value></data>
+  <data name="Detail_BadgeSleep" xml:space="preserve"><value>15 Dk Otomatik Uyku</value></data>
+  <data name="Detail_LaunchBtn" xml:space="preserve"><value>🚀 Canlı Demoyu Başlat</value></data>
+  <data name="Detail_LoadingTitle" xml:space="preserve"><value>İzole Demo Ortamı Hazırlanıyor...</value></data>
+  <data name="Detail_LoadingDesc" xml:space="preserve"><value>Container imajı ayağa kaldırılıyor, yerel port atanıyor ve YARP güvenli tüneli bağlanıyor. Bu işlem birkaç saniye sürebilir.</value></data>
+  <data name="Detail_BusyTitle" xml:space="preserve"><value>Şu Anda Başka Bir Demo Aktif</value></data>
+  <data name="Detail_BusyRemaining" xml:space="preserve"><value>Tahmini Kalan Süre:</value></data>
+  <data name="Detail_NoDemoTitle" xml:space="preserve"><value>Canlı Demo Henüz Tanımlanmamış</value></data>
+  <data name="Detail_NoDemoDesc" xml:space="preserve"><value>Bu proje için henüz bir Docker container imajı veya harici demo bağlantısı eklenmemiştir. Sağ taraftaki kullanım kılavuzunu inceleyebilirsiniz.</value></data>
+  <data name="Detail_GuideTitle" xml:space="preserve"><value>✦ Nasıl Kullanılır / Test Rehberi</value></data>
+  <data name="Detail_GuideSubtitle" xml:space="preserve"><value>Projeyi deneyimlerken aşağıdaki adımları ve test senaryolarını takip edebilirsiniz.</value></data>
+  <data name="Detail_NoGuide" xml:space="preserve"><value>Bu proje için henüz rehber adımı eklenmemiş.</value></data>
+  <data name="Detail_Step" xml:space="preserve"><value>✦ Adım</value></data>
+  <data name="Demo_StatusActive" xml:space="preserve"><value>Canlı Container Aktif</value></data>
+  <data name="Demo_StatusSleeping" xml:space="preserve"><value>Uyku Moduna Geçti</value></data>
+  <data name="Demo_StatusBusy" xml:space="preserve"><value>Başka Bir Demo Aktif</value></data>
+  <data name="Demo_StatusStarting" xml:space="preserve"><value>Container Başlatılıyor...</value></data>
+  <data name="Demo_StatusReady" xml:space="preserve"><value>Başlatılmaya Hazır</value></data>
+  <data name="Demo_StatusConnError" xml:space="preserve"><value>Bağlantı Hatası</value></data>
+  <data name="Demo_ErrTurnstile" xml:space="preserve"><value>Lütfen önce güvenlik doğrulamasını (Cloudflare Turnstile) tamamlayınız.</value></data>
+  <data name="Demo_ErrGeneric" xml:space="preserve"><value>Canlı demo başlatılırken bir hata oluştu.</value></data>
+  <data name="Demo_ErrNetwork" xml:space="preserve"><value>Sunucuya bağlanırken ağ hatası oluştu. Lütfen tekrar deneyin.</value></data>
+
+  <data name="Memories_PageTitle" xml:space="preserve"><value>Hatıra Defteri &amp; Anılar</value></data>
+  <data name="Memories_Badge" xml:space="preserve"><value>YÂD-I CEMÎL</value></data>
+  <data name="Memories_Heading" xml:space="preserve"><value>Albüm-i Hâtıra &amp; Ziyaretçi Defteri</value></data>
+  <data name="Memories_Subtitle" xml:space="preserve"><value>Ziyaretinizden geriye hoş bir sadâ bırakmak için fotoğraf ve birkaç cümlelik hatıra notu düşebilirsiniz.</value></data>
+  <data name="Memories_FormTitle" xml:space="preserve"><value>✦ Bir Hatıra Bırakın</value></data>
+  <data name="Memories_FormDesc" xml:space="preserve"><value>Yüklediğiniz görsel güvenle WebP formatına dönüştürülür, zararlı kodlardan arındırılır ve onay sonrasında vitrinde yer alır. (Maksimum 5MB)</value></data>
+  <data name="Memories_NoteLabel" xml:space="preserve"><value>Kısa Hatıra Notu (1-2 Cümle):</value></data>
+  <data name="Memories_NotePlaceholder" xml:space="preserve"><value>Örn: Bu güzel günü ve hoş sohbeti unutmayacağım...</value></data>
+  <data name="Memories_PhotoLabel" xml:space="preserve"><value>Fotoğraf (JPG, PNG veya WebP):</value></data>
+  <data name="Memories_SubmitBtn" xml:space="preserve"><value>✦ Hatırayı Kaydet</value></data>
+  <data name="Memories_ApprovedHeading" xml:space="preserve"><value>Onaylanmış Hatıralar</value></data>
+  <data name="Memories_Empty" xml:space="preserve"><value>Henüz yayınlanmış bir anı bulunmuyor. İlk hatırayı yukarıdaki formdan siz bırakabilirsiniz!</value></data>
+  <data name="Memories_GuestMemory" xml:space="preserve"><value>✦ Misafir Anısı</value></data>
+
+  <data name="Notes_PageTitle" xml:space="preserve"><value>Özel Not Defteri</value></data>
+  <data name="Notes_Badge" xml:space="preserve"><value>MAHREM-İ ESRÂR &amp; VARAKLAR</value></data>
+  <data name="Notes_Heading" xml:space="preserve"><value>Özel Not Defteri &amp; Günlük</value></data>
+  <data name="Notes_Subtitle" xml:space="preserve"><value>Yalnızca yetkili kullanıcıların erişebildiği, sunucuda yerel olarak saklanan kişisel not ve fikir kayıt alanı.</value></data>
+  <data name="Notes_NewTitle" xml:space="preserve"><value>✦ Yeni Bir Not Düşün</value></data>
+  <data name="Notes_AdminUnlimited" xml:space="preserve"><value>Yönetici: Sınırsız Yazım Yetkisi</value></data>
+  <data name="Notes_WordCount" xml:space="preserve"><value>Kelime Sayısı:</value></data>
+  <data name="Notes_TitleLabel" xml:space="preserve"><value>Not Başlığı:</value></data>
+  <data name="Notes_TitlePlaceholder" xml:space="preserve"><value>Örn: Sunucu Mimarisi &amp; Proje Notları...</value></data>
+  <data name="Notes_ContentLabel" xml:space="preserve"><value>Not İçeriği:</value></data>
+  <data name="Notes_ContentPlaceholderAdmin" xml:space="preserve"><value>Buraya dilediğiniz uzunlukta detaylı notlar, kod blokları veya sunucu yapılandırmaları yazabilirsiniz...</value></data>
+  <data name="Notes_ContentPlaceholderUser" xml:space="preserve"><value>Notunuzu yazınız (En fazla 280 kelime)...</value></data>
+  <data name="Notes_PinLabel" xml:space="preserve"><value>Bu notu en başa iğnele (Sabit Not)</value></data>
+  <data name="Notes_SaveBtn" xml:space="preserve"><value>✦ Notu Kaydet</value></data>
+  <data name="Notes_ListHeading" xml:space="preserve"><value>Kayıtlı Varaklar</value></data>
+  <data name="Notes_Page" xml:space="preserve"><value>Sayfa</value></data>
+  <data name="Notes_EmptyTitle" xml:space="preserve"><value>Henüz Kayıtlı Not Yok</value></data>
+  <data name="Notes_EmptyDesc" xml:space="preserve"><value>Yukarıdaki formdan ilk notunuzu düşebilirsiniz.</value></data>
+  <data name="Notes_AccessDeniedTitle" xml:space="preserve"><value>Erişim İzni Bekleniyor</value></data>
+  <data name="Notes_AccessDeniedHeading" xml:space="preserve"><value>Özel Not Defteri Erişimi</value></data>
+  <data name="Notes_AccessDeniedDesc" xml:space="preserve"><value>Giriş yapmış durumdasınız; ancak bu özel not alanı yalnızca yöneticinin onayladığı kişilere açıktır. Lütfen erişim yetkisi talep ediniz.</value></data>
+
+  <data name="Auth_LoginTitle" xml:space="preserve"><value>Dergâha Giriş</value></data>
+  <data name="Auth_LoginBadge" xml:space="preserve"><value>BÂB-I DÜHÛL • KİMLİK DOĞRULAMA</value></data>
+  <data name="Auth_LoginHeading" xml:space="preserve"><value>Divan'a Giriş</value></data>
+  <data name="Auth_LoginSubtitle" xml:space="preserve"><value>Özel arşiv, varaklar ve yönetim kalemine erişmek için kimliğinizi doğrulayın.</value></data>
+  <data name="Auth_EmailLabel" xml:space="preserve"><value>E-Posta Adresi veya Kullanıcı Adı</value></data>
+  <data name="Auth_EmailPlaceholder" xml:space="preserve"><value>ornek@alanadi.com</value></data>
+  <data name="Auth_PasswordLabel" xml:space="preserve"><value>Parola</value></data>
+  <data name="Auth_ShowHidePassword" xml:space="preserve"><value>Parolayı Göster/Gizle</value></data>
+  <data name="Auth_RememberMe" xml:space="preserve"><value>Beni Hatırla</value></data>
+  <data name="Auth_ProtectedSession" xml:space="preserve"><value>Korumalı Oturum</value></data>
+  <data name="Auth_LoginSubmit" xml:space="preserve"><value>✦ DERGÂHA GİRİŞ YAP</value></data>
+  <data name="Auth_AccessDeniedTitle" xml:space="preserve"><value>Yetkisiz Erişim</value></data>
+  <data name="Auth_AccessDeniedBadge" xml:space="preserve"><value>ERİŞİM REDDEDİLDİ</value></data>
+  <data name="Auth_AccessDeniedHeading" xml:space="preserve"><value>Bu Alana Erişim Yetkiniz Yok</value></data>
+  <data name="Auth_AccessDeniedDesc" xml:space="preserve"><value>Talep ettiğiniz makam veya sayfa için gerekli yetki beratına sahip değilsiniz.</value></data>
+  <data name="Auth_LockoutTitle" xml:space="preserve"><value>Hesap Geçici Olarak Kilitlendi</value></data>
+  <data name="Auth_LockoutBadge" xml:space="preserve"><value>GÜVENLİK KİLİDİ</value></data>
+  <data name="Auth_LockoutHeading" xml:space="preserve"><value>Hesap Geçici Olarak Kilitlendi</value></data>
+  <data name="Auth_LockoutDesc" xml:space="preserve"><value>Çok sayıda başarısız giriş denemesi tespit edildiği için bu hesap güvenlik amacıyla 15 dakika süreyle korumaya alınmıştır. Lütfen süre dolduktan sonra tekrar deneyiniz.</value></data>
+
+  <data name="Error_Title" xml:space="preserve"><value>Bir Hata Oluştu</value></data>
+  <data name="Error_Heading" xml:space="preserve"><value>Beklenmeyen Bir Hata Oluştu</value></data>
+  <data name="Error_Desc" xml:space="preserve"><value>İsteğiniz işlenirken sunucu tarafında geçici bir aksaklık meydana geldi.</value></data>
+  <data name="Error_RequestId" xml:space="preserve"><value>İstek Kimliği (Request ID):</value></data>
+  <data name="Common_BackHome" xml:space="preserve"><value>✦ Ana Sayfaya Dön</value></data>
+  <data name="Common_BrowseProjects" xml:space="preserve"><value>Projeleri İncele</value></data>
+
+  <data name="Games_Easy" xml:space="preserve"><value>Kolay</value></data>
+  <data name="Games_Medium" xml:space="preserve"><value>Orta</value></data>
+  <data name="Games_Hard" xml:space="preserve"><value>Zor</value></data>
+  <data name="Games_Impossible" xml:space="preserve"><value>İmkansız</value></data>
+  <data name="Games_TopList" xml:space="preserve"><value>Oyun Bazlı Top-List</value></data>
+  <data name="Games_GlobalTierList" xml:space="preserve"><value>Genel Top Tier List</value></data>
+  <data name="Games_GuestWarning" xml:space="preserve"><value>Misafir oturumundasınız; skorlarınızın kaydedilmesi için giriş yapınız.</value></data>
+  <data name="Games_Notes" xml:space="preserve"><value>Not Modu</value></data>
+  <data name="Games_Undo" xml:space="preserve"><value>Geri Al</value></data>
+  <data name="Games_Mistakes" xml:space="preserve"><value>Hata</value></data>
+  <data name="Games_Time" xml:space="preserve"><value>Süre</value></data>
+</root>

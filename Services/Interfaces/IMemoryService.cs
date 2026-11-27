@@ -19,6 +19,6 @@ public interface IMemoryService
     Task<Memory?> GetByIdAsync(int id);
     Task AddPendingMemoryAsync(string description, IFormFile file, string ipAddress);
     Task<bool> ApproveAsync(int id);
-    Task<bool> DeleteAsync(int id);
+    Task<bool> DeleteAsync(int id, string? deletedBy = null);
     Task<(int pendingCount, int approvedCount)> GetCountsAsync();
 }

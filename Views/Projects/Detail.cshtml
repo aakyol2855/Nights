@@ -1,106 +1,223 @@
 @model Nights.Models.ViewModels.ProjectDetailViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
     ViewData["Title"] = Model.Project.Title + " - Canlı Demo & Rehber";
+    var isDockerDemo = Model.Project.IsDemoEnabled && !string.IsNullOrWhiteSpace(Model.Project.DockerImageName);
+    var isAdmin = User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
+    var turnstileSiteKey = Configuration["CloudflareTurnstile:SiteKey"] ?? "1x00000000000000000000AA";
 }
 
-<div style="max-width: 1200px; margin: 0 auto;">
-    <div style="margin-bottom: 1.75rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+<div style="max-width: 1400px; margin: 1.5rem auto 3.5rem;">
+    <!-- Üst Başlık & Butonlar -->
+    <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div>
-            <a asp-area="" asp-action="Index" style="font-size: 0.92rem; color: var(--accent-gold); font-weight: 500;">&larr; Projelere Dön</a>
-            <h1 style="font-size: 2rem; color: var(--accent-sapphire); margin-top: 0.4rem;">@Model.Project.Title</h1>
-            <p style="color: var(--text-muted); font-size: 1rem;">@Model.Project.Summary</p>
+            <a asp-area="" asp-action="Index" style="font-size: 0.92rem; color: var(--gold-bright); font-weight: 500;">&larr; Tüm Projelere Dön</a>
+            <h1 style="font-family: var(--font-serif); font-size: 2.4rem; color: var(--text-white); margin-top: 0.35rem;">@Model.Project.Title</h1>
+            <p style="color: var(--text-muted); font-size: 1rem; max-width: 750px;">@Model.Project.Summary</p>
         </div>
 
-        <div style="display: flex; gap: 0.75rem;">
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
             @if (!string.IsNullOrEmpty(Model.Project.GitHubUrl))
             {
                 <a href="@Model.Project.GitHubUrl" target="_blank" rel="noopener noreferrer" class="btn-ottoman-outline">
-                    GitHub Kaynak Kodu
+                    GitHub Kaynak Kodu &nearr;
                 </a>
             }
-            @if (!string.IsNullOrEmpty(Model.Project.LiveDemoUrl))
+            @if (isDockerDemo)
             {
-                <a href="@Model.Project.LiveDemoUrl" target="_blank" rel="noopener noreferrer" class="btn-ottoman">
+                <a id="demoOpenNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn-divan-primary" style="display: none;">
+                    Yeni Sekmede Aç &nearr;
+                </a>
+            }
+            else if (!string.IsNullOrEmpty(Model.Project.LiveDemoUrl))
+            {
+                <a href="@Model.Project.LiveDemoUrl" target="_blank" rel="noopener noreferrer" class="btn-divan-primary">
                     Yeni Sekmede Aç &nearr;
                 </a>
             }
         </div>
     </div>
 
-    <div class="ottoman-divider">
-        <div class="ottoman-divider-crest">
-            <span>✦</span> ۞ <span>✦</span>
-        </div>
-    </div>
+    <!-- Canlı Ekran & Rehber Düzeni (Grid) -->
+    <div class="divan-project-detail-grid">
+        
+        <!-- Sol: Canlı Demo Ekranı (On-Demand Docker veya Harici iFrame) -->
+        <div class="divan-corner-box" style="padding: 0; overflow: hidden; border-radius: var(--radius-sm);"
+             @(isDockerDemo ? Html.Raw($"id=\"divanDemoStage\" data-project-id=\"{Model.Project.Id}\" data-is-admin=\"{(isAdmin ? "true" : "false")}\"") : null)>
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
 
-    <div class="showcase-container">
-        <!-- Sol: Canlı Demo Ekranı (iFrame / Container) -->
-        <div class="demo-screen-box">
-            <div class="demo-screen-header">
+            <!-- Üst Durum Çubuğu -->
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(7, 12, 19, 0.95); padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--gold-border); flex-wrap: wrap; gap: 0.5rem;">
                 <div style="display: flex; align-items: center; gap: 0.6rem;">
-                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #22c55e;"></span>
-                    <span style="font-weight: 600;">Canlı Ortam: @Model.Project.BadgeText</span>
+                    <span id="demoStatusDot" style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: @(isDockerDemo ? "#C5A059" : "#2ecc71"); box-shadow: 0 0 8px @(isDockerDemo ? "rgba(197,160,89,0.5)" : "#2ecc71");"></span>
+                    <span id="demoStatusText" style="font-size: 0.85rem; font-weight: 600; color: #FFFFFF;">
+                        @(isDockerDemo ? L["Detail_OnDemandSleep"].Value : $"{L["Detail_LiveEnv"].Value}: {Model.Project.BadgeText}")
+                    </span>
+                    <span id="demoIdleTimer" class="badge-ottoman" style="display: none; font-size: 0.72rem; padding: 0.15rem 0.55rem;">
+                        @L["Detail_SleepLabel"] <span>15:00</span>
+                    </span>
                 </div>
                 <div style="display: flex; gap: 0.5rem;">
-                    <button class="btn-ottoman-outline" data-demo-reload style="min-height: 32px; padding: 0.2rem 0.6rem; color: #fff; border-color: rgba(255,255,255,0.3); font-size: 0.8rem;">
-                        Yenile
-                    </button>
-                    <button class="btn-ottoman-outline" data-demo-fullscreen style="min-height: 32px; padding: 0.2rem 0.6rem; color: #fff; border-color: rgba(255,255,255,0.3); font-size: 0.8rem;">
-                        Tam Ekran
-                    </button>
+                    @if (isDockerDemo)
+                    {
+                        <a id="demoOpenNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn-ottoman-outline" style="display: none; min-height: 28px; padding: 0.15rem 0.6rem; font-size: 0.78rem; align-items: center;">
+                            @L["Detail_OpenNewTab"]
+                        </a>
+                        <button type="button" id="demoReloadBtn" class="btn-ottoman-outline" style="display: none; min-height: 28px; padding: 0.15rem 0.6rem; font-size: 0.78rem;">
+                            @L["Detail_Reload"]
+                        </button>
+                        <button type="button" id="demoFullscreenBtn" class="btn-ottoman-outline" style="display: none; min-height: 28px; padding: 0.15rem 0.6rem; font-size: 0.78rem;">
+                            @L["Detail_Fullscreen"]
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn-ottoman-outline" data-demo-reload style="min-height: 28px; padding: 0.15rem 0.6rem; font-size: 0.78rem;">
+                            @L["Detail_Reload"]
+                        </button>
+                        <button type="button" class="btn-ottoman-outline" data-demo-fullscreen style="min-height: 28px; padding: 0.15rem 0.6rem; font-size: 0.78rem;">
+                            @L["Detail_Fullscreen"]
+                        </button>
+                    }
                 </div>
             </div>
 
-            @if (!string.IsNullOrEmpty(Model.Project.LiveDemoUrl))
+            @if (isDockerDemo)
             {
-                <iframe src="@Model.Project.LiveDemoUrl" class="demo-iframe" title="@Model.Project.Title" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+                <!-- 1. Başlatıcı Ekranı -->
+                <div id="demoLauncherState" style="min-height: 540px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.5rem 2rem; background: var(--bg-card);">
+                    <span style="font-size: 2.8rem; color: var(--gold-bright); margin-bottom: 0.6rem;">۞</span>
+                    <h3 style="font-family: var(--font-serif); font-size: 1.75rem; color: var(--text-white); margin-bottom: 0.6rem;">
+                        @L["Detail_LauncherTitle"]
+                    </h3>
+                    <p style="color: var(--text-muted); max-width: 480px; font-size: 0.94rem; line-height: 1.6; margin-bottom: 1.25rem;">
+                        @L["Detail_LauncherDesc"]
+                    </p>
+
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1.5rem;">
+                        <span class="badge-ottoman" style="font-size: 0.75rem;">@L["Detail_BadgeRam"]</span>
+                        <span class="badge-ottoman" style="font-size: 0.75rem;">@L["Detail_BadgeReadOnly"]</span>
+                        <span class="badge-ottoman" style="font-size: 0.75rem;">@L["Detail_BadgeSleep"]</span>
+                    </div>
+
+                    @if (!isAdmin)
+                    {
+                        <div style="margin-bottom: 1.35rem;">
+                            <div class="cf-turnstile" data-sitekey="@turnstileSiteKey" data-theme="dark"></div>
+                        </div>
+                    }
+
+                    <div id="demoErrorBox" style="display: none; width: 100%; max-width: 560px; margin-bottom: 1.25rem; padding: 0.85rem 1rem; background: rgba(231, 76, 60, 0.12); border: 1px solid var(--danger-rose); color: #ffb8b8; border-radius: var(--radius-sm); font-size: 0.82rem; white-space: pre-wrap; word-break: break-word; text-align: left; max-height: 220px; overflow-y: auto; font-family: monospace, sans-serif;"></div>
+
+                    <button type="button" id="launchDemoBtn" class="btn-divan-primary" style="padding: 0.9rem 2rem; font-size: 0.98rem;">
+                        <span>@L["Detail_LaunchBtn"]</span>
+                    </button>
+                </div>
+
+                <!-- 2. Osmanlı Temalı Yükleme Ekranı -->
+                <div id="demoLoadingState" style="display: none; min-height: 540px; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.5rem 2rem; background: var(--bg-card);">
+                    <div class="divan-demo-spinner">۞</div>
+                    <h3 style="font-family: var(--font-serif); font-size: 1.65rem; color: var(--gold-bright); margin-top: 1.25rem; margin-bottom: 0.5rem;">
+                        @L["Detail_LoadingTitle"]
+                    </h3>
+                    <p style="color: var(--text-muted); max-width: 440px; font-size: 0.92rem; line-height: 1.6;">
+                        @L["Detail_LoadingDesc"]
+                    </p>
+                </div>
+
+                <!-- 3. Başka Demo Aktif (Bekleme Ekranı) -->
+                <div id="demoBusyState" style="display: none; min-height: 540px; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.5rem 2rem; background: var(--bg-card);">
+                    <span style="font-size: 2.6rem; color: var(--gold-bright); margin-bottom: 0.75rem;">⏳</span>
+                    <h3 style="font-family: var(--font-serif); font-size: 1.65rem; color: var(--text-white); margin-bottom: 0.6rem;">
+                        @L["Detail_BusyTitle"]
+                    </h3>
+                    <p id="demoBusyMessage" style="color: var(--text-muted); max-width: 480px; font-size: 0.94rem; line-height: 1.6; margin-bottom: 1.25rem;"></p>
+                    <div class="badge-ottoman" style="font-size: 1rem; padding: 0.55rem 1.25rem;">
+                        @L["Detail_BusyRemaining"] <strong id="demoBusyCountdown" style="margin-left: 0.35rem;">--:--</strong>
+                    </div>
+                </div>
+
+                <!-- 4. Aktif Canlı Demo iFrame -->
+                <div id="demoIframeContainer" style="display: none;">
+                    <iframe id="liveDemoIframe" src="about:blank" class="demo-iframe" style="width: 100%; height: 620px; border: none; background: #fff;" title="@Model.Project.Title Canlı Demo" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+                </div>
+            }
+            else if (!string.IsNullOrEmpty(Model.Project.LiveDemoUrl))
+            {
+                <iframe src="@Model.Project.LiveDemoUrl" class="demo-iframe" style="width: 100%; height: 600px; border: none; background: #fff;" title="@Model.Project.Title" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
             }
             else
             {
-                <div style="height: 480px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #FAF7F0; text-align: center; padding: 2rem;">
-                    <span style="font-size: 2.5rem; color: var(--accent-gold); margin-bottom: 0.6rem;">۞</span>
-                    <h3 style="color: var(--accent-sapphire); margin-bottom: 0.4rem;">Canlı Demo URL Tanımlanmamış</h3>
+                <div style="height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; background: var(--bg-card);">
+                    <span style="font-size: 2.5rem; color: var(--gold-primary); margin-bottom: 0.6rem;">۞</span>
+                    <h3 style="color: var(--text-white); margin-bottom: 0.4rem; font-family: var(--font-serif); font-size: 1.4rem;">@L["Detail_NoDemoTitle"]</h3>
                     <p style="color: var(--text-muted); max-width: 420px; font-size: 0.92rem;">
-                        Bu proje yerel bir servis veya henüz dışarıya açılmamış bir container üzerinde çalışıyor olabilir. Lütfen sağ taraftaki kullanım kılavuzunu inceleyiniz.
+                        @L["Detail_NoDemoDesc"]
                     </p>
                 </div>
             }
         </div>
 
-        <!-- Sağ: Rehber / Öğretici & Test Senaryoları (Tutorials) -->
-        <div class="tutorial-panel ottoman-frame">
-            <span class="ottoman-corner corner-tr"></span>
-            <span class="ottoman-corner corner-br"></span>
+        <!-- Sağ: Rehber / Öğretici & Test Senaryoları (Markdown & Tutorials) -->
+        <div class="divan-corner-box ottoman-frame" style="padding: 1.75rem;">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
 
-            <h3 style="font-size: 1.2rem; color: var(--accent-sapphire); margin-bottom: 0.4rem;">
-                ✦ Nasıl Kullanılır / Test Rehberi
+            <h3 style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--gold-bright); margin-bottom: 0.4rem;">
+                @L["Detail_GuideTitle"]
             </h3>
-            <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.6rem;">
-                Projeyi deneyimlerken aşağıdaki adımları ve test senaryolarını takip edebilirsiniz.
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">
+                @L["Detail_GuideSubtitle"]
             </p>
 
-            @if (!Model.RenderedTutorials.Any())
+            @if (!string.IsNullOrWhiteSpace(Model.MarkdownGuideHtml))
             {
-                <p style="color: var(--text-muted); font-size: 0.92rem; font-style: italic;">
-                    Bu proje için henüz rehber adımı eklenmemiş.
+                <div style="padding: 1.15rem; margin-bottom: 1.25rem; background: var(--bg-surface); border: 1px solid var(--gold-border); border-radius: var(--radius-sm); font-size: 0.9rem; color: var(--text-main); line-height: 1.65;">
+                    @Html.Raw(Model.MarkdownGuideHtml)
+                </div>
+            }
+
+            @if (!Model.RenderedTutorials.Any() && string.IsNullOrWhiteSpace(Model.MarkdownGuideHtml))
+            {
+                <p style="color: var(--text-muted); font-size: 0.9rem; font-style: italic;">
+                    @L["Detail_NoGuide"]
                 </p>
             }
-            else
+            else if (Model.RenderedTutorials.Any())
             {
-                @foreach (var tutorial in Model.RenderedTutorials)
-                {
-                    <div class="tutorial-step-card">
-                        <h4 class="tutorial-step-title">@tutorial.StepTitle</h4>
-                        <div class="tutorial-markdown-body">
-                            @Html.Raw(tutorial.ContentHtml)
+                <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                    @foreach (var tutorial in Model.RenderedTutorials)
+                    {
+                        <div style="padding: 1.15rem; background: var(--bg-surface); border: 1px solid var(--gold-border); border-radius: var(--radius-sm);">
+                            <span class="badge-ottoman" style="margin-bottom: 0.4rem; font-size: 0.75rem;">@L["Detail_Step"] #@tutorial.StepOrder</span>
+                            <h4 style="font-family: var(--font-serif); font-size: 1.15rem; color: var(--text-white); margin: 0.35rem 0 0.5rem;">@tutorial.StepTitle</h4>
+                            <div style="font-size: 0.88rem; color: var(--text-main); line-height: 1.6;">
+                                @Html.Raw(tutorial.ContentHtml)
+                            </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             }
         </div>
     </div>
 </div>
 
 @section Scripts {
-    <script src="~/js/projects.js" asp-append-version="true"></script>
+    @if (isDockerDemo && !isAdmin)
+    {
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    }
+    @if (isDockerDemo)
+    {
+        <script src="~/js/demo-launcher.js" asp-append-version="true"></script>
+    }
+    else
+    {
+        <script src="~/js/projects.js" asp-append-version="true"></script>
+    }
 }

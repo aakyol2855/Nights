@@ -22,7 +22,7 @@ public interface IProjectService
     Task<Project?> GetByIdAsync(int id);
     Task CreateProjectAsync(Project project);
     Task UpdateProjectAsync(Project project);
-    Task DeleteProjectAsync(int id);
+    Task DeleteProjectAsync(int id, string? deletedBy = null);
     Task AddTutorialStepAsync(ProjectTutorial tutorial);
     Task DeleteTutorialStepAsync(int tutorialId);
     Task<int> GetTotalCountAsync();

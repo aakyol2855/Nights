@@ -1,0 +1,333 @@
+/* ==========================================================================
+   DİVAN SUDOKU - 9x9 OSMANLI ESTETİKLİ ETKİLEŞİMLİ OYUN TAHTASI
+   ========================================================================== */
+
+.sudoku-play-grid {
+    display: grid;
+    grid-template-columns: minmax(310px, 560px) 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.sudoku-stage-card {
+    padding: 1.5rem;
+    border-radius: var(--radius-sm);
+    position: relative;
+}
+
+/* Zorluk Seçici Üst Şerit */
+.sudoku-diff-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-bottom: 1rem;
+    justify-content: center;
+}
+
+.sudoku-diff-btn {
+    padding: 0.42rem 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gold-border);
+    background: var(--bg-surface);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.sudoku-diff-btn:hover {
+    border-color: var(--gold-bright);
+    color: var(--gold-bright);
+}
+
+.sudoku-diff-btn.active {
+    background: linear-gradient(135deg, #163E33 0%, #0E2922 100%);
+    color: #FFFFFF;
+    border-color: var(--gold-primary);
+    box-shadow: 0 0 12px var(--gold-glow);
+}
+
+/* Üst Bilgi Metrikleri (Hata, Puan, Kronometre) */
+.sudoku-hud {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+}
+
+.sudoku-hud-item {
+    background: var(--bg-surface);
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+}
+
+.sudoku-hud-label {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.sudoku-hud-value {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-white);
+}
+
+/* 9x9 Izgara */
+.sudoku-board-wrap {
+    width: 100%;
+    max-width: 486px;
+    margin: 0 auto 1.15rem;
+    aspect-ratio: 1 / 1;
+    border: 2.5px solid var(--gold-primary);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-input);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35), 0 0 14px var(--gold-glow);
+}
+
+.sudoku-board {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    width: 100%;
+    height: 100%;
+    user-select: none;
+}
+
+.sudoku-cell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(197, 160, 89, 0.22);
+    border-bottom: 1px solid rgba(197, 160, 89, 0.22);
+    font-family: var(--font-serif);
+    font-size: clamp(1.2rem, 3.2vw, 1.65rem);
+    font-weight: 600;
+    color: var(--text-white);
+    cursor: pointer;
+    transition: background-color 0.14s ease, color 0.14s ease;
+    outline: none;
+}
+
+/* 3x3 Alt Blok Kalın Altın Çizgileri */
+.sudoku-cell[data-col="2"],
+.sudoku-cell[data-col="5"] {
+    border-right: 2.5px solid var(--gold-primary);
+}
+
+.sudoku-cell[data-row="2"],
+.sudoku-cell[data-row="5"] {
+    border-bottom: 2.5px solid var(--gold-primary);
+}
+
+.sudoku-cell[data-col="8"] {
+    border-right: none;
+}
+
+.sudoku-cell[data-row="8"] {
+    border-bottom: none;
+}
+
+/* Sabit (İpucu) ve Kullanıcı Hücreleri */
+.sudoku-cell.is-given {
+    background: rgba(197, 160, 89, 0.05);
+    color: var(--text-white);
+    font-weight: 700;
+}
+
+.sudoku-cell.is-user {
+    color: var(--gold-bright);
+    font-weight: 700;
+}
+
+[data-theme="light"] .sudoku-cell.is-user {
+    color: #165242;
+}
+
+/* Satır / Sütun / 3x3 Blok Aydınlatması */
+.sudoku-cell.is-peer {
+    background: rgba(197, 160, 89, 0.11);
+}
+
+/* Aynı Rakam Aydınlatması */
+.sudoku-cell.is-same-digit {
+    background: rgba(46, 204, 113, 0.20);
+}
+
+/* Seçili Hücre */
+.sudoku-cell.is-selected {
+    background: rgba(247, 214, 136, 0.28) !important;
+    box-shadow: inset 0 0 0 2px var(--gold-bright);
+}
+
+[data-theme="light"] .sudoku-cell.is-selected {
+    background: rgba(197, 160, 89, 0.32) !important;
+    box-shadow: inset 0 0 0 2px var(--gold-primary);
+}
+
+/* Hatalı Giriş Vurgusu */
+.sudoku-cell.is-error {
+    background: rgba(255, 90, 95, 0.25) !important;
+    color: var(--danger-rose) !important;
+    animation: sudokuShake 0.28s ease;
+}
+
+@keyframes sudokuShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+}
+
+/* Kalem / Not Modu 3x3 Mini Aday Rakamlar */
+.sudoku-notes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 100%;
+    height: 100%;
+    padding: 2px;
+    pointer-events: none;
+}
+
+.sudoku-note-digit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-size: clamp(0.52rem, 1.3vw, 0.68rem);
+    font-weight: 600;
+    color: var(--text-muted);
+    line-height: 1;
+}
+
+/* Araç Çubuğu (Kalem, Geri Al, Sil, Yeni Tahta) */
+.sudoku-tools {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    max-width: 486px;
+    margin: 0 auto 0.85rem;
+}
+
+.sudoku-tool-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    padding: 0.5rem 0.35rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gold-border);
+    background: var(--bg-surface);
+    color: var(--text-main);
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.sudoku-tool-btn:hover {
+    border-color: var(--gold-bright);
+    color: var(--gold-bright);
+}
+
+.sudoku-tool-btn.is-active {
+    background: rgba(18, 51, 42, 0.85);
+    border-color: var(--emerald-bright);
+    color: #FFFFFF;
+}
+
+/* 1-9 Rakam Tuş Takımı */
+.sudoku-numpad {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 0.4rem;
+    max-width: 486px;
+    margin: 0 auto;
+}
+
+.sudoku-num-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.15rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gold-border);
+    background: var(--bg-surface);
+    color: var(--gold-bright);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.sudoku-num-btn .num-main {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.sudoku-num-btn .num-rem {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.sudoku-num-btn:hover:not(:disabled) {
+    background: rgba(197, 160, 89, 0.18);
+    border-color: var(--gold-bright);
+    transform: translateY(-2px);
+}
+
+.sudoku-num-btn.is-completed,
+.sudoku-num-btn:disabled {
+    opacity: 0.32;
+    cursor: default;
+}
+
+/* Oyun Sonu (Zafer & Skor Kayıt) Modalı */
+.sudoku-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 9, 15, 0.82);
+    backdrop-filter: blur(6px);
+    z-index: 2500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+}
+
+.sudoku-modal-backdrop.show {
+    display: flex;
+}
+
+.sudoku-modal-card {
+    width: 100%;
+    max-width: 480px;
+    padding: 2rem 1.85rem;
+    text-align: center;
+}
+
+@media (max-width: 992px) {
+    .sudoku-play-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .sudoku-stage-card {
+        padding: 1rem 0.75rem;
+    }
+    .sudoku-tools {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

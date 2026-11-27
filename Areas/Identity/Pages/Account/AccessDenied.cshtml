@@ -1,0 +1,32 @@
+@page
+@model Nights.Areas.Identity.Pages.Account.AccessDeniedModel
+@{
+    ViewData["Title"] = "Yetkisiz Erişim";
+}
+
+<div class="divan-auth-wrapper">
+    <div class="divan-auth-card divan-corner-box ottoman-frame" style="text-align: center;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
+
+        <span style="font-size: 3rem; color: var(--gold-primary); display: block; margin-bottom: 0.75rem;">۞</span>
+        <span class="badge-ottoman" style="border-color: var(--danger-rose); color: var(--danger-rose); margin-bottom: 0.75rem;">
+            <span>✦</span> ERİŞİM REDDEDİLDİ <span>✦</span>
+        </span>
+        <h1 class="divan-auth-title">Bu Alana Erişim Yetkiniz Yok</h1>
+        <p class="divan-auth-subtitle" style="margin-bottom: 1.75rem;">
+            Talep ettiğiniz makam veya sayfa için gerekli yetki beratına sahip değilsiniz.
+        </p>
+
+        <div style="display: flex; gap: 0.85rem; justify-content: center; flex-wrap: wrap;">
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="btn-divan-primary">
+                <span>✦ Ana Sayfaya Dön</span>
+            </a>
+            <a asp-area="" asp-controller="Projects" asp-action="Index" class="btn-ottoman-outline">
+                <span>Projeleri İncele</span>
+            </a>
+        </div>
+    </div>
+</div>

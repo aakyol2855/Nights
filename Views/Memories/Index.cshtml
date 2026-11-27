@@ -1,55 +1,58 @@
 @model IEnumerable<Nights.Models.Entities.Memory>
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
-    ViewData["Title"] = "Hatıra Defteri & Anılar";
+    ViewData["Title"] = L["Memories_PageTitle"];
     var turnstileSiteKey = Configuration["CloudflareTurnstile:SiteKey"] ?? "1x00000000000000000000AA";
 }
 
-<div style="max-width: 950px; margin: 0 auto;">
-    <div style="text-align: center; margin-bottom: 2.25rem;">
+<div style="max-width: 1000px; margin: 1.5rem auto 3.5rem;">
+    <!-- Başlık Bölümü -->
+    <div style="text-align: center; margin-bottom: 2.5rem;">
         <span class="badge-ottoman">
-            <span>۞</span> Yâd-ı Cemîl <span>۞</span>
+            <span>۞</span> @L["Memories_Badge"] <span>۞</span>
         </span>
-        <h1 style="font-size: 2.1rem; color: var(--accent-sapphire); margin: 0.6rem 0;">Ziyaretçi Hatıraları</h1>
-        <p style="color: var(--text-muted); font-size: 1.05rem;">
-            Ziyaretinizden geriye hoş bir sadâ bırakmak için fotoğraf ve birkaç cümlelik not ekleyebilirsiniz.
+        <h1 class="divan-page-title">
+            @L["Memories_Heading"]
+        </h1>
+        <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto;">
+            @L["Memories_Subtitle"]
         </p>
     </div>
 
-    <!-- Hatıra Bırakma Kutusu (Osmanlı Köşe Tezhipli) -->
-    <div class="ottoman-frame upload-box">
-        <span class="ottoman-corner corner-tl"></span>
-        <span class="ottoman-corner corner-tr"></span>
-        <span class="ottoman-corner corner-bl"></span>
-        <span class="ottoman-corner corner-br"></span>
+    <!-- Hatıra Bırakma Kutusu (Divan Koyu Tezhip Cam) -->
+    <div class="divan-corner-box ottoman-frame" style="padding: 2.25rem; margin-bottom: 3rem;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
 
-        <h3 style="color: var(--accent-sapphire); margin-bottom: 0.4rem; font-size: 1.25rem;">
-            ✦ Bir Hatıra Bırakın
+        <h3 style="font-family: var(--font-serif); color: var(--gold-bright); margin-bottom: 0.4rem; font-size: 1.45rem;">
+            @L["Memories_FormTitle"]
         </h3>
         <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.5rem;">
-            Görseliniz güvenle WebP formatına dönüştürülecek, EXIF kodlarından arındırılacak ve yönetici onayının ardından burada yayınlanacaktır. (Maksimum 5MB)
+            @L["Memories_FormDesc"]
         </p>
 
         <form id="memoryUploadForm">
-            <div class="form-group">
-                <label for="memoryDescInput" class="form-label">Kısa Hatıra Notu (1-2 Cümle):</label>
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label for="memoryDescInput" class="form-label">@L["Memories_NoteLabel"]</label>
                 <input type="text" id="memoryDescInput" class="form-control" maxlength="280" required
-                       placeholder="Örn: Bu güzel günü ve hoş sohbeti unutmayacağım..." />
+                       placeholder="@L["Memories_NotePlaceholder"]" />
             </div>
 
-            <div class="form-group">
-                <label for="memoryFileInput" class="form-label">Fotoğraf (JPG, PNG veya WebP):</label>
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="memoryFileInput" class="form-label">@L["Memories_PhotoLabel"]</label>
                 <input type="file" id="memoryFileInput" class="form-control" accept="image/jpeg,image/png,image/webp" required />
             </div>
 
             <!-- Cloudflare Turnstile Bot Koruması -->
             <div style="margin: 1.25rem 0;">
-                <div class="cf-turnstile" data-sitekey="@turnstileSiteKey" data-theme="light"></div>
+                <div class="cf-turnstile" data-sitekey="@turnstileSiteKey" data-theme="dark"></div>
             </div>
 
             <div style="display: flex; justify-content: flex-end;">
-                <button type="submit" id="memorySubmitBtn" class="btn-ottoman">
-                    <span>✦ Hatırayı Kaydet</span>
+                <button type="submit" id="memorySubmitBtn" class="btn-divan-primary" style="cursor: pointer;">
+                    <span>@L["Memories_SubmitBtn"]</span>
                 </button>
             </div>
         </form>
@@ -61,38 +64,40 @@
         </div>
     </div>
 
-    <h2 style="font-size: 1.4rem; color: var(--accent-sapphire); margin-bottom: 1.75rem;">
-        Onaylanmış Hatıralar (@Model.Count())
+    <h2 style="font-family: var(--font-serif); font-size: 1.85rem; color: var(--text-white); margin-bottom: 1.75rem;">
+        @L["Memories_ApprovedHeading"] (@Model.Count())
     </h2>
 
     @if (!Model.Any())
     {
-        <div class="ottoman-frame" style="text-align: center; padding: 3rem 1.5rem;">
-            <span class="ottoman-mini-corner corner-tl"></span>
-            <span class="ottoman-mini-corner corner-tr"></span>
-            <span class="ottoman-mini-corner corner-bl"></span>
-            <span class="ottoman-mini-corner corner-br"></span>
-            <p style="color: var(--text-muted);">Henüz yayınlanmış bir anı bulunmuyor. İlk hatırayı yukarıdaki formdan siz bırakabilirsiniz!</p>
+        <div class="divan-corner-box ottoman-frame" style="text-align: center; padding: 3.5rem 1.5rem;">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">@L["Memories_Empty"]</p>
         </div>
     }
     else
     {
-        <div class="memories-grid">
+        <div class="memories-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
             @foreach (var memory in Model)
             {
-                <div class="memory-card">
-                    <span class="ottoman-mini-corner corner-tl"></span>
-                    <span class="ottoman-mini-corner corner-tr"></span>
+                <div class="divan-corner-box" style="padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+                    <span class="divan-corner c-tl"></span>
+                    <span class="divan-corner c-tr"></span>
+                    <span class="divan-corner c-bl"></span>
+                    <span class="divan-corner c-br"></span>
 
-                    <div class="memory-thumb-wrapper">
+                    <div style="width: 100%; height: 200px; overflow: hidden; border-radius: var(--radius-sm); border: 1px solid var(--gold-border); margin-bottom: 1rem;">
                         <img src="@Url.Action("Image", "Memories", new { f = memory.ImageFileName, area = "" })" 
-                             alt="Hatıra" class="memory-thumb" loading="lazy" />
+                             alt="@L["Memories_GuestMemory"]" style="width: 100%; height: 100%; object-fit: cover; transition: var(--transition-smooth);" loading="lazy" />
                     </div>
-                    <div class="memory-body">
-                        <p class="memory-caption">@memory.Description</p>
-                        <div class="memory-footer">
-                            <span>✦ Misafir Anısı</span>
-                            <time>@memory.CreatedAt.ToString("dd MMMM yyyy")</time>
+                    <div>
+                        <p style="font-size: 0.92rem; color: var(--text-white); line-height: 1.5; margin-bottom: 0.75rem;">@memory.Description</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; color: var(--gold-primary); border-top: 1px solid rgba(197, 160, 89, 0.18); padding-top: 0.5rem;">
+                            <span>@L["Memories_GuestMemory"]</span>
+                            <time>@memory.CreatedAt.ToString("dd MMMM yyyy", CultureInfo.CurrentUICulture)</time>
                         </div>
                     </div>
                 </div>

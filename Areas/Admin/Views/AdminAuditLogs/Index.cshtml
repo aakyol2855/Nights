@@ -1,0 +1,165 @@
+@model Nights.Services.Interfaces.AuditLogPagedResultDto
+@{
+    ViewData["Title"] = "Sistem & Güvenlik Günlüğü";
+    var filter = ViewBag.Filter as Nights.Services.Interfaces.AuditLogFilterDto ?? new Nights.Services.Interfaces.AuditLogFilterDto();
+}
+
+<div class="divan-container" style="padding: 2rem 1rem 4rem;">
+    <div style="margin-bottom: 1.5rem;">
+        <span class="badge-ottoman" style="margin-bottom: 0.45rem;">✦ Denetim &amp; Güvenlik İzleri</span>
+        <h2 style="font-family: var(--font-serif); font-size: 2rem; color: var(--text-white); margin: 0;">
+            Sistem Günlüğü
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.92rem; margin: 0.35rem 0 0;">
+            Toplam <strong>@Model.TotalCount</strong> kayıt bulundu. 60 günden eski kayıtlar donanım tasarrufu için otomatik budanır.
+        </p>
+    </div>
+
+    <!-- Filtre Formu -->
+    <div class="divan-corner-box" style="padding: 1.25rem; margin-bottom: 1.5rem;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
+
+        <form id="auditLogFilterForm" method="get" asp-area="Admin" asp-controller="AdminAuditLogs" asp-action="Index"
+              style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0.85rem; align-items: end;">
+            <div>
+                <label for="filterCategory" style="display: block; font-size: 0.78rem; color: var(--gold-bright); margin-bottom: 0.3rem;">Kategori</label>
+                <select id="filterCategory" name="category" class="form-control" style="width: 100%;">
+                    <option value="All">Tümü</option>
+                    @foreach (var cat in Model.AvailableCategories)
+                    {
+                        <option value="@cat" selected="@(string.Equals(filter.Category, cat, StringComparison.OrdinalIgnoreCase) ? "selected" : null)">@cat</option>
+                    }
+                </select>
+            </div>
+
+            <div>
+                <label for="filterLevel" style="display: block; font-size: 0.78rem; color: var(--gold-bright); margin-bottom: 0.3rem;">Seviye</label>
+                <select id="filterLevel" name="level" class="form-control" style="width: 100%;">
+                    <option value="All">Tümü</option>
+                    <option value="Information" selected="@(filter.LogLevel == "Information" ? "selected" : null)">Information</option>
+                    <option value="Security" selected="@(filter.LogLevel == "Security" ? "selected" : null)">Security</option>
+                    <option value="Warning" selected="@(filter.LogLevel == "Warning" ? "selected" : null)">Warning</option>
+                    <option value="Error" selected="@(filter.LogLevel == "Error" ? "selected" : null)">Error</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="filterFromDate" style="display: block; font-size: 0.78rem; color: var(--gold-bright); margin-bottom: 0.3rem;">Başlangıç</label>
+                <input id="filterFromDate" name="fromDate" type="date" value="@(filter.FromDate?.ToString("yyyy-MM-dd"))" class="form-control" style="width: 100%;" />
+            </div>
+
+            <div>
+                <label for="filterToDate" style="display: block; font-size: 0.78rem; color: var(--gold-bright); margin-bottom: 0.3rem;">Bitiş</label>
+                <input id="filterToDate" name="toDate" type="date" value="@(filter.ToDate?.ToString("yyyy-MM-dd"))" class="form-control" style="width: 100%;" />
+            </div>
+
+            <div>
+                <label for="filterSearch" style="display: block; font-size: 0.78rem; color: var(--gold-bright); margin-bottom: 0.3rem;">Arama</label>
+                <input id="filterSearch" name="search" type="text" value="@filter.Search" placeholder="Kullanıcı, IP, açıklama..." class="form-control" style="width: 100%;" />
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+                <button type="submit" class="btn-divan-primary" style="flex: 1; padding: 0.55rem 0.9rem; font-size: 0.84rem;">Filtrele</button>
+                <a asp-area="Admin" asp-controller="AdminAuditLogs" asp-action="Index" class="btn-ottoman-outline" style="padding: 0.55rem 0.85rem; font-size: 0.84rem;">Sıfırla</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Log Tablosu -->
+    <div class="divan-corner-box" style="padding: 1.25rem; overflow-x: auto;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
+
+        @if (!Model.Items.Any())
+        {
+            <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+                Seçilen filtrelere uygun denetim kaydı bulunamadı.
+            </div>
+        }
+        else
+        {
+            <table style="width: 100%; border-collapse: collapse; min-width: 780px;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--gold-border); text-align: left; color: var(--gold-bright); font-size: 0.78rem; text-transform: uppercase;">
+                        <th style="padding: 0.7rem 0.55rem;">Zaman</th>
+                        <th style="padding: 0.7rem 0.55rem;">Kategori</th>
+                        <th style="padding: 0.7rem 0.55rem;">Seviye</th>
+                        <th style="padding: 0.7rem 0.55rem;">Kullanıcı / IP</th>
+                        <th style="padding: 0.7rem 0.55rem;">Özet Açıklama</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var log in Model.Items)
+                    {
+                        var levelColor = log.LogLevel switch
+                        {
+                            "Security" => "#F7D688",
+                            "Warning" => "#f39c12",
+                            "Error" => "var(--danger-rose)",
+                            _ => "#2ecc71"
+                        };
+                        <tr style="border-bottom: 1px solid rgba(197, 160, 89, 0.14); font-size: 0.86rem;">
+                            <td style="padding: 0.75rem 0.55rem; white-space: nowrap; color: var(--text-muted); font-family: monospace;">
+                                @log.TimestampUtc.ToLocalTime().ToString("dd.MM.yy HH:mm:ss")
+                            </td>
+                            <td style="padding: 0.75rem 0.55rem; white-space: nowrap;">
+                                <span class="badge-ottoman" style="font-size: 0.73rem;">@log.Category</span>
+                            </td>
+                            <td style="padding: 0.75rem 0.55rem; white-space: nowrap; font-weight: 600; color: @levelColor;">
+                                @log.LogLevel
+                            </td>
+                            <td style="padding: 0.75rem 0.55rem;">
+                                <div style="color: var(--text-white); font-weight: 500;">@log.Username</div>
+                                <div style="color: var(--text-muted); font-size: 0.75rem; font-family: monospace;">@log.IpAddress</div>
+                            </td>
+                            <td style="padding: 0.75rem 0.55rem; color: var(--text-main); line-height: 1.5;">
+                                @log.Summary
+                                @if (!string.IsNullOrWhiteSpace(log.TargetEntityType))
+                                {
+                                    <span style="color: var(--text-muted); font-size: 0.75rem; margin-left: 0.4rem;">[@log.TargetEntityType @(string.IsNullOrWhiteSpace(log.TargetEntityId) ? "" : $"#{log.TargetEntityId}")]</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <!-- Sayfalama -->
+            @if (Model.TotalPages > 1)
+            {
+                <div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 1.5rem; flex-wrap: wrap;">
+                    @if (Model.Page > 1)
+                    {
+                        <a class="btn-ottoman-outline" style="font-size: 0.82rem; padding: 0.35rem 0.8rem;"
+                           asp-area="Admin" asp-controller="AdminAuditLogs" asp-action="Index"
+                           asp-route-category="@filter.Category" asp-route-level="@filter.LogLevel"
+                           asp-route-search="@filter.Search"
+                           asp-route-fromDate="@(filter.FromDate?.ToString("yyyy-MM-dd"))"
+                           asp-route-toDate="@(filter.ToDate?.ToString("yyyy-MM-dd"))"
+                           asp-route-page="@(Model.Page - 1)">← Önceki</a>
+                    }
+
+                    <span style="color: var(--text-muted); font-size: 0.85rem; padding: 0 0.65rem;">
+                        Sayfa <strong style="color: var(--gold-bright);">@Model.Page</strong> / @Model.TotalPages
+                    </span>
+
+                    @if (Model.Page < Model.TotalPages)
+                    {
+                        <a class="btn-ottoman-outline" style="font-size: 0.82rem; padding: 0.35rem 0.8rem;"
+                           asp-area="Admin" asp-controller="AdminAuditLogs" asp-action="Index"
+                           asp-route-category="@filter.Category" asp-route-level="@filter.LogLevel"
+                           asp-route-search="@filter.Search"
+                           asp-route-fromDate="@(filter.FromDate?.ToString("yyyy-MM-dd"))"
+                           asp-route-toDate="@(filter.ToDate?.ToString("yyyy-MM-dd"))"
+                           asp-route-page="@(Model.Page + 1)">Sonraki →</a>
+                    }
+                </div>
+            }
+        }
+    </div>
+</div>

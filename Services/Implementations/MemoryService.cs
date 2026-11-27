@@ -141,16 +141,19 @@ public class MemoryService : IMemoryService
 
     /// <inheritdoc/>
     /// <remarks>
-    /// Hard-delete: Görsel dosyası da fiziksel olarak kaldırılır.
-    /// Anılar için soft-delete uygulanmaz; onay bekleyen reddetmede dosya da silinmeli.
+    /// Soft-delete: Anı Çöp Kutusu'na taşınır (IsDeleted = true) ve fiziksel görsel dosyası
+    /// uploads/trash/ karantina dizinine aktarılır. 30 gün içinde geri getirilebilir.
     /// </remarks>
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, string? deletedBy = null)
     {
         var memory = await _context.Memories.FindAsync(id);
         if (memory == null) return false;
 
-        _imageService.DeleteImage(memory.ImageFileName, isPending: !memory.IsApproved);
-        _context.Memories.Remove(memory);
+        _imageService.MoveToTrash(memory.ImageFileName, isPending: !memory.IsApproved);
+
+        memory.IsDeleted = true;
+        memory.DeletedAtUtc = DateTime.UtcNow;
+        memory.DeletedBy = string.IsNullOrWhiteSpace(deletedBy) ? "Admin" : deletedBy;
         await _context.SaveChangesAsync();
 
         if (memory.IsApproved)
@@ -158,7 +161,7 @@ public class MemoryService : IMemoryService
             _cache.Remove(ApprovedMemoriesCacheKey);
         }
 
-        _logger.LogInformation("[MemoryService] Anı ve görsel silindi. MemoryId={Id}", id);
+        _logger.LogInformation("[MemoryService] Anı çöp kutusuna taşındı. MemoryId={Id}, DeletedBy={User}", id, memory.DeletedBy);
         return true;
     }
 

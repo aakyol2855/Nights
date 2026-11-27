@@ -1,0 +1,245 @@
+/* ==========================================================================
+   DİVAN OYUNHANE - VİTRİN, LİDERLİK TABLOSU VE GENEL TOP-TIER LIST STİLLERİ
+   ========================================================================== */
+
+.oyunhane-container {
+    max-width: 1380px;
+    margin: 1.5rem auto 3.5rem;
+}
+
+.oyunhane-layout-grid {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    gap: 1.85rem;
+    align-items: start;
+}
+
+.oyunhane-games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 1.5rem;
+}
+
+.oyunhane-game-card {
+    padding: 1.85rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 290px;
+    background: var(--bg-card);
+}
+
+.oyunhane-game-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gold-border);
+    background: rgba(197, 160, 89, 0.12);
+    color: var(--gold-bright);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.oyunhane-diff-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 1rem 0 1.35rem;
+}
+
+.oyunhane-diff-tag {
+    font-size: 0.74rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    background: rgba(197, 160, 89, 0.10);
+    border: 1px solid var(--gold-border);
+    color: var(--gold-bright);
+    font-weight: 500;
+}
+
+/* Genel Top Tier List & Oyun Bazlı Liderlik Tablosu */
+.tier-panel {
+    padding: 1.75rem;
+    border-radius: var(--radius-sm);
+}
+
+.tier-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 0.85rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--gold-border);
+}
+
+.tier-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.tier-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+    border: 1px solid rgba(197, 160, 89, 0.20);
+    transition: var(--transition-smooth);
+}
+
+.tier-row:hover {
+    border-color: var(--gold-bright);
+}
+
+.tier-row.is-top-1 {
+    background: linear-gradient(90deg, rgba(197, 160, 89, 0.20) 0%, var(--bg-surface) 100%);
+    border-color: var(--gold-primary);
+}
+
+.tier-row.is-top-2 {
+    background: linear-gradient(90deg, rgba(197, 160, 89, 0.12) 0%, var(--bg-surface) 100%);
+}
+
+.tier-row.is-top-3 {
+    background: linear-gradient(90deg, rgba(197, 160, 89, 0.08) 0%, var(--bg-surface) 100%);
+}
+
+.tier-row.is-current-player {
+    box-shadow: 0 0 0 1px var(--emerald-bright), 0 0 12px rgba(46, 204, 113, 0.2);
+}
+
+.tier-rank-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.82rem;
+    border: 1px solid var(--gold-border);
+    color: var(--gold-bright);
+    background: rgba(197, 160, 89, 0.12);
+    flex-shrink: 0;
+}
+
+.tier-row.is-top-1 .tier-rank-badge {
+    background: var(--gold-primary);
+    color: #080D14;
+    border-color: var(--gold-bright);
+}
+
+.tier-player-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.tier-player-name {
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--text-white);
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+}
+
+.tier-player-sub {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    margin-top: 0.1rem;
+}
+
+.tier-points-box {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.tier-points-val {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--gold-bright);
+    line-height: 1.1;
+}
+
+.tier-points-lbl {
+    font-size: 0.68rem;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.guest-pill {
+    font-size: 0.68rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 10px;
+    border: 1px dashed var(--gold-primary);
+    color: var(--gold-bright);
+    font-weight: 500;
+}
+
+/* Misafir Oturumu Bilgilendirme Notu */
+.divan-guest-notice {
+    margin-top: 1.2rem;
+    padding: 0.95rem 1.1rem;
+    border-radius: var(--radius-sm);
+    border: 1px dashed var(--gold-border);
+    background: rgba(197, 160, 89, 0.07);
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+}
+
+.divan-guest-notice strong {
+    color: var(--gold-bright);
+}
+
+/* Zorluk Filtre Sekmeleri */
+.leaderboard-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+}
+
+.leaderboard-tab {
+    padding: 0.32rem 0.7rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gold-border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.leaderboard-tab:hover {
+    color: var(--gold-bright);
+    border-color: var(--gold-bright);
+}
+
+.leaderboard-tab.active {
+    background: rgba(18, 51, 42, 0.75);
+    color: #FFFFFF;
+    border-color: var(--gold-primary);
+}
+
+[data-theme="light"] .leaderboard-tab.active {
+    background: var(--emerald-accent);
+    color: #FFFFFF;
+}
+
+@media (max-width: 1024px) {
+    .oyunhane-layout-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,47 +1,202 @@
+@inject Nights.Services.Interfaces.ISettingService SettingService
+@{
+    var adminSettings = await SettingService.GetSettingsAsync();
+}
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="dark">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Yönetim Paneli</title>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - Yönetim Paneli | @adminSettings.LogoText</title>
+    
+    <!-- Sayfa Yüklenirken Tema Flaşını Önleyen Hızlı Betik -->
+    <script>
+        (function() {
+            var saved = localStorage.getItem('divan-theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+
+    <!-- Divan Koyu / Aydınlık Çift Modlu Osmanlı Teması -->
+    <link rel="stylesheet" href="~/css/divan-theme.css" asp-append-version="true" />
+
+    <!-- Dinamik Arka Plan Yapılandırması (Admin Ayarları) -->
+    <style>
+        @if (string.Equals(adminSettings.BackgroundMode, "color", StringComparison.OrdinalIgnoreCase))
+        {
+            <text>
+            :root, [data-theme="dark"] {
+                --site-bg-display: none !important;
+                --hero-bg-display: none !important;
+                --bg-deep: @(string.IsNullOrWhiteSpace(adminSettings.DarkBackgroundColor) ? "#080D14" : adminSettings.DarkBackgroundColor) !important;
+            }
+            [data-theme="light"] {
+                --site-bg-display: none !important;
+                --hero-bg-display: none !important;
+                --bg-deep: @(string.IsNullOrWhiteSpace(adminSettings.LightBackgroundColor) ? "#F8F5EE" : adminSettings.LightBackgroundColor) !important;
+            }
+            body::after {
+                display: none !important;
+            }
+            </text>
+        }
+        else
+        {
+            var darkImg = !string.IsNullOrWhiteSpace(adminSettings.DarkBackgroundImageUrl) ? adminSettings.DarkBackgroundImageUrl : "/images/divan-hero-bg.jpg";
+            var lightImg = !string.IsNullOrWhiteSpace(adminSettings.LightBackgroundImageUrl) ? adminSettings.LightBackgroundImageUrl : darkImg;
+            var blurPx = adminSettings.BackgroundBlur + "px";
+            var opacityVal = adminSettings.BackgroundOpacity > 0 ? (adminSettings.BackgroundOpacity / 100.0).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) : "0.75";
+            var darkBrightness = (0.20 + (adminSettings.BackgroundOpacity / 100.0) * 0.70).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+            <text>
+            :root, [data-theme="dark"] {
+                --site-bg-image: url('@darkImg') !important;
+                --hero-bg-image: url('@darkImg') !important;
+                --site-bg-display: block !important;
+                --hero-bg-display: block !important;
+                --bg-body-filter: blur(@blurPx) brightness(@darkBrightness) saturate(1.1) !important;
+                --bg-body-vignette-opacity: @opacityVal;
+            }
+            [data-theme="light"] {
+                --site-bg-image: url('@lightImg') !important;
+                --hero-bg-image: url('@lightImg') !important;
+                --site-bg-display: block !important;
+                --hero-bg-display: block !important;
+                --bg-body-filter: blur(@blurPx) brightness(0.96) saturate(0.85) !important;
+                --bg-body-vignette-opacity: @opacityVal;
+            }
+            body::before {
+                opacity: @opacityVal !important;
+            }
+            </text>
+        }
+    </style>
 </head>
-<body style="background: #FAF7F0;">
+<body>
     @Html.AntiForgeryToken()
 
-    <header class="header-ottoman" style="border-bottom: 2px solid var(--accent-gold);">
-        <div class="header-container">
-            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="brand-link">
-                <span class="brand-crest">۞</span>
-                <span>Yönetim Paneli</span>
+    <header class="divan-nav">
+        <div class="divan-nav-inner">
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="divan-brand">
+                @if (!string.IsNullOrWhiteSpace(adminSettings.CustomLogoUrl))
+                {
+                    <img src="@adminSettings.CustomLogoUrl" alt="@adminSettings.LogoText" style="max-height: 44px; width: auto;" />
+                }
+                else
+                {
+                    <img src="~/images/tugra.svg" alt="Tuğra" />
+                }
+                <div class="divan-brand-text">
+                    <h1>@adminSettings.LogoText</h1>
+                    <span>YÖNETİM PANELİ</span>
+                </div>
             </a>
 
-            <ul class="nav-links">
-                <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="nav-link-item">Özet</a></li>
-                <li><a asp-area="Admin" asp-controller="AdminMemories" asp-action="Index" class="nav-link-item">Onay Bekleyen Anılar</a></li>
-                <li><a asp-area="Admin" asp-controller="AdminProjects" asp-action="Index" class="nav-link-item">Projeler &amp; Rehberler</a></li>
-                <li><a asp-area="Admin" asp-controller="AdminUsers" asp-action="Index" class="nav-link-item">Kullanıcı İzinleri</a></li>
-                <li><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link-item" target="_blank">Siteye Git &nearr;</a></li>
+            <!-- Mobil Menü Toggle Butonu -->
+            <button class="divan-mobile-toggle" data-divan-toggle aria-label="Menü">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <ul class="divan-menu">
                 <li>
-                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" style="display:inline;">
-                        <button type="submit" class="btn-danger-soft" style="min-height: 36px; padding: 0.3rem 0.8rem; font-size: 0.85rem;">Çıkış</button>
-                    </form>
+                    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" 
+                       class="divan-menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")">
+                        Özet
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="Admin" asp-controller="AdminMemories" asp-action="Index" 
+                       class="divan-menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminMemories" ? "active" : "")">
+                        Onay Bekleyen Anılar
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="Admin" asp-controller="AdminProjects" asp-action="Index" 
+                       class="divan-menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminProjects" ? "active" : "")">
+                        Projeler &amp; Rehberler
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="Admin" asp-controller="AdminUsers" asp-action="Index" 
+                       class="divan-menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminUsers" ? "active" : "")">
+                        Kullanıcılar
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="Admin" asp-controller="AdminTrash" asp-action="Index" 
+                       class="divan-menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminTrash" ? "active" : "")">
+                        Çöp Kutusu
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="Admin" asp-controller="AdminAuditLogs" asp-action="Index" 
+                       class="divan-menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminAuditLogs" ? "active" : "")">
+                        Sistem Günlüğü
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="Admin" asp-controller="AdminMaintenance" asp-action="Index" 
+                       class="divan-menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminMaintenance" ? "active" : "")">
+                        Veri Bakım
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="Admin" asp-controller="AdminSettings" asp-action="Index" 
+                       class="divan-menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "AdminSettings" ? "active" : "")" style="color: var(--gold-bright); font-weight: 600;">
+                        ✦ Ayarlar
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="divan-menu-link" target="_blank">
+                        Siteye Git &nearr;
+                    </a>
                 </li>
             </ul>
+
+            <div class="divan-nav-right">
+                <!-- Karanlık / Aydınlık Mod Toggle -->
+                <button type="button" id="themeToggleBtn" class="divan-theme-toggle" aria-label="Temayı Değiştir" title="Karanlık / Aydınlık Mod">
+                    <!-- Güneş (Karanlık Modda Görünür) -->
+                    <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <!-- Ay (Aydınlık Modda Görünür) -->
+                    <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+
+                <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" style="display:inline;">
+                    <button type="submit" class="btn-ottoman-outline" style="min-height: 36px; padding: 0.35rem 0.9rem; font-size: 0.85rem; border-color: var(--danger-rose); color: var(--danger-rose) !important;">
+                        Çıkış Yap
+                    </button>
+                </form>
+            </div>
         </div>
     </header>
 
-    <main class="site-main" style="max-width: 1200px;">
+    <main class="site-main divan-main-container" style="max-width: 1400px; margin: 2rem auto;">
         @if (TempData["SuccessMessage"] != null)
         {
-            <div style="background: #e6f4ea; color: #137333; padding: 1rem 1.25rem; border-radius: var(--radius-sm); border-left: 4px solid #137333; margin-bottom: 1.5rem;">
-                @TempData["SuccessMessage"]
+            <div style="background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid var(--emerald-border); padding: 1rem 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
+                ✓ @TempData["SuccessMessage"]
             </div>
         }
         @if (TempData["ErrorMessage"] != null)
         {
-            <div style="background: #fce8e6; color: #c5221f; padding: 1rem 1.25rem; border-radius: var(--radius-sm); border-left: 4px solid #c5221f; margin-bottom: 1.5rem;">
-                @TempData["ErrorMessage"]
+            <div style="background: rgba(217, 83, 79, 0.15); color: #ff6b6b; border: 1px solid var(--danger-rose); padding: 1rem 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
+                ✕ @TempData["ErrorMessage"]
             </div>
         }
 
@@ -51,7 +206,9 @@
     <div id="app-toast"></div>
 
     <script src="~/js/main.js" asp-append-version="true"></script>
+    <script src="~/js/divan-ui.js" asp-append-version="true"></script>
     <script src="~/js/admin.js" asp-append-version="true"></script>
+    <script src="~/js/admin-maintenance.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

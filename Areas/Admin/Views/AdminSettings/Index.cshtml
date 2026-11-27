@@ -1,0 +1,428 @@
+@model Nights.Models.Entities.SiteSetting
+@{
+    ViewData["Title"] = "Site Ayarları (Arka Plan, Logo, Sosyal Linkler & Alıntı)";
+    var availableLogos = ViewBag.AvailableLogos as List<string> ?? new List<string>();
+    var availableBackgrounds = ViewBag.AvailableBackgrounds as List<string> ?? new List<string>();
+}
+
+<div style="max-width: 950px; margin: 0 auto;">
+    <div style="margin-bottom: 2rem;">
+        <h1 style="font-size: 1.85rem; color: var(--gold-bright); margin-bottom: 0.35rem; font-family: var(--font-serif);">
+            ✦ Site Ayarları &amp; Kimlik Yönetimi
+        </h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Genel sitenin ve yönetim panelinin arka planını (görsel veya düz renk), logolarını, sosyal medya linklerini ve ana sayfa alıntı kartını buradan yönetebilirsiniz.
+        </p>
+    </div>
+
+    <div class="divan-corner-box ottoman-frame" style="padding: 2.5rem;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
+
+        <form asp-area="Admin" asp-controller="AdminSettings" asp-action="Index" method="post">
+            @Html.AntiForgeryToken()
+
+            <!-- 1. Arka Plan Yönetimi (Görsel veya Renk / Aydınlık - Karanlık Uyumlu) -->
+            <h3 style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--gold-bright); margin-bottom: 1.25rem; border-bottom: 1px solid var(--gold-border); padding-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                <span>1. Site Arka Planı (Aydınlık &amp; Karanlık Mod)</span>
+                <span class="badge-ottoman" style="font-size: 0.76rem;">Görsel veya Düz Renk</span>
+            </h3>
+
+            <!-- Mod Seçimi (Görsel mi Düz Renk mi?) -->
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label class="form-label">Arka Plan Tarzı:</label>
+                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--text-white);">
+                        <input type="radio" asp-for="BackgroundMode" value="image" id="bgModeImage" onchange="toggleBgMode('image')" style="accent-color: var(--gold-primary);" />
+                        <span>Arka Plan Görseli Kullan (Önerilen)</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--text-white);">
+                        <input type="radio" asp-for="BackgroundMode" value="color" id="bgModeColor" onchange="toggleBgMode('color')" style="accent-color: var(--gold-primary);" />
+                        <span>Yalnızca Düz Renk Kullan (Minimal)</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Görsel Bilgilendirme ve Ölçü Kutusu -->
+            <div style="background: rgba(197, 160, 89, 0.08); border-left: 3px solid var(--gold-primary); padding: 0.85rem 1.15rem; border-radius: var(--radius-sm); margin-bottom: 1.75rem; font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;">
+                <strong style="color: var(--gold-bright);">💡 Görsel Ekleme &amp; Ölçü Tavsiyeleri:</strong><br />
+                Arka plan görselleri için tavsiye edilen çözünürlük <strong>1920&times;1080px</strong> veya <strong>2560&times;1440px</strong> (16:9 oranında), yatay (landscape) formattır. Görsellerinizi <code>wwwroot/images/</code> dizinine eklediğinizde aşağıdaki listede otomatik olarak belirecektir.
+            </div>
+
+            <!-- Arka Plan Görseli Seçenekleri -->
+            <div id="bgImageSection" style="display: @(string.Equals(Model.BackgroundMode, "color", StringComparison.OrdinalIgnoreCase) ? "none" : "block"); margin-bottom: 2rem;">
+                <label class="form-label" style="margin-bottom: 0.75rem; display: block;">
+                    ✦ Mevcut Görsellerden Seçim (Galeriden Hızlı Seçim):
+                </label>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+                    <!-- Varsayılan Boğaz/Ayasofya Silüeti -->
+                    <div class="bg-select-card @(string.IsNullOrWhiteSpace(Model.DarkBackgroundImageUrl) || Model.DarkBackgroundImageUrl == "/images/divan-hero-bg.jpg" ? "selected" : "")" 
+                         style="border: 1px solid var(--gold-border); border-radius: var(--radius-sm); padding: 0.75rem; background: var(--bg-surface); cursor: pointer; transition: var(--transition-smooth);"
+                         onclick="selectBgImage('/images/divan-hero-bg.jpg')">
+                        <div style="height: 95px; width: 100%; border-radius: 3px; overflow: hidden; margin-bottom: 0.5rem; border: 1px solid rgba(197, 160, 89, 0.2);">
+                            <img src="/images/divan-hero-bg.jpg" alt="Varsayılan Divan Görseli" style="width: 100%; height: 100%; object-fit: cover;" />
+                        </div>
+                        <span style="font-size: 0.82rem; font-weight: 600; color: var(--gold-bright); display: block; text-align: center;">Varsayılan (Boğaz &amp; Gece)</span>
+                    </div>
+
+                    @foreach (var bgName in availableBackgrounds)
+                    {
+                        var bgUrl = "/images/" + bgName;
+                        if (bgName.Equals("divan-hero-bg.jpg", StringComparison.OrdinalIgnoreCase)) { continue; }
+                        var isSel = string.Equals(Model.DarkBackgroundImageUrl, bgUrl, StringComparison.OrdinalIgnoreCase);
+                        <div class="bg-select-card @(isSel ? "selected" : "")" 
+                             style="border: 1px solid var(--gold-border); border-radius: var(--radius-sm); padding: 0.75rem; background: var(--bg-surface); cursor: pointer; transition: var(--transition-smooth);"
+                             onclick="selectBgImage('@bgUrl')">
+                            <div style="height: 95px; width: 100%; border-radius: 3px; overflow: hidden; margin-bottom: 0.5rem; border: 1px solid rgba(197, 160, 89, 0.2);">
+                                <img src="@bgUrl" alt="@bgName" style="width: 100%; height: 100%; object-fit: cover;" />
+                            </div>
+                            <span style="font-size: 0.8rem; color: var(--text-main); display: block; text-align: center; word-break: break-all;">
+                                @(bgName.Length > 22 ? bgName.Substring(0, 20) + "..." : bgName)
+                            </span>
+                        </div>
+                    }
+                </div>
+
+                <div class="divan-form-row-2" style="margin-bottom: 1.5rem;">
+                    <div class="form-group">
+                        <label asp-for="DarkBackgroundImageUrl" class="form-label">Karanlık Mod Görsel URL'si:</label>
+                        <input asp-for="DarkBackgroundImageUrl" id="darkBgInput" class="form-control" placeholder="Örn: /images/divan-hero-bg.jpg veya dış link" oninput="updateLivePreview()" />
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">Boş bırakılırsa varsayılan gece Boğaz görseli kullanılır.</span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LightBackgroundImageUrl" class="form-label">Aydınlık Mod Görsel URL'si (Opsiyonel):</label>
+                        <input asp-for="LightBackgroundImageUrl" id="lightBgInput" class="form-control" placeholder="Örn: /images/aydinlik-bg.jpg (Boşsa karanlık moddaki kullanılır)" oninput="updateLivePreview()" />
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">Aydınlık temada farklı ve daha aydınlık bir görsel kullanmak isterseniz giriniz.</span>
+                    </div>
+                </div>
+
+                <!-- Arka Plan Bulanıklığı (Blur) & Canlı Demo Önizleme -->
+                <div style="background: var(--bg-surface); border: 1px solid var(--gold-border); border-radius: var(--radius-sm); padding: 1.5rem; margin-top: 1.25rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <div>
+                            <label asp-for="BackgroundBlur" class="form-label" style="margin-bottom: 0.2rem; font-size: 1rem; color: var(--gold-bright);">
+                                ✦ Arka Plan Bulanıklık Derecesi (Blur): <strong id="blurValueDisplay" style="color: var(--text-white);">@Model.BackgroundBlur px</strong>
+                            </label>
+                            <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">
+                                0px (Tam net) ile 25px (Yoğun puslu/blurlu) arasında ayarlayabilirsiniz. Önerilen: 6px - 10px.
+                            </span>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Önizleme Modu:</span>
+                            <button type="button" class="btn-ottoman-outline" id="previewThemeToggleBtn" onclick="togglePreviewTheme()" style="min-height: 30px; padding: 0.2rem 0.75rem; font-size: 0.78rem;">
+                                🌗 Karanlık / Aydınlık Değiştir
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Blur Slider Input -->
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                        <span style="font-size: 0.82rem; color: var(--text-dim);">0px (Net)</span>
+                        <input type="range" asp-for="BackgroundBlur" id="blurRangeInput" min="0" max="25" step="1" 
+                               style="flex: 1; accent-color: var(--gold-primary); cursor: pointer; height: 6px;" 
+                               oninput="onBlurSliderChange(this.value)" />
+                        <span style="font-size: 0.82rem; color: var(--text-dim);">25px (Bulanık)</span>
+                    </div>
+
+                    <!-- Görsel Belirginlik / Karartma Seviyesi (Opacity/Brightness) Slider Input -->
+                    <div style="margin-bottom: 1.5rem; border-top: 1px solid rgba(197, 160, 89, 0.15); padding-top: 1.25rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                            <label asp-for="BackgroundOpacity" class="form-label" style="margin-bottom: 0; font-size: 0.95rem; color: var(--gold-bright);">
+                                ✦ Görsel Netliği / Belirginlik Gücü: <strong id="opacityValueDisplay" style="color: var(--text-white);">%@Model.BackgroundOpacity</strong>
+                            </label>
+                            <span style="font-size: 0.78rem; color: var(--text-muted);">
+                                %100: Tam Canlı / Net &bull; %30: Ağır Maskeli / Koyu
+                            </span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="font-size: 0.82rem; color: var(--text-dim);">%30 (Loş)</span>
+                            <input type="range" asp-for="BackgroundOpacity" id="opacityRangeInput" min="30" max="100" step="1" 
+                                   style="flex: 1; accent-color: var(--gold-primary); cursor: pointer; height: 6px;" 
+                                   oninput="onOpacitySliderChange(this.value)" />
+                            <span style="font-size: 0.82rem; color: var(--text-dim);">%100 (Canlı)</span>
+                        </div>
+                    </div>
+
+                    <!-- CANLI DEMO ÖNİZLEME PENCERESİ -->
+                    <div style="border: 1px solid var(--gold-border); border-radius: var(--radius-sm); overflow: hidden; position: relative;">
+                        <div style="padding: 0.45rem 1rem; background: rgba(7, 12, 19, 0.85); border-bottom: 1px solid rgba(197, 160, 89, 0.2); font-size: 0.76rem; color: var(--gold-bright); display: flex; justify-content: space-between; align-items: center;">
+                            <span>✦ CANLI SİTE SİMÜLASYONU &amp; DEMO KARTI</span>
+                            <span id="previewThemeIndicator" style="color: var(--text-muted); font-size: 0.74rem;">Karanlık Mod Görünümü</span>
+                        </div>
+
+                        <!-- Önizleme Sahnesi -->
+                        <div id="demoScene" style="position: relative; height: 260px; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 1.5rem; transition: background 0.3s ease;">
+                            <!-- Blurlu Arka Plan Katmanı -->
+                            <div id="demoBgLayer" style="position: absolute; inset: -20px; background-size: cover; background-position: center 25%; transition: filter 0.15s ease, background-image 0.3s ease; pointer-events: none;"></div>
+                            <!-- Vignette / Gradyan Katmanı -->
+                            <div id="demoVignetteLayer" style="position: absolute; inset: 0; pointer-events: none; transition: background 0.3s ease;"></div>
+
+                            <!-- Örnek Vitrin Kartı (Kullanıcının sitenin ön yüzündeki kartları nasıl göreceğini simüle eder) -->
+                            <div class="divan-corner-box ottoman-frame" style="position: relative; z-index: 2; max-width: 480px; width: 100%; padding: 1.5rem; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.4);">
+                                <span class="divan-corner c-tl"></span>
+                                <span class="divan-corner c-tr"></span>
+                                <span class="divan-corner c-bl"></span>
+                                <span class="divan-corner c-br"></span>
+                                <span class="badge-ottoman" style="margin-bottom: 0.5rem; font-size: 0.72rem;">✦ DİVAN CANLI ÖNİZLEME</span>
+                                <h4 style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--text-white); margin-bottom: 0.35rem;">
+                                    Metin Okunabilirlik Testi
+                                </h4>
+                                <p style="font-size: 0.85rem; color: var(--text-main); margin-bottom: 0.75rem; line-height: 1.5;">
+                                    Arka plan görselinin bulanıklığı, sayfa içeriklerinin ve altın işlemeli detayların rahat okunmasını sağlar.
+                                </p>
+                                <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                                    <span class="btn-divan-primary" style="padding: 0.35rem 0.85rem; font-size: 0.78rem; pointer-events: none;">Örnek Buton</span>
+                                    <span class="btn-ottoman-outline" style="padding: 0.35rem 0.85rem; font-size: 0.78rem; pointer-events: none;">Arşiv &rarr;</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Düz Renk Seçenekleri -->
+            <div id="bgColorSection" style="display: @(string.Equals(Model.BackgroundMode, "color", StringComparison.OrdinalIgnoreCase) ? "block" : "none"); margin-bottom: 2rem;">
+                <div class="divan-form-row-2">
+                    <div class="form-group">
+                        <label asp-for="DarkBackgroundColor" class="form-label">Karanlık Mod Arka Plan Rengi:</label>
+                        <div style="display: flex; gap: 0.75rem; align-items: center;">
+                            <input type="color" id="darkColorPicker" value="@(string.IsNullOrWhiteSpace(Model.DarkBackgroundColor) ? "#080D14" : Model.DarkBackgroundColor)" 
+                                   onchange="document.getElementById('darkColorText').value = this.value" 
+                                   style="width: 48px; height: 38px; border: 1px solid var(--gold-border); border-radius: var(--radius-sm); cursor: pointer; background: transparent; padding: 2px;" />
+                            <input asp-for="DarkBackgroundColor" id="darkColorText" class="form-control" placeholder="#080D14" 
+                                   oninput="document.getElementById('darkColorPicker').value = this.value" />
+                        </div>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">Varsayılan derin lacivert: #080D14</span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LightBackgroundColor" class="form-label">Aydınlık Mod Arka Plan Rengi:</label>
+                        <div style="display: flex; gap: 0.75rem; align-items: center;">
+                            <input type="color" id="lightColorPicker" value="@(string.IsNullOrWhiteSpace(Model.LightBackgroundColor) ? "#F8F5EE" : Model.LightBackgroundColor)" 
+                                   onchange="document.getElementById('lightColorText').value = this.value" 
+                                   style="width: 48px; height: 38px; border: 1px solid var(--gold-border); border-radius: var(--radius-sm); cursor: pointer; background: transparent; padding: 2px;" />
+                            <input asp-for="LightBackgroundColor" id="lightColorText" class="form-control" placeholder="#F8F5EE" 
+                                   oninput="document.getElementById('lightColorPicker').value = this.value" />
+                        </div>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">Varsayılan parşömen/fildişi: #F8F5EE</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Logo ve Marka Ayarları -->
+            <h3 style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--gold-bright); margin-bottom: 1.25rem; border-bottom: 1px solid var(--gold-border); padding-bottom: 0.5rem;">
+                2. Logo &amp; Marka Başlığı
+            </h3>
+
+            <div class="divan-form-row-2" style="margin-bottom: 1.75rem;">
+                <div class="form-group">
+                    <label asp-for="LogoText" class="form-label">Ana Logo Metni:</label>
+                    <input asp-for="LogoText" class="form-control" required placeholder="DİVAN" />
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Örn: DİVAN, NİGHTS vb.</span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LogoSubText" class="form-label">Alt Logo Metni:</label>
+                    <input asp-for="LogoSubText" class="form-control" required placeholder="PERSONAL DIGITAL ARCHIVE" />
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Logo altındaki küçük açıklama</span>
+                </div>
+            </div>
+
+            <!-- Logo Seçimi (Galeriden Seç veya Özel URL Gir) -->
+            <div class="form-group" style="margin-bottom: 2rem;">
+                <label class="form-label" style="margin-bottom: 0.75rem; display: block;">
+                    ✦ Logo Görseli Seçimi (wwwroot/images Galerisi):
+                </label>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+                    <!-- Varsayılan Seçenek -->
+                    <label class="logo-select-card @(string.IsNullOrWhiteSpace(Model.CustomLogoUrl) ? "selected" : "")" style="cursor: pointer; border: 1px solid var(--gold-border); border-radius: var(--radius-sm); padding: 1rem; text-align: center; background: var(--bg-surface); transition: var(--transition-smooth); display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 0.5rem;">
+                        <input type="radio" name="logoSelectionRadio" value="" @(string.IsNullOrWhiteSpace(Model.CustomLogoUrl) ? "checked" : "") style="position: absolute; opacity: 0; pointer-events: none;" onchange="selectLogo('')" />
+                        <div style="height: 60px; display: flex; align-items: center; justify-content: center;">
+                            <img src="~/images/tugra.svg" alt="Varsayılan Tuğra" style="max-height: 52px; max-width: 100%; filter: drop-shadow(0 0 4px rgba(197, 160, 89, 0.3));" />
+                        </div>
+                        <span style="font-size: 0.82rem; font-weight: 600; color: var(--gold-bright);">Varsayılan Tuğra (SVG)</span>
+                    </label>
+
+                    @foreach (var imgName in availableLogos)
+                    {
+                        var imgUrl = "/images/" + imgName;
+                        var isSelected = string.Equals(Model.CustomLogoUrl, imgUrl, StringComparison.OrdinalIgnoreCase);
+                        <label class="logo-select-card @(isSelected ? "selected" : "")" style="cursor: pointer; border: 1px solid var(--gold-border); border-radius: var(--radius-sm); padding: 1rem; text-align: center; background: var(--bg-surface); transition: var(--transition-smooth); display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 0.5rem;">
+                            <input type="radio" name="logoSelectionRadio" value="@imgUrl" @(isSelected ? "checked" : "") style="position: absolute; opacity: 0; pointer-events: none;" onchange="selectLogo('@imgUrl')" />
+                            <div style="height: 60px; display: flex; align-items: center; justify-content: center;">
+                                <img src="@imgUrl" alt="@imgName" style="max-height: 52px; max-width: 100%; object-fit: contain; filter: drop-shadow(0 0 4px rgba(197, 160, 89, 0.3));" />
+                            </div>
+                            <span style="font-size: 0.8rem; color: var(--text-main); word-break: break-all;" title="@imgName">
+                                @(imgName.Length > 20 ? imgName.Substring(0, 18) + "..." : imgName)
+                            </span>
+                        </label>
+                    }
+                </div>
+
+                <label asp-for="CustomLogoUrl" class="form-label">Seçili veya Özel Logo URL'si:</label>
+                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                    <input asp-for="CustomLogoUrl" id="customLogoUrlInput" class="form-control" placeholder="Örn: /images/tugra.png veya dış görsel linki" style="flex: 1;" />
+                    <button type="button" class="btn-ottoman-outline" onclick="selectLogo('')" style="white-space: nowrap; padding: 0.65rem 1rem;">
+                        Varsayılana Sıfırla
+                    </button>
+                </div>
+                <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 0.35rem;">
+                    Yukarıdaki kartlardan birine tıkladığınızda alan otomatik dolar. Boş bırakıldığında varsayılan SVG kullanılır.
+                </span>
+            </div>
+
+            <!-- 3. Alıntı Çerçevesi Ayarları -->
+            <h3 style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--gold-bright); margin-bottom: 1.25rem; border-bottom: 1px solid var(--gold-border); padding-bottom: 0.5rem;">
+                3. Ana Sayfa Alıntı Kartı (Orta Bölüm)
+            </h3>
+
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label asp-for="QuoteText" class="form-label">Alıntı Metni:</label>
+                <textarea asp-for="QuoteText" class="form-control" rows="3" required placeholder="Geçmişin izinde, geleceğin kodunda..."></textarea>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 2rem;">
+                <label asp-for="QuoteAuthor" class="form-label">Alıntı Sahibi / Yazar:</label>
+                <input asp-for="QuoteAuthor" class="form-control" required placeholder="zGetWar Harâbât" />
+            </div>
+
+            <!-- 4. Sosyal Bağlantılar & Hızlı Erişim -->
+            <h3 style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--gold-bright); margin-bottom: 1.25rem; border-bottom: 1px solid var(--gold-border); padding-bottom: 0.5rem;">
+                4. Sosyal Medya ve İletişim Linkleri
+            </h3>
+
+            <div class="divan-form-row-2" style="margin-bottom: 1.5rem;">
+                <div class="form-group">
+                    <label asp-for="GithubUrl" class="form-label">GitHub Profil URL'si:</label>
+                    <input asp-for="GithubUrl" class="form-control" placeholder="https://github.com/kullaniciadi" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="LinkedinUrl" class="form-label">LinkedIn Profil URL'si:</label>
+                    <input asp-for="LinkedinUrl" class="form-control" placeholder="https://linkedin.com/in/kullaniciadi" />
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 2rem;">
+                <label asp-for="ContactEmail" class="form-label">İletişim E-Posta Adresi:</label>
+                <input asp-for="ContactEmail" class="form-control" type="email" placeholder="iletisim@alanadi.com" />
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+                <button type="submit" class="btn-divan-primary" style="cursor: pointer;">
+                    <span>✦ Ayarları Kaydet</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let previewTheme = 'dark';
+
+        function toggleBgMode(mode) {
+            const imgSection = document.getElementById('bgImageSection');
+            const colorSection = document.getElementById('bgColorSection');
+            if (mode === 'color') {
+                imgSection.style.display = 'none';
+                colorSection.style.display = 'block';
+            } else {
+                imgSection.style.display = 'block';
+                colorSection.style.display = 'none';
+                updateLivePreview();
+            }
+        }
+
+        function selectBgImage(url) {
+            document.getElementById('darkBgInput').value = url;
+            document.querySelectorAll('.bg-select-card').forEach(card => {
+                card.classList.remove('selected');
+                card.style.borderColor = 'var(--gold-border)';
+                card.style.boxShadow = 'none';
+            });
+            event.currentTarget.classList.add('selected');
+            event.currentTarget.style.borderColor = 'var(--gold-bright)';
+            event.currentTarget.style.boxShadow = '0 0 12px var(--gold-glow)';
+            updateLivePreview();
+        }
+
+        function onBlurSliderChange(val) {
+            document.getElementById('blurValueDisplay').innerText = val + ' px';
+            updateLivePreview();
+        }
+
+        function onOpacitySliderChange(val) {
+            document.getElementById('opacityValueDisplay').innerText = '%' + val;
+            updateLivePreview();
+        }
+
+        function togglePreviewTheme() {
+            previewTheme = (previewTheme === 'dark') ? 'light' : 'dark';
+            document.getElementById('previewThemeIndicator').innerText = 
+                (previewTheme === 'dark') ? 'Karanlık Mod Görünümü' : 'Aydınlık Mod Görünümü';
+            updateLivePreview();
+        }
+
+        function updateLivePreview() {
+            const blurVal = document.getElementById('blurRangeInput').value || 0;
+            const opacityVal = (document.getElementById('opacityRangeInput') ? document.getElementById('opacityRangeInput').value : 75) / 100;
+            const darkImgInput = document.getElementById('darkBgInput').value.trim() || '/images/divan-hero-bg.jpg';
+            const lightImgInput = document.getElementById('lightBgInput').value.trim() || darkImgInput;
+            
+            const activeImg = (previewTheme === 'dark') ? darkImgInput : lightImgInput;
+            const bgLayer = document.getElementById('demoBgLayer');
+            const vignetteLayer = document.getElementById('demoVignetteLayer');
+
+            if (bgLayer) {
+                bgLayer.style.backgroundImage = `url('${activeImg}')`;
+                bgLayer.style.opacity = opacityVal;
+
+                if (previewTheme === 'dark') {
+                    const brightness = (0.20 + opacityVal * 0.70).toFixed(2);
+                    bgLayer.style.filter = `blur(${blurVal}px) brightness(${brightness}) saturate(1.1)`;
+                } else {
+                    bgLayer.style.filter = `blur(${blurVal}px) brightness(0.96) saturate(0.85)`;
+                }
+            }
+
+            if (vignetteLayer) {
+                const maskStrength = Math.max(0.1, 1.35 - opacityVal * 0.7).toFixed(2);
+                vignetteLayer.style.opacity = maskStrength;
+                if (previewTheme === 'dark') {
+                    vignetteLayer.style.background = 'radial-gradient(circle at 50% 15%, rgba(14, 22, 34, 0.25) 0%, rgba(8, 13, 20, 0.78) 65%, #06090E 100%)';
+                } else {
+                    vignetteLayer.style.background = 'radial-gradient(circle at 50% 15%, rgba(250, 247, 240, 0.45) 0%, rgba(245, 241, 232, 0.85) 65%, #EDE7D8 100%)';
+                }
+            }
+        }
+
+        function selectLogo(url) {
+            document.getElementById('customLogoUrlInput').value = url;
+            document.querySelectorAll('.logo-select-card').forEach(card => {
+                const radio = card.querySelector('input[type="radio"]');
+                if (radio && radio.value === url) {
+                    radio.checked = true;
+                    card.classList.add('selected');
+                    card.style.borderColor = 'var(--gold-bright)';
+                    card.style.boxShadow = '0 0 12px var(--gold-glow)';
+                } else {
+                    if (radio) radio.checked = false;
+                    card.classList.remove('selected');
+                    card.style.borderColor = 'var(--gold-border)';
+                    card.style.boxShadow = 'none';
+                }
+            });
+        }
+
+        // Başlangıç vurgusu ve demo simülasyonunu başlat
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.logo-select-card.selected, .bg-select-card.selected').forEach(card => {
+                card.style.borderColor = 'var(--gold-bright)';
+                card.style.boxShadow = '0 0 12px var(--gold-glow)';
+            });
+            updateLivePreview();
+        });
+    </script>
+}

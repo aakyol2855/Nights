@@ -3,22 +3,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nights.Models.Entities;
 using Nights.Models.ViewModels;
+using Nights.Services.Implementations;
 using Nights.Services.Interfaces;
 
 namespace Nights.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Authorize]
+[Authorize(Roles = "Admin")]
 public class AdminProjectsController : Controller
 {
     private readonly IProjectService _projectService;
+    private readonly IDockerOrchestratorService _orchestrator;
+    private readonly IAuditLogService _auditLogService;
     private readonly ILogger<AdminProjectsController> _logger;
 
     public AdminProjectsController(
         IProjectService projectService,
+        IDockerOrchestratorService orchestrator,
+        IAuditLogService auditLogService,
         ILogger<AdminProjectsController> logger)
     {
         _projectService = projectService;
+        _orchestrator = orchestrator;
+        _auditLogService = auditLogService;
         _logger = logger;
     }
 
@@ -27,7 +34,19 @@ public class AdminProjectsController : Controller
     {
         _logger.LogInformation("[AdminProjectsController] Yönetici proje listesi görüntülendi.");
         var projects = await _projectService.GetAllProjectsForAdminAsync();
+        ViewBag.ActiveDemo = _orchestrator.GetCurrentActiveSession();
         return View(projects);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> StopActiveDemo(CancellationToken ct)
+    {
+        var stopped = await _orchestrator.StopActiveDemoAsync("AdminManualStop", ct);
+        TempData["SuccessMessage"] = stopped
+            ? "Aktif demo container başarıyla durduruldu ve bellek serbest bırakıldı."
+            : "Şu anda çalışan bir demo container bulunmuyor.";
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpGet]
@@ -38,16 +57,44 @@ public class AdminProjectsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(ProjectEditViewModel model)
+    [RequestFormLimits(MultipartBodyLengthLimit = 524_288_000)]
+    [RequestSizeLimit(524_288_000)]
+    public async Task<IActionResult> Create(ProjectEditViewModel model, CancellationToken ct)
     {
         if (!ModelState.IsValid)
         {
             return View(model);
         }
 
+        var dockerImageName = model.DockerImageName?.Trim();
+
+        if (model.DockerImageTarFile != null && model.DockerImageTarFile.Length > 0)
+        {
+            if (!model.DockerImageTarFile.FileName.EndsWith(".tar", StringComparison.OrdinalIgnoreCase))
+            {
+                ModelState.AddModelError(nameof(model.DockerImageTarFile), "Yalnızca '.tar' uzantılı Docker imaj arşivleri yüklenebilir.");
+                return View(model);
+            }
+
+            await using var stream = model.DockerImageTarFile.OpenReadStream();
+            var loadResult = await _orchestrator.LoadImageFromTarAsync(stream, model.DockerImageTarFile.FileName, ct);
+            if (!loadResult.Success)
+            {
+                ModelState.AddModelError(nameof(model.DockerImageTarFile), loadResult.Message);
+                return View(model);
+            }
+
+            if (!string.IsNullOrWhiteSpace(loadResult.LoadedImageName))
+            {
+                dockerImageName = loadResult.LoadedImageName;
+            }
+            TempData["SuccessMessage"] = loadResult.Message;
+        }
+
         var project = new Project
         {
             Title = model.Title.Trim(),
+            Slug = DockerOrchestratorService.NormalizeSlug(string.IsNullOrWhiteSpace(model.Slug) ? model.Title : model.Slug, 0),
             Summary = model.Summary.Trim(),
             Description = model.Description?.Trim() ?? string.Empty,
             LiveDemoUrl = model.LiveDemoUrl?.Trim(),
@@ -58,12 +105,18 @@ public class AdminProjectsController : Controller
             DisplayOrder = model.DisplayOrder,
             IsActive = model.IsActive,
             IsFeatured = model.IsFeatured,
+            IsDemoEnabled = model.IsDemoEnabled,
+            DockerImageName = dockerImageName,
+            ContainerInternalPort = model.ContainerInternalPort is >= 1 and <= 65535 ? model.ContainerInternalPort : 8080,
+            EnvironmentVariables = model.EnvironmentVariables?.Trim(),
+            UseSharedDemoNetwork = model.UseSharedDemoNetwork,
+            MarkdownGuide = model.MarkdownGuide?.Trim(),
             CreatedAt = DateTime.UtcNow
         };
 
         await _projectService.CreateProjectAsync(project);
-        _logger.LogInformation("[AdminProjectsController] Yeni proje eklendi. Title={Title}", project.Title);
-        TempData["SuccessMessage"] = "Proje başarıyla eklendi.";
+        _logger.LogInformation("[AdminProjectsController] Yeni proje eklendi. Title={Title}, Demo={Demo}", project.Title, project.IsDemoEnabled);
+        TempData["SuccessMessage"] ??= "Proje başarıyla eklendi.";
         return RedirectToAction(nameof(Index));
     }
 
@@ -83,6 +136,7 @@ public class AdminProjectsController : Controller
         {
             Id = project.Id,
             Title = project.Title,
+            Slug = project.Slug,
             Summary = project.Summary,
             Description = project.Description,
             LiveDemoUrl = project.LiveDemoUrl,
@@ -92,7 +146,13 @@ public class AdminProjectsController : Controller
             TechStack = project.TechStack,
             DisplayOrder = project.DisplayOrder,
             IsActive = project.IsActive,
-            IsFeatured = project.IsFeatured
+            IsFeatured = project.IsFeatured,
+            IsDemoEnabled = project.IsDemoEnabled,
+            DockerImageName = project.DockerImageName,
+            ContainerInternalPort = project.ContainerInternalPort is >= 1 and <= 65535 ? project.ContainerInternalPort : 8080,
+            EnvironmentVariables = project.EnvironmentVariables,
+            UseSharedDemoNetwork = project.UseSharedDemoNetwork,
+            MarkdownGuide = project.MarkdownGuide
         };
 
         return View(vm);
@@ -100,7 +160,9 @@ public class AdminProjectsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, ProjectEditViewModel model)
+    [RequestFormLimits(MultipartBodyLengthLimit = 524_288_000)]
+    [RequestSizeLimit(524_288_000)]
+    public async Task<IActionResult> Edit(int id, ProjectEditViewModel model, CancellationToken ct)
     {
         if (id != model.Id)
         {
@@ -123,7 +185,35 @@ public class AdminProjectsController : Controller
             return NotFound();
         }
 
+        var dockerImageName = model.DockerImageName?.Trim();
+
+        if (model.DockerImageTarFile != null && model.DockerImageTarFile.Length > 0)
+        {
+            if (!model.DockerImageTarFile.FileName.EndsWith(".tar", StringComparison.OrdinalIgnoreCase))
+            {
+                ModelState.AddModelError(nameof(model.DockerImageTarFile), "Yalnızca '.tar' uzantılı Docker imaj arşivleri yüklenebilir.");
+                ViewBag.Tutorials = existing.Tutorials.OrderBy(t => t.StepOrder).ToList();
+                return View(model);
+            }
+
+            await using var stream = model.DockerImageTarFile.OpenReadStream();
+            var loadResult = await _orchestrator.LoadImageFromTarAsync(stream, model.DockerImageTarFile.FileName, ct);
+            if (!loadResult.Success)
+            {
+                ModelState.AddModelError(nameof(model.DockerImageTarFile), loadResult.Message);
+                ViewBag.Tutorials = existing.Tutorials.OrderBy(t => t.StepOrder).ToList();
+                return View(model);
+            }
+
+            if (!string.IsNullOrWhiteSpace(loadResult.LoadedImageName))
+            {
+                dockerImageName = loadResult.LoadedImageName;
+            }
+            TempData["SuccessMessage"] = loadResult.Message;
+        }
+
         existing.Title = model.Title.Trim();
+        existing.Slug = DockerOrchestratorService.NormalizeSlug(string.IsNullOrWhiteSpace(model.Slug) ? model.Title : model.Slug, existing.Id);
         existing.Summary = model.Summary.Trim();
         existing.Description = model.Description?.Trim() ?? string.Empty;
         existing.LiveDemoUrl = model.LiveDemoUrl?.Trim();
@@ -134,10 +224,16 @@ public class AdminProjectsController : Controller
         existing.DisplayOrder = model.DisplayOrder;
         existing.IsActive = model.IsActive;
         existing.IsFeatured = model.IsFeatured;
+        existing.IsDemoEnabled = model.IsDemoEnabled;
+        existing.DockerImageName = dockerImageName;
+        existing.ContainerInternalPort = model.ContainerInternalPort is >= 1 and <= 65535 ? model.ContainerInternalPort : 8080;
+        existing.EnvironmentVariables = model.EnvironmentVariables?.Trim();
+        existing.UseSharedDemoNetwork = model.UseSharedDemoNetwork;
+        existing.MarkdownGuide = model.MarkdownGuide?.Trim();
 
         await _projectService.UpdateProjectAsync(existing);
         _logger.LogInformation("[AdminProjectsController] Proje güncellendi. Id={Id}", id);
-        TempData["SuccessMessage"] = "Proje güncellendi.";
+        TempData["SuccessMessage"] ??= "Proje güncellendi.";
         return RedirectToAction(nameof(Edit), new { id });
     }
 
@@ -179,8 +275,16 @@ public class AdminProjectsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
-        await _projectService.DeleteProjectAsync(id);
-        _logger.LogInformation("[AdminProjectsController] Proje silindi. ProjectId={Id}", id);
+        await _projectService.DeleteProjectAsync(id, User.Identity?.Name);
+        await _auditLogService.LogAsync(
+            category: "ItemSoftDeleted",
+            summary: $"Proje #{id} Çöp Kutusu'na taşındı (30 gün saklama).",
+            targetEntityType: "Project",
+            targetEntityId: id.ToString(),
+            logLevel: "Warning",
+            username: User.Identity?.Name,
+            component: "AdminProjectsController");
+        _logger.LogInformation("[AdminProjectsController] Proje çöp kutusuna taşındı. ProjectId={Id}", id);
         return Json(new { success = true });
     }
 }

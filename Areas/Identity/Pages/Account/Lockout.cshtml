@@ -1,0 +1,27 @@
+@page
+@model Nights.Areas.Identity.Pages.Account.LockoutModel
+@{
+    ViewData["Title"] = "Hesap Geçici Olarak Kilitlendi";
+}
+
+<div class="divan-auth-wrapper">
+    <div class="divan-auth-card divan-corner-box ottoman-frame" style="text-align: center;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
+
+        <span style="font-size: 3rem; color: var(--danger-rose); display: block; margin-bottom: 0.75rem;">🛡️</span>
+        <span class="badge-ottoman" style="border-color: var(--danger-rose); color: var(--danger-rose); margin-bottom: 0.75rem;">
+            <span>۞</span> GÜVENLİK KİLİDİ <span>۞</span>
+        </span>
+        <h1 class="divan-auth-title">Hesap Geçici Olarak Kilitlendi</h1>
+        <p class="divan-auth-subtitle" style="margin-bottom: 1.75rem;">
+            Çok sayıda başarısız giriş denemesi tespit edildiği için bu hesap güvenlik amacıyla <strong>15 dakika</strong> süreyle korumaya alınmıştır. Lütfen süre dolduktan sonra tekrar deneyiniz.
+        </p>
+
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="btn-ottoman-outline" style="width: 100%; justify-content: center;">
+            <span>&larr; Ana Sayfaya Dön</span>
+        </a>
+    </div>
+</div>

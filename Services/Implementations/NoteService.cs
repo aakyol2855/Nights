@@ -176,8 +176,10 @@ public class NoteService : INoteService
             return (false, "Bu notu silme yetkiniz bulunmuyor.");
         }
 
-        // Soft-delete: Fiziksel silme yerine IsDeleted = true yap
+        // Soft-delete: Fiziksel silme yerine IsDeleted = true yap ve Çöp Kutusu izini kaydet
         note.IsDeleted = true;
+        note.DeletedAtUtc = DateTime.UtcNow;
+        note.DeletedBy = string.IsNullOrWhiteSpace(userId) ? "System" : userId;
         note.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();

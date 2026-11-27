@@ -5,22 +5,28 @@
 
 <div style="max-width: 850px; margin: 0 auto;">
     <div style="margin-bottom: 1.5rem;">
-        <a asp-area="Admin" asp-action="Index" style="font-size: 0.92rem; color: var(--accent-gold); font-weight: 500;">&larr; Projelere Dön</a>
-        <h1 style="font-size: 1.85rem; color: var(--accent-sapphire); margin-top: 0.3rem;">Yeni Proje Ekle</h1>
+        <a asp-area="Admin" asp-action="Index" style="font-size: 0.92rem; color: var(--gold-bright); font-weight: 500;">&larr; Projelere Dön</a>
+        <h1 style="font-family: var(--font-serif); font-size: 2rem; color: var(--text-white); margin-top: 0.3rem;">Yeni Proje Ekle</h1>
     </div>
 
-    <div class="ottoman-frame" style="padding: 2.25rem;">
-        <span class="ottoman-corner corner-tl"></span>
-        <span class="ottoman-corner corner-tr"></span>
-        <span class="ottoman-corner corner-bl"></span>
-        <span class="ottoman-corner corner-br"></span>
+    <div class="divan-corner-box ottoman-frame" style="padding: 2.25rem;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
 
-        <form asp-area="Admin" asp-action="Create" method="post">
-            <div asp-validation-summary="All" style="color: var(--danger-rose); margin-bottom: 1rem; font-size: 0.9rem;"></div>
+        <form asp-area="Admin" asp-action="Create" method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 1.25rem;">
+            <div asp-validation-summary="All" style="color: var(--danger-rose); font-size: 0.9rem;"></div>
 
-            <div class="form-group">
-                <label asp-for="Title" class="form-label">Proje Başlığı *</label>
-                <input asp-for="Title" class="form-control" required placeholder="Örn: DİTİB Cemaat Portalı" />
+            <div class="divan-form-row-2">
+                <div class="form-group">
+                    <label asp-for="Title" class="form-label">Proje Başlığı *</label>
+                    <input asp-for="Title" class="form-control" required placeholder="Örn: DİTİB Cemaat Portalı" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Slug" class="form-label">URL Slug (Opsiyonel - /live-demo/slug/)</label>
+                    <input asp-for="Slug" class="form-control" placeholder="Örn: ditib-cemaat-portali (Boşsa otomatik)" />
+                </div>
             </div>
 
             <div class="form-group">
@@ -29,8 +35,8 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="LiveDemoUrl" class="form-label">Canlı Demo / iFrame URL (Opsiyonel)</label>
-                <input asp-for="LiveDemoUrl" class="form-control" placeholder="https://demo.example.com veya container subdomain" />
+                <label asp-for="LiveDemoUrl" class="form-label">Harici Canlı Demo URL (Docker Kullanılmıyorsa)</label>
+                <input asp-for="LiveDemoUrl" class="form-control" placeholder="https://demo.example.com" />
             </div>
 
             <div class="form-group">
@@ -38,7 +44,7 @@
                 <input asp-for="GitHubUrl" class="form-control" placeholder="https://github.com/..." />
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="divan-form-row-2">
                 <div class="form-group">
                     <label asp-for="BadgeText" class="form-label">Rozet Metni</label>
                     <input asp-for="BadgeText" class="form-control" placeholder="Örn: DİTİB, Canlı Demo, Microservice" />
@@ -49,24 +55,78 @@
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+            <!-- Docker On-Demand Canlı Demo Yapılandırması -->
+            <div style="margin-top: 0.75rem; padding: 1.5rem; background: var(--bg-surface); border: 1px solid var(--gold-border); border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 1rem;">
+                <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--gold-bright); margin: 0;">
+                    🐳 Docker On-Demand Canlı Demo &amp; Container Yükleme
+                </h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+                    Container'lar donanım koruması için <code>--memory=256m --cpus=0.40 --read-only</code> ile başlatılır ve 15 dk hareketsizlikte otomatik silinir.
+                </p>
+
+                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-weight: 600;">
+                        <input asp-for="IsDemoEnabled" type="checkbox" style="width: 18px; height: 18px; accent-color: var(--gold-primary);" />
+                        <span>On-Demand Docker Demosunu Aktifleştir</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-weight: 600;">
+                        <input asp-for="UseSharedDemoNetwork" type="checkbox" style="width: 18px; height: 18px; accent-color: var(--gold-primary);" />
+                        <span>Ortak İzole Ağa Bağla (divan_demo_net)</span>
+                    </label>
+                </div>
+
+                <div class="divan-form-row-2">
+                    <div class="form-group">
+                        <label asp-for="DockerImageName" class="form-label">Docker İmaj Adı</label>
+                        <input asp-for="DockerImageName" class="form-control" placeholder="Örn: ditib-demo:latest" />
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">Aşağıdan .tar yüklerseniz imaj adı otomatik algılanır.</span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ContainerInternalPort" class="form-label">Container İçi Port</label>
+                        <input asp-for="ContainerInternalPort" type="number" class="form-control" min="1" max="65535" />
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">Örn: 8080 (.NET 8/9/10) veya 80 (Nginx)</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="DockerImageTarFile" class="form-label">Container İmaj Arşivi Yükle (.tar - Max 500MB)</label>
+                    <input asp-for="DockerImageTarFile" type="file" class="form-control" accept=".tar" />
+                    <span style="font-size: 0.78rem; color: var(--text-muted);">
+                        Yerel makinede <code>docker save -o proje.tar proje-imaji:latest</code> ile oluşturulan arşiv. Yüklendikten sonra otomatik <code>docker load</code> çalıştırılır ve .tar diskten silinir.
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="EnvironmentVariables" class="form-label">Ortam Değişkenleri (Her satıra bir KEY=VALUE)</label>
+                    <textarea asp-for="EnvironmentVariables" class="form-control" rows="4" style="font-family: monospace; font-size: 0.85rem;"
+                              placeholder="ASPNETCORE_ENVIRONMENT=Demo&#10;ConnectionStrings__DefaultConnection=Server=nights-mssql;Database=DemoDb;..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="MarkdownGuide" class="form-label">Genel Kullanım Rehberi / Test Kılavuzu (Markdown)</label>
+                    <textarea asp-for="MarkdownGuide" class="form-control" rows="5"
+                              placeholder="### Test Bilgileri&#10;- **Kullanıcı:** `demo@example.com`&#10;- **Şifre:** `Demo123!`"></textarea>
+                </div>
+            </div>
+
+            <div class="divan-form-row-3">
                 <div class="form-group">
                     <label asp-for="DisplayOrder" class="form-label">Sıralama Önceliği</label>
                     <input asp-for="DisplayOrder" type="number" class="form-control" />
                 </div>
-                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.8rem;">
-                    <input asp-for="IsActive" type="checkbox" style="width: 20px; height: 20px;" />
-                    <label asp-for="IsActive" style="font-weight: 600;">Aktif</label>
+                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; padding-top: 1.5rem;">
+                    <input asp-for="IsActive" type="checkbox" style="width: 18px; height: 18px; accent-color: var(--gold-primary);" />
+                    <label asp-for="IsActive" style="font-weight: 600; margin-bottom: 0;">Aktif</label>
                 </div>
-                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.8rem;">
-                    <input asp-for="IsFeatured" type="checkbox" style="width: 20px; height: 20px;" />
-                    <label asp-for="IsFeatured" style="font-weight: 600;">Öne Çıkan</label>
+                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; padding-top: 1.5rem;">
+                    <input asp-for="IsFeatured" type="checkbox" style="width: 18px; height: 18px; accent-color: var(--gold-primary);" />
+                    <label asp-for="IsFeatured" style="font-weight: 600; margin-bottom: 0;">Öne Çıkan</label>
                 </div>
             </div>
 
-            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap;">
                 <a asp-area="Admin" asp-action="Index" class="btn-ottoman-outline">İptal</a>
-                <button type="submit" class="btn-ottoman">Projeyi Kaydet &amp; Devam Et</button>
+                <button type="submit" class="btn-divan-primary">Projeyi Kaydet &amp; Devam Et</button>
             </div>
         </form>
     </div>

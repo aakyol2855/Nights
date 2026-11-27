@@ -4,66 +4,62 @@
 }
 
 <div style="margin-bottom: 2rem;">
-    <h1 style="font-size: 1.85rem; color: var(--accent-sapphire);">Yönetim Paneli Özeti</h1>
+    <h1 style="font-family: var(--font-serif); font-size: 2.2rem; color: var(--text-white); margin-bottom: 0.35rem;">
+        ✦ Yönetim Paneli Özeti
+    </h1>
     <p style="color: var(--text-muted); font-size: 0.95rem;">Sistem istatistikleri ve onay bekleyen ziyaretçi katkıları</p>
 </div>
 
 <!-- İstatistik Kartları -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
-    <div class="ottoman-frame" style="padding: 1.75rem;">
-        <span class="ottoman-mini-corner corner-tl"></span>
-        <span class="ottoman-mini-corner corner-tr"></span>
-        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">ONAY BEKLEYEN ANILAR</span>
-        <div style="font-size: 2.3rem; font-weight: 700; color: var(--accent-sapphire); margin-top: 0.3rem;">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+    <div class="divan-corner-box ottoman-frame" style="padding: 1.75rem;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span style="font-size: 0.8rem; color: var(--gold-bright); font-weight: 600; letter-spacing: 1px;">ONAY BEKLEYEN ANILAR</span>
+        <div style="font-size: 2.5rem; font-weight: 700; color: var(--text-white); margin: 0.35rem 0;">
             @Model.PendingMemoriesCount
         </div>
-        <a asp-area="Admin" asp-controller="AdminMemories" asp-action="Index" style="font-size: 0.88rem; color: var(--accent-gold); font-weight: 600; display: inline-block; margin-top: 0.6rem;">
+        <a asp-area="Admin" asp-controller="AdminMemories" asp-action="Index" style="font-size: 0.88rem; color: var(--gold-bright); font-weight: 600;">
             İncele ve Onayla &rarr;
         </a>
     </div>
 
-    <div class="ottoman-frame" style="padding: 1.75rem;">
-        <span class="ottoman-mini-corner corner-tl"></span>
-        <span class="ottoman-mini-corner corner-tr"></span>
-        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">YAYINDAKİ ANILAR</span>
-        <div style="font-size: 2.3rem; font-weight: 700; color: var(--accent-sapphire); margin-top: 0.3rem;">
+    <div class="divan-corner-box ottoman-frame" style="padding: 1.75rem;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span style="font-size: 0.8rem; color: var(--gold-bright); font-weight: 600; letter-spacing: 1px;">YAYINDAKİ ANILAR</span>
+        <div style="font-size: 2.5rem; font-weight: 700; color: var(--text-white); margin: 0.35rem 0;">
             @Model.ApprovedMemoriesCount
         </div>
-        <span style="font-size: 0.85rem; color: var(--text-muted); display: inline-block; margin-top: 0.6rem;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">
             Cache ile sunuluyor
         </span>
     </div>
 
-    <div class="ottoman-frame" style="padding: 1.75rem;">
-        <span class="ottoman-mini-corner corner-tl"></span>
-        <span class="ottoman-mini-corner corner-tr"></span>
-        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">TOPLAM PROJE</span>
-        <div style="font-size: 2.3rem; font-weight: 700; color: var(--accent-sapphire); margin-top: 0.3rem;">
+    <div class="divan-corner-box ottoman-frame" style="padding: 1.75rem;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span style="font-size: 0.8rem; color: var(--gold-bright); font-weight: 600; letter-spacing: 1px;">TOPLAM PROJE</span>
+        <div style="font-size: 2.5rem; font-weight: 700; color: var(--text-white); margin: 0.35rem 0;">
             @Model.ProjectsCount
         </div>
-        <a asp-area="Admin" asp-controller="AdminProjects" asp-action="Index" style="font-size: 0.88rem; color: var(--accent-sapphire); font-weight: 600; display: inline-block; margin-top: 0.6rem;">
+        <a asp-area="Admin" asp-controller="AdminProjects" asp-action="Index" style="font-size: 0.88rem; color: var(--gold-bright); font-weight: 600;">
             Projeleri Yönet &rarr;
         </a>
     </div>
 </div>
 
-<div class="ottoman-divider">
-    <div class="ottoman-divider-crest">
-        <span>✦</span> ۞ <span>✦</span>
-    </div>
-</div>
+<!-- Onay Bekleyen Son Anılar -->
+<div class="divan-corner-box ottoman-frame" style="padding: 2.25rem;">
+    <span class="divan-corner c-tl"></span>
+    <span class="divan-corner c-tr"></span>
+    <span class="divan-corner c-bl"></span>
+    <span class="divan-corner c-br"></span>
 
-<!-- Son Bekleyen Anılar -->
-<div class="ottoman-frame" style="padding: 2rem;">
-    <span class="ottoman-corner corner-tl"></span>
-    <span class="ottoman-corner corner-tr"></span>
-    <span class="ottoman-corner corner-bl"></span>
-    <span class="ottoman-corner corner-br"></span>
-
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h2 style="font-size: 1.35rem; color: var(--accent-sapphire);">Onay Bekleyen Son Anılar</h2>
-        <a asp-area="Admin" asp-controller="AdminMemories" asp-action="Index" class="btn-ottoman" style="min-height: 36px; padding: 0.4rem 1rem; font-size: 0.85rem;">
-            Tüm Onay Bekleyenler
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--gold-border); padding-bottom: 0.85rem;">
+        <h2 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--text-white);">Onay Bekleyen Son Anılar</h2>
+        <a asp-area="Admin" asp-controller="AdminMemories" asp-action="Index" class="btn-ottoman-outline" style="font-size: 0.85rem; padding: 0.35rem 0.9rem;">
+            Tüm Onay Bekleyenler &rarr;
         </a>
     </div>
 
@@ -76,20 +72,20 @@
         <div style="display: flex; flex-direction: column; gap: 1rem;">
             @foreach (var memory in Model.RecentPendingMemories)
             {
-                <div id="pending-card-@memory.Id" style="display: flex; align-items: center; gap: 1.25rem; padding: 1rem; background: var(--bg-parchment); border-radius: var(--radius-sm); border: 1px solid var(--border-light); flex-wrap: wrap;">
+                <div id="pending-card-@memory.Id" style="display: flex; align-items: center; gap: 1.25rem; padding: 1.15rem; background: var(--bg-surface); border-radius: var(--radius-sm); border: 1px solid var(--gold-border); flex-wrap: wrap;">
                     <img src="@Url.Action("PreviewPendingImage", "AdminMemories", new { f = memory.ImageFileName, area = "Admin" })" 
-                         alt="Önizleme" style="width: 80px; height: 60px; object-fit: cover; border-radius: var(--radius-sm);" />
+                         alt="Önizleme" style="width: 80px; height: 60px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--gold-border);" />
                     
                     <div style="flex: 1; min-width: 200px;">
-                        <p style="font-size: 0.95rem; font-weight: 500; color: var(--text-charcoal);">@memory.Description</p>
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">Gönderilme: @memory.CreatedAt.ToString("g")</span>
+                        <p style="font-size: 0.95rem; font-weight: 500; color: var(--text-white);">@memory.Description</p>
+                        <span style="font-size: 0.8rem; color: var(--gold-primary);">Gönderilme: @memory.CreatedAt.ToString("g")</span>
                     </div>
 
                     <div style="display: flex; gap: 0.5rem;">
-                        <button type="button" class="btn-ottoman btn-ottoman-tile" data-admin-action="approve" data-id="@memory.Id" style="min-height: 38px; padding: 0.4rem 0.85rem;">
+                        <button type="button" class="btn-divan-primary" data-admin-action="approve" data-id="@memory.Id" style="padding: 0.45rem 1rem; font-size: 0.85rem;">
                             Onayla
                         </button>
-                        <button type="button" class="btn-danger-soft" data-admin-action="reject" data-id="@memory.Id" style="min-height: 38px; padding: 0.4rem 0.85rem;">
+                        <button type="button" class="btn-ottoman-outline" data-admin-action="reject" data-id="@memory.Id" style="padding: 0.45rem 1rem; font-size: 0.85rem; border-color: var(--danger-rose); color: var(--danger-rose) !important;">
                             Reddet
                         </button>
                     </div>

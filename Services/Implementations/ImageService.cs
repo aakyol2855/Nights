@@ -9,6 +9,7 @@ public class ImageService : IImageService
 {
     private readonly string _pendingPath;
     private readonly string _approvedPath;
+    private readonly string _trashPath;
     private static readonly string[] AllowedExtensions = [".jpg", ".jpeg", ".png", ".webp"];
 
     public ImageService(IWebHostEnvironment env)
@@ -16,9 +17,11 @@ public class ImageService : IImageService
         var baseStorage = Path.Combine(env.ContentRootPath, "Storage", "uploads");
         _pendingPath = Path.Combine(baseStorage, "pending");
         _approvedPath = Path.Combine(baseStorage, "approved");
+        _trashPath = Path.Combine(baseStorage, "trash");
 
         Directory.CreateDirectory(_pendingPath);
         Directory.CreateDirectory(_approvedPath);
+        Directory.CreateDirectory(_trashPath);
     }
 
     public async Task<string> ProcessAndSavePendingAsync(IFormFile file)
@@ -89,6 +92,63 @@ public class ImageService : IImageService
     {
         fileName = Path.GetFileName(fileName);
         var path = Path.Combine(isPending ? _pendingPath : _approvedPath, fileName);
+        if (!File.Exists(path)) return null;
+
+        return (File.ReadAllBytes(path), "image/webp");
+    }
+
+    public bool MoveToTrash(string fileName, bool isPending)
+    {
+        fileName = Path.GetFileName(fileName);
+        if (string.IsNullOrWhiteSpace(fileName)) return false;
+
+        var primarySource = Path.Combine(isPending ? _pendingPath : _approvedPath, fileName);
+        var fallbackSource = Path.Combine(isPending ? _approvedPath : _pendingPath, fileName);
+        var sourcePath = File.Exists(primarySource) ? primarySource : (File.Exists(fallbackSource) ? fallbackSource : null);
+
+        if (sourcePath == null) return false;
+
+        var destPath = Path.Combine(_trashPath, fileName);
+        File.Move(sourcePath, destPath, overwrite: true);
+        return true;
+    }
+
+    public bool RestoreFromTrash(string fileName, bool restoreToApproved)
+    {
+        fileName = Path.GetFileName(fileName);
+        if (string.IsNullOrWhiteSpace(fileName)) return false;
+
+        var sourcePath = Path.Combine(_trashPath, fileName);
+        if (!File.Exists(sourcePath)) return false;
+
+        var destPath = Path.Combine(restoreToApproved ? _approvedPath : _pendingPath, fileName);
+        File.Move(sourcePath, destPath, overwrite: true);
+        return true;
+    }
+
+    public void DeleteFromTrash(string fileName)
+    {
+        fileName = Path.GetFileName(fileName);
+        if (string.IsNullOrWhiteSpace(fileName)) return;
+
+        var trashFile = Path.Combine(_trashPath, fileName);
+        if (File.Exists(trashFile))
+        {
+            File.Delete(trashFile);
+        }
+
+        // Emniyet olarak pending/approved altında kalmışsa onları da temizle
+        var pendingFile = Path.Combine(_pendingPath, fileName);
+        if (File.Exists(pendingFile)) File.Delete(pendingFile);
+
+        var approvedFile = Path.Combine(_approvedPath, fileName);
+        if (File.Exists(approvedFile)) File.Delete(approvedFile);
+    }
+
+    public (byte[] fileBytes, string contentType)? GetTrashImageStream(string fileName)
+    {
+        fileName = Path.GetFileName(fileName);
+        var path = Path.Combine(_trashPath, fileName);
         if (!File.Exists(path)) return null;
 
         return (File.ReadAllBytes(path), "image/webp");

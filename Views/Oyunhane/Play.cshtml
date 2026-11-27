@@ -1,0 +1,215 @@
+@model Nights.Models.ViewModels.OyunhanePlayViewModel
+@{
+    ViewData["Title"] = Model.Game.Title + " - Oyunhane";
+    var firstDiff = Model.Game.Difficulties.FirstOrDefault()?.Key ?? "all";
+}
+
+<link rel="stylesheet" href="~/css/games/oyunhane.css" asp-append-version="true" />
+@if (!string.IsNullOrWhiteSpace(Model.Game.StylePath))
+{
+    <link rel="stylesheet" href="@Model.Game.StylePath" asp-append-version="true" />
+}
+
+<div class="oyunhane-container">
+    <!-- Üst Başlık & Navigasyon -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.65rem;">
+        <div>
+            <a asp-controller="Oyunhane" asp-action="Index" style="font-size: 0.9rem; color: var(--gold-bright); font-weight: 600;">
+                &larr; Oyunhane Vitrinine Dön
+            </a>
+            <h1 style="font-family: var(--font-serif); font-size: 2.3rem; color: var(--text-white); margin: 0.25rem 0 0.2rem;">
+                @Model.Game.Title
+            </h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 720px; margin: 0;">
+                @Model.Game.Description
+            </p>
+        </div>
+
+        <div>
+            @if (Model.IsAuthenticated)
+            {
+                <span class="badge-ottoman">✦ Kayıtlı Oyuncu: @Model.SafeCurrentUserName (Kalıcı Skor)</span>
+            }
+            else
+            {
+                <span class="badge-ottoman">۞ Misafir Oturumu (Geçici Skor)</span>
+            }
+        </div>
+    </div>
+
+    <div class="sudoku-play-grid"
+         id="divanGameHost"
+         data-game-slug="@Model.Game.Slug"
+         data-default-difficulty="@firstDiff"
+         data-is-authenticated="@(Model.IsAuthenticated ? "true" : "false")"
+         data-player-name="@Model.SafeCurrentUserName">
+
+        <!-- SOL: Modüler İstemci Oyun Sahnesi -->
+        <section class="divan-corner-box ottoman-frame sudoku-stage-card">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
+
+            <!-- Zorluk Seçici Butonlar (IGameModule.Difficulties üzerinden dinamik) -->
+            @if (Model.Game.Difficulties.Any())
+            {
+                <div class="sudoku-diff-bar" id="gameDifficultySelector" role="tablist" aria-label="Zorluk Seviyeleri">
+                    @for (var i = 0; i < Model.Game.Difficulties.Count; i++)
+                    {
+                        var diff = Model.Game.Difficulties[i];
+                        <button type="button"
+                                class="sudoku-diff-btn @(i == 0 ? "active" : "")"
+                                data-difficulty-key="@diff.Key"
+                                data-difficulty-label="@diff.Label"
+                                data-difficulty-multiplier="@diff.Multiplier.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+                                title="@diff.HintBadge">
+                            @diff.Label
+                        </button>
+                    }
+                </div>
+            }
+
+            <!-- Oyun Motorunun Bağlanacağı Kök Konteyner -->
+            <div id="gameBoardMount"></div>
+        </section>
+
+        <!-- SAĞ: Oyun Bazlı Top 10 Liderlik Tablosu -->
+        <aside class="divan-corner-box ottoman-frame tier-panel">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
+
+            <div class="tier-header">
+                <div>
+                    <h2 style="font-size: 1.4rem; color: var(--gold-bright); margin: 0;">🏆 @Model.Game.Title Top 10</h2>
+                    <span style="font-size: 0.78rem; color: var(--text-muted);">En Yüksek Skor &amp; En Kısa Süre Sıralaması</span>
+                </div>
+            </div>
+
+            <!-- Zorluk Bazlı Liderlik Filtresi -->
+            @if (Model.Game.Difficulties.Any())
+            {
+                <div class="leaderboard-tabs" id="leaderboardDiffTabs">
+                    @for (var i = 0; i < Model.Game.Difficulties.Count; i++)
+                    {
+                        var diff = Model.Game.Difficulties[i];
+                        <button type="button"
+                                class="leaderboard-tab @(i == 0 ? "active" : "")"
+                                data-lb-diff="@diff.Key">
+                            @diff.Label
+                        </button>
+                    }
+                    <button type="button" class="leaderboard-tab" data-lb-diff="all">Genel</button>
+                </div>
+            }
+
+            <div id="gameLeaderboardContainer" class="tier-list">
+                @if (!Model.InitialLeaderboard.Any())
+                {
+                    <div style="padding: 1.85rem 1rem; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+                        Bu zorluk seviyesinde henüz kayıtlı bir derece yok. İlk rekoru siz kırın!
+                    </div>
+                }
+                else
+                {
+                    @foreach (var item in Model.InitialLeaderboard)
+                    {
+                        var topClass = item.Rank == 1 ? "is-top-1" : item.Rank == 2 ? "is-top-2" : item.Rank == 3 ? "is-top-3" : "";
+                        var meClass = item.IsCurrentUser ? "is-current-player" : "";
+                        var mins = item.DurationSeconds / 60;
+                        var secs = item.DurationSeconds % 60;
+                        <div class="tier-row @topClass @meClass">
+                            <span class="tier-rank-badge">@item.Rank</span>
+                            <div class="tier-player-meta">
+                                <div class="tier-player-name">
+                                    <span>@item.PlayerDisplayName</span>
+                                    @if (item.IsGuestSession)
+                                    {
+                                        <span class="guest-pill">Misafir</span>
+                                    }
+                                </div>
+                                <div class="tier-player-sub">
+                                    @item.DifficultyLabel &bull; Süre: @(mins.ToString("00")):@(secs.ToString("00")) &bull; Hata: @item.Mistakes
+                                </div>
+                            </div>
+                            <div class="tier-points-box">
+                                <div class="tier-points-val">@item.Score</div>
+                                <div class="tier-points-lbl">+@item.TierPoints Tier</div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+            <!-- Misafir Bilgilendirme Notu -->
+            <div class="divan-guest-notice">
+                <span>۞</span>
+                <em>"Misafir oturumunda kazanılan puanlar yalnızca mevcut oturum süresince geçerlidir. Skorlarınızı kalıcı kılmak ve Genel Top Tier List'te yerinizi korumak için
+                <a asp-area="Identity" asp-page="/Account/Login" style="font-weight: 600; text-decoration: underline;">giriş yapın</a> veya
+                <a asp-area="Identity" asp-page="/Account/Register" style="font-weight: 600; text-decoration: underline;">kayıt olun</a>."</em>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<!-- Oyun Sonu Skor & Zafer Modalı -->
+<div class="sudoku-modal-backdrop" id="gameVictoryModal" role="dialog" aria-modal="true" aria-labelledby="victoryModalTitle">
+    <div class="divan-corner-box ottoman-frame sudoku-modal-card">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
+
+        <span style="font-size: 2.5rem; color: var(--gold-bright); display: block; margin-bottom: 0.35rem;">♛</span>
+        <h2 id="victoryModalTitle" style="font-size: 1.85rem; color: var(--text-white); margin-bottom: 0.35rem;">Tebrikler, Bulmaca Çözüldü!</h2>
+        <p id="victorySummaryText" style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 1.15rem;"></p>
+
+        <div class="sudoku-hud" style="margin-bottom: 1.15rem;">
+            <div class="sudoku-hud-item">
+                <span class="sudoku-hud-label">Skor</span>
+                <span class="sudoku-hud-value" id="modalFinalScore">0</span>
+            </div>
+            <div class="sudoku-hud-item">
+                <span class="sudoku-hud-label">Süre</span>
+                <span class="sudoku-hud-value" id="modalFinalTime">00:00</span>
+            </div>
+            <div class="sudoku-hud-item">
+                <span class="sudoku-hud-label">Hata</span>
+                <span class="sudoku-hud-value" id="modalFinalMistakes">0</span>
+            </div>
+        </div>
+
+        @if (!Model.IsAuthenticated)
+        {
+            <div style="text-align: left; margin-bottom: 1rem;">
+                <label for="guestNicknameInput" class="form-label">Oturum Takma Adınız (Liderlik Tablosu İçin):</label>
+                <input type="text" id="guestNicknameInput" class="form-control" maxlength="24" placeholder="Örn: Seyyah, Mimar Sinan..." />
+            </div>
+
+            <div class="divan-guest-notice" style="margin-top: 0; margin-bottom: 1.15rem; text-align: left;">
+                <span>۞</span>
+                <em>"Misafir oturumunda kazanılan puanlar yalnızca mevcut oturum süresince geçerlidir. Skorlarınızı kalıcı kılmak ve Genel Top Tier List'te yerinizi korumak için
+                <a asp-area="Identity" asp-page="/Account/Login" style="font-weight: 600; text-decoration: underline;">giriş yapın</a> veya
+                <a asp-area="Identity" asp-page="/Account/Register" style="font-weight: 600; text-decoration: underline;">kayıt olun</a>."</em>
+            </div>
+        }
+
+        <div id="victoryServerFeedback" style="display: none; margin-bottom: 1rem; padding: 0.7rem 0.9rem; border-radius: var(--radius-sm); border: 1px solid var(--gold-border); background: var(--bg-surface); font-size: 0.86rem; color: var(--gold-bright);"></div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+            <button type="button" id="submitScoreModalBtn" class="btn-divan-primary">
+                <span>✦ Skoru Tabloya İşle</span>
+            </button>
+            <button type="button" id="playAgainModalBtn" class="btn-ottoman-outline">
+                Yeni Oyun Başlat
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/games/game-leaderboard.js" asp-append-version="true"></script>
+    <script src="@Model.Game.ScriptPath" asp-append-version="true"></script>
+}

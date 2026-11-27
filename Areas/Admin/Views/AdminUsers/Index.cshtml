@@ -5,22 +5,24 @@
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
     <div>
-        <h1 style="font-size: 1.85rem; color: var(--accent-sapphire);">Kullanıcı İzinleri &amp; Not Defteri Erişimi</h1>
+        <h1 style="font-family: var(--font-serif); font-size: 2.2rem; color: var(--text-white); margin-bottom: 0.35rem;">
+            ✦ Kullanıcı İzinleri &amp; Not Defteri Erişimi
+        </h1>
         <p style="color: var(--text-muted); font-size: 0.95rem;">
             Kayıt olan kullanıcılardan hangilerinin özel not alanını görebileceğini ve not ekleyebileceğini buradan yönetebilirsiniz.
         </p>
     </div>
 </div>
 
-<div class="ottoman-frame" style="padding: 1.75rem; overflow-x: auto;">
-    <span class="ottoman-corner corner-tl"></span>
-    <span class="ottoman-corner corner-tr"></span>
-    <span class="ottoman-corner corner-bl"></span>
-    <span class="ottoman-corner corner-br"></span>
+<div class="divan-corner-box ottoman-frame" style="padding: 1.75rem; overflow-x: auto;">
+    <span class="divan-corner c-tl"></span>
+    <span class="divan-corner c-tr"></span>
+    <span class="divan-corner c-bl"></span>
+    <span class="divan-corner c-br"></span>
 
     <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
         <thead>
-            <tr style="background: var(--bg-parchment); border-bottom: 1px solid var(--border-cetvel); color: var(--accent-sapphire);">
+            <tr style="border-bottom: 1px solid var(--gold-border); color: var(--gold-bright);">
                 <th style="padding: 1rem 1.25rem;">Kullanıcı Adı / E-posta</th>
                 <th style="padding: 1rem 1.25rem;">Rol</th>
                 <th style="padding: 1rem 1.25rem;">Not Defteri Erişimi</th>
@@ -30,15 +32,15 @@
         <tbody>
             @foreach (var user in Model)
             {
-                <tr id="user-row-@user.UserId" style="border-bottom: 1px solid var(--border-light);">
+                <tr id="user-row-@user.UserId" style="border-bottom: 1px solid rgba(197, 160, 89, 0.15);">
                     <td style="padding: 1rem 1.25rem;">
-                        <strong>@user.UserName</strong>
+                        <strong style="color: var(--text-white);">@user.UserName</strong>
                         <div style="font-size: 0.82rem; color: var(--text-muted);">@user.Email</div>
                     </td>
                     <td style="padding: 1rem 1.25rem;">
                         @if (user.IsAdmin)
                         {
-                            <span class="badge-ottoman" style="background: var(--accent-sapphire); color: #fff;">Yönetici (Admin)</span>
+                            <span class="badge-ottoman" style="background: rgba(197, 160, 89, 0.2); border-color: var(--gold-primary);">Yönetici (Admin)</span>
                         }
                         else
                         {
@@ -48,7 +50,7 @@
                     <td style="padding: 1rem 1.25rem;" id="access-badge-@user.UserId">
                         @if (user.HasNoteAccess)
                         {
-                            <span style="color: #137333; font-weight: 600; font-size: 0.9rem;">✓ İzin Verildi (280 Kelime)</span>
+                            <span style="color: #2ecc71; font-weight: 600; font-size: 0.9rem;">✓ İzin Verildi (280 Kelime)</span>
                         }
                         else
                         {

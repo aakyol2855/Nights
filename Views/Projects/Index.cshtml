@@ -1,16 +1,19 @@
 @model IEnumerable<Nights.Models.Entities.Project>
 @{
-    ViewData["Title"] = "Projeler & Canlı Demo";
+    ViewData["Title"] = L["Projects_PageTitle"];
 }
 
-<div style="max-width: 1100px; margin: 0 auto;">
-    <div style="text-align: center; margin-bottom: 2.25rem;">
+<div style="max-width: 1200px; margin: 1.5rem auto 3.5rem;">
+    <!-- Başlık -->
+    <div style="text-align: center; margin-bottom: 2.5rem;">
         <span class="badge-ottoman">
-            <span>۞</span> Eserler &amp; Sistemler <span>۞</span>
+            <span>۞</span> @L["Projects_Badge"] <span>۞</span>
         </span>
-        <h1 style="font-size: 2.1rem; color: var(--accent-sapphire); margin: 0.6rem 0;">Geliştirilen Projeler</h1>
-        <p style="color: var(--text-muted); font-size: 1.05rem;">
-            Doğrudan canlı container üzerinde test edebileceğiniz veya kullanım kılavuzunu inceleyebileceğiniz yazılım projeleri.
+        <h1 class="divan-page-title">
+            @L["Projects_Heading"]
+        </h1>
+        <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 650px; margin: 0 auto;">
+            @L["Projects_Subtitle"]
         </p>
     </div>
 
@@ -20,44 +23,63 @@
         </div>
     </div>
 
-    <div class="projects-grid">
-        @foreach (var project in Model)
-        {
-            <div class="project-card">
-                <span class="ottoman-mini-corner corner-tl"></span>
-                <span class="ottoman-mini-corner corner-tr"></span>
-                <span class="ottoman-mini-corner corner-bl"></span>
-                <span class="ottoman-mini-corner corner-br"></span>
+    @if (!Model.Any())
+    {
+        <div class="divan-corner-box ottoman-frame" style="text-align: center; padding: 3.5rem 1.5rem;">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">@L["Projects_Empty"]</p>
+        </div>
+    }
+    else
+    {
+        <div class="divan-projects-grid">
+            @foreach (var project in Model)
+            {
+                <div class="divan-corner-box" style="padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                    <span class="divan-corner c-tl"></span>
+                    <span class="divan-corner c-tr"></span>
+                    <span class="divan-corner c-bl"></span>
+                    <span class="divan-corner c-br"></span>
 
-                <div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.9rem;">
-                        <span class="badge-ottoman">✦ @project.BadgeText</span>
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">Sıra: #@project.DisplayOrder</span>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span class="badge-ottoman">✦ @project.BadgeText</span>
+                            <span style="font-size: 0.78rem; color: var(--gold-primary);">@L["Projects_Order"]: #@project.DisplayOrder</span>
+                        </div>
+
+                        <h2 style="font-family: var(--font-serif); font-size: 1.6rem; color: var(--text-white); margin-bottom: 0.5rem;">
+                            @project.Title
+                        </h2>
+                        <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.25rem;">
+                            @project.Summary
+                        </p>
+
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem;">
+                            @foreach (var tech in project.TechStack.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                <span style="font-size: 0.75rem; padding: 0.2rem 0.6rem; background: rgba(197, 160, 89, 0.08); border: 1px solid rgba(197, 160, 89, 0.2); border-radius: 3px; color: var(--gold-bright);">
+                                    @tech
+                                </span>
+                            }
+                        </div>
                     </div>
 
-                    <h2 class="project-title">@project.Title</h2>
-                    <p class="project-summary">@project.Summary</p>
-
-                    <div class="tech-tags">
-                        @foreach (var tech in project.TechStack.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                    <div style="display: flex; gap: 0.75rem; border-top: 1px solid rgba(197, 160, 89, 0.18); padding-top: 1.25rem;">
+                        <a asp-area="" asp-action="Detail" asp-route-id="@project.Id" class="btn-divan-primary" style="flex: 1; justify-content: center; padding: 0.65rem 1rem; font-size: 0.85rem;">
+                            @L["Projects_LiveDemoGuide"]
+                        </a>
+                        @if (!string.IsNullOrEmpty(project.GitHubUrl))
                         {
-                            <span class="tech-tag">@tech</span>
+                            <a href="@project.GitHubUrl" target="_blank" rel="noopener noreferrer" class="btn-ottoman-outline" style="padding: 0.65rem 1rem; font-size: 0.85rem;" title="GitHub">
+                                GitHub &nearr;
+                            </a>
                         }
                     </div>
                 </div>
-
-                <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem;">
-                    <a asp-area="" asp-action="Detail" asp-route-id="@project.Id" class="btn-ottoman" style="flex: 1;">
-                        Canlı Demo &amp; Rehber
-                    </a>
-                    @if (!string.IsNullOrEmpty(project.GitHubUrl))
-                    {
-                        <a href="@project.GitHubUrl" target="_blank" rel="noopener noreferrer" class="btn-ottoman-outline" title="GitHub">
-                            GitHub
-                        </a>
-                    }
-                </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
 </div>

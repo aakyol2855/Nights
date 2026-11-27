@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Nav_Home" xml:space="preserve"><value>Home</value></data>
+  <data name="Nav_Projects" xml:space="preserve"><value>Projects</value></data>
+  <data name="Nav_Memories" xml:space="preserve"><value>Memories</value></data>
+  <data name="Nav_Games" xml:space="preserve"><value>Arcade</value></data>
+  <data name="Nav_Journal" xml:space="preserve"><value>Journal</value></data>
+  <data name="Nav_AdminPanel" xml:space="preserve"><value>✦ Admin Panel</value></data>
+  <data name="Nav_Login" xml:space="preserve"><value>Sign In</value></data>
+  <data name="Nav_LoginTitle" xml:space="preserve"><value>Sign In</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>🚪 Sign Out</value></data>
+  <data name="Nav_MyNotes" xml:space="preserve"><value>✍ My Journal</value></data>
+  <data name="Nav_SysAdmin" xml:space="preserve"><value>✦ System Administrator</value></data>
+  <data name="Nav_SignedIn" xml:space="preserve"><value>Signed In</value></data>
+  <data name="Nav_SiteSettings" xml:space="preserve"><value>⚙ Site Settings</value></data>
+  <data name="Nav_UserPermissions" xml:space="preserve"><value>👥 User Permissions</value></data>
+  <data name="Nav_ProjectsGuides" xml:space="preserve"><value>📁 Projects &amp; Guides</value></data>
+  <data name="Nav_PendingMemories" xml:space="preserve"><value>📷 Pending Memories</value></data>
+  <data name="Nav_ThemeToggle" xml:space="preserve"><value>Dark / Light Mode</value></data>
+  <data name="Nav_Menu" xml:space="preserve"><value>Menu</value></data>
+  <data name="Nav_AccountMenu" xml:space="preserve"><value>Account Menu</value></data>
+  <data name="Nav_LangSwitchTitle" xml:space="preserve"><value>Switch Language (Türkçe / English)</value></data>
+  <data name="Footer_Tagline" xml:space="preserve"><value>EST. 2026 • PRIVATE DIGITAL DOMAIN</value></data>
+
+  <data name="Home_Title" xml:space="preserve"><value>Home</value></data>
+  <data name="Home_HeroLine1" xml:space="preserve"><value>A bit of the past,</value></data>
+  <data name="Home_HeroLine2" xml:space="preserve"><value>a glimpse of the future.</value></data>
+  <data name="Home_HeroDesc" xml:space="preserve"><value>Welcome to my personal digital space where code, memories, thoughts, and small experiments come together.</value></data>
+  <data name="Home_EnterArchive" xml:space="preserve"><value>✦ ENTER ARCHIVE</value></data>
+  <data name="Home_LeaveMemory" xml:space="preserve"><value>Leave a Memory →</value></data>
+  <data name="Home_Card1Title" xml:space="preserve"><value>Workshop</value></data>
+  <data name="Home_Card1Sub" xml:space="preserve"><value>Projects</value></data>
+  <data name="Home_Card1Desc" xml:space="preserve"><value>Explore the software projects, live demos, and source guides I built.</value></data>
+  <data name="Home_Card2Title" xml:space="preserve"><value>Memory Album</value></data>
+  <data name="Home_Card2Sub" xml:space="preserve"><value>Memories</value></data>
+  <data name="Home_Card2Desc" xml:space="preserve"><value>Shared moments, curated photos, and guestbook notes.</value></data>
+  <data name="Home_Card3Title" xml:space="preserve"><value>Arcade</value></data>
+  <data name="Home_Card3Sub" xml:space="preserve"><value>Games</value></data>
+  <data name="Home_Card3Desc" xml:space="preserve"><value>Small interactive experiments filled with logic, strategy, and nostalgia.</value></data>
+  <data name="Home_Card4Title" xml:space="preserve"><value>Folios</value></data>
+  <data name="Home_Card4Sub" xml:space="preserve"><value>Journal</value></data>
+  <data name="Home_Card4Desc" xml:space="preserve"><value>My personal notes, writings, and inner reflections.</value></data>
+  <data name="Home_Explore" xml:space="preserve"><value>Explore →</value></data>
+  <data name="Home_RecentNotes" xml:space="preserve"><value>✍ Recent Notes</value></data>
+  <data name="Home_ViewAll" xml:space="preserve"><value>View All →</value></data>
+  <data name="Home_NoNotes" xml:space="preserve"><value>No published notes or articles yet.</value></data>
+  <data name="Home_QuickAccess" xml:space="preserve"><value>⚡ Quick Access</value></data>
+  <data name="Home_TerminalSoon" xml:space="preserve"><value>Terminal (Coming Soon)</value></data>
+  <data name="Home_Presentations" xml:space="preserve"><value>Presentations</value></data>
+  <data name="Home_Archive" xml:space="preserve"><value>Archive</value></data>
+  <data name="Home_Contact" xml:space="preserve"><value>Contact</value></data>
+
+  <data name="Projects_PageTitle" xml:space="preserve"><value>Projects &amp; Live Demo</value></data>
+  <data name="Projects_Badge" xml:space="preserve"><value>WORKSHOP &amp; PORTFOLIO</value></data>
+  <data name="Projects_Heading" xml:space="preserve"><value>Featured Projects &amp; Live Systems</value></data>
+  <data name="Projects_Subtitle" xml:space="preserve"><value>Software projects you can test directly in an isolated live container or explore through step-by-step guides.</value></data>
+  <data name="Projects_Empty" xml:space="preserve"><value>No projects are currently showcased.</value></data>
+  <data name="Projects_Order" xml:space="preserve"><value>Order</value></data>
+  <data name="Projects_LiveDemoGuide" xml:space="preserve"><value>Live Demo &amp; Guide</value></data>
+
+  <data name="Detail_BackToProjects" xml:space="preserve"><value>← Back to All Projects</value></data>
+  <data name="Detail_OnDemandSleep" xml:space="preserve"><value>On-Demand Container (Sleeping)</value></data>
+  <data name="Detail_LiveEnv" xml:space="preserve"><value>Live Environment</value></data>
+  <data name="Detail_SleepLabel" xml:space="preserve"><value>⏱ Sleep:</value></data>
+  <data name="Detail_OpenNewTab" xml:space="preserve"><value>Open in New Tab</value></data>
+  <data name="Detail_Reload" xml:space="preserve"><value>Reload</value></data>
+  <data name="Detail_Fullscreen" xml:space="preserve"><value>Fullscreen</value></data>
+  <data name="Detail_LauncherTitle" xml:space="preserve"><value>On-Demand Live Demo</value></data>
+  <data name="Detail_LauncherDesc" xml:space="preserve"><value>To conserve home-server resources, the demo environment spins up inside an isolated container only when you request it and automatically enters sleep mode after 15 minutes of inactivity.</value></data>
+  <data name="Detail_BadgeRam" xml:space="preserve"><value>Isolated Container</value></data>
+  <data name="Detail_BadgeReadOnly" xml:space="preserve"><value>Read-Only Root Filesystem</value></data>
+  <data name="Detail_BadgeSleep" xml:space="preserve"><value>15-Min Auto Sleep</value></data>
+  <data name="Detail_LaunchBtn" xml:space="preserve"><value>🚀 Launch Live Demo</value></data>
+  <data name="Detail_LoadingTitle" xml:space="preserve"><value>Preparing Isolated Demo Environment...</value></data>
+  <data name="Detail_LoadingDesc" xml:space="preserve"><value>Starting container image, binding local port, and connecting secure YARP tunnel. This may take a few seconds.</value></data>
+  <data name="Detail_BusyTitle" xml:space="preserve"><value>Another Demo Is Currently Active</value></data>
+  <data name="Detail_BusyRemaining" xml:space="preserve"><value>Estimated Time Remaining:</value></data>
+  <data name="Detail_NoDemoTitle" xml:space="preserve"><value>Live Demo Not Configured Yet</value></data>
+  <data name="Detail_NoDemoDesc" xml:space="preserve"><value>No container image or external demo URL has been attached to this project yet. You can review the usage guide on the right.</value></data>
+  <data name="Detail_GuideTitle" xml:space="preserve"><value>✦ Usage &amp; Testing Guide</value></data>
+  <data name="Detail_GuideSubtitle" xml:space="preserve"><value>Follow the steps and test scenarios below while exploring the project.</value></data>
+  <data name="Detail_NoGuide" xml:space="preserve"><value>No guide steps have been added for this project yet.</value></data>
+  <data name="Detail_Step" xml:space="preserve"><value>✦ Step</value></data>
+  <data name="Demo_StatusActive" xml:space="preserve"><value>Live Container Active</value></data>
+  <data name="Demo_StatusSleeping" xml:space="preserve"><value>Entered Sleep Mode</value></data>
+  <data name="Demo_StatusBusy" xml:space="preserve"><value>Another Demo Active</value></data>
+  <data name="Demo_StatusStarting" xml:space="preserve"><value>Starting Container...</value></data>
+  <data name="Demo_StatusReady" xml:space="preserve"><value>Ready to Launch</value></data>
+  <data name="Demo_StatusConnError" xml:space="preserve"><value>Connection Error</value></data>
+  <data name="Demo_ErrTurnstile" xml:space="preserve"><value>Please complete the security verification (Cloudflare Turnstile) first.</value></data>
+  <data name="Demo_ErrGeneric" xml:space="preserve"><value>An error occurred while starting the live demo.</value></data>
+  <data name="Demo_ErrNetwork" xml:space="preserve"><value>A network error occurred while connecting to the server. Please try again.</value></data>
+
+  <data name="Memories_PageTitle" xml:space="preserve"><value>Guestbook &amp; Memories</value></data>
+  <data name="Memories_Badge" xml:space="preserve"><value>CHERISHED MEMORIES</value></data>
+  <data name="Memories_Heading" xml:space="preserve"><value>Memory Album &amp; Guestbook</value></data>
+  <data name="Memories_Subtitle" xml:space="preserve"><value>Leave a photo and a short note to share a lasting memory from your visit.</value></data>
+  <data name="Memories_FormTitle" xml:space="preserve"><value>✦ Leave a Memory</value></data>
+  <data name="Memories_FormDesc" xml:space="preserve"><value>Your uploaded image is safely converted to WebP, stripped of metadata, and published after moderation. (Max 5MB)</value></data>
+  <data name="Memories_NoteLabel" xml:space="preserve"><value>Short Memory Note (1-2 Sentences):</value></data>
+  <data name="Memories_NotePlaceholder" xml:space="preserve"><value>e.g. I will always remember this wonderful day...</value></data>
+  <data name="Memories_PhotoLabel" xml:space="preserve"><value>Photo (JPG, PNG, or WebP):</value></data>
+  <data name="Memories_SubmitBtn" xml:space="preserve"><value>✦ Save Memory</value></data>
+  <data name="Memories_ApprovedHeading" xml:space="preserve"><value>Approved Memories</value></data>
+  <data name="Memories_Empty" xml:space="preserve"><value>No approved memories yet. Be the first to leave one using the form above!</value></data>
+  <data name="Memories_GuestMemory" xml:space="preserve"><value>✦ Guest Memory</value></data>
+
+  <data name="Notes_PageTitle" xml:space="preserve"><value>Private Journal</value></data>
+  <data name="Notes_Badge" xml:space="preserve"><value>PRIVATE FOLIOS &amp; NOTES</value></data>
+  <data name="Notes_Heading" xml:space="preserve"><value>Private Notebook &amp; Journal</value></data>
+  <data name="Notes_Subtitle" xml:space="preserve"><value>A locally hosted personal note and idea space accessible only to authorized members.</value></data>
+  <data name="Notes_NewTitle" xml:space="preserve"><value>✦ Write a New Note</value></data>
+  <data name="Notes_AdminUnlimited" xml:space="preserve"><value>Administrator: Unlimited Writing</value></data>
+  <data name="Notes_WordCount" xml:space="preserve"><value>Word Count:</value></data>
+  <data name="Notes_TitleLabel" xml:space="preserve"><value>Note Title:</value></data>
+  <data name="Notes_TitlePlaceholder" xml:space="preserve"><value>e.g. Server Architecture &amp; Project Notes...</value></data>
+  <data name="Notes_ContentLabel" xml:space="preserve"><value>Note Content:</value></data>
+  <data name="Notes_ContentPlaceholderAdmin" xml:space="preserve"><value>Write detailed notes, code snippets, or server configurations of any length...</value></data>
+  <data name="Notes_ContentPlaceholderUser" xml:space="preserve"><value>Write your note (up to 280 words)...</value></data>
+  <data name="Notes_PinLabel" xml:space="preserve"><value>Pin this note to the top</value></data>
+  <data name="Notes_SaveBtn" xml:space="preserve"><value>✦ Save Note</value></data>
+  <data name="Notes_ListHeading" xml:space="preserve"><value>Saved Folios</value></data>
+  <data name="Notes_Page" xml:space="preserve"><value>Page</value></data>
+  <data name="Notes_EmptyTitle" xml:space="preserve"><value>No Saved Notes Yet</value></data>
+  <data name="Notes_EmptyDesc" xml:space="preserve"><value>You can write your first note using the form above.</value></data>
+  <data name="Notes_AccessDeniedTitle" xml:space="preserve"><value>Access Approval Pending</value></data>
+  <data name="Notes_AccessDeniedHeading" xml:space="preserve"><value>Private Journal Access</value></data>
+  <data name="Notes_AccessDeniedDesc" xml:space="preserve"><value>You are signed in, but this private journal is restricted to approved members only. Please request access from the site administrator.</value></data>
+
+  <data name="Auth_LoginTitle" xml:space="preserve"><value>Sign In</value></data>
+  <data name="Auth_LoginBadge" xml:space="preserve"><value>AUTHENTICATION GATEWAY</value></data>
+  <data name="Auth_LoginHeading" xml:space="preserve"><value>Sign In to Divan</value></data>
+  <data name="Auth_LoginSubtitle" xml:space="preserve"><value>Verify your identity to access the private archive, journal, and administration console.</value></data>
+  <data name="Auth_EmailLabel" xml:space="preserve"><value>Email Address or Username</value></data>
+  <data name="Auth_EmailPlaceholder" xml:space="preserve"><value>name@domain.com</value></data>
+  <data name="Auth_PasswordLabel" xml:space="preserve"><value>Password</value></data>
+  <data name="Auth_ShowHidePassword" xml:space="preserve"><value>Show/Hide Password</value></data>
+  <data name="Auth_RememberMe" xml:space="preserve"><value>Remember Me</value></data>
+  <data name="Auth_ProtectedSession" xml:space="preserve"><value>Protected Session</value></data>
+  <data name="Auth_LoginSubmit" xml:space="preserve"><value>✦ SIGN IN</value></data>
+  <data name="Auth_AccessDeniedTitle" xml:space="preserve"><value>Access Denied</value></data>
+  <data name="Auth_AccessDeniedBadge" xml:space="preserve"><value>ACCESS DENIED</value></data>
+  <data name="Auth_AccessDeniedHeading" xml:space="preserve"><value>You Do Not Have Permission</value></data>
+  <data name="Auth_AccessDeniedDesc" xml:space="preserve"><value>You do not hold the required authorization to access this page or section.</value></data>
+  <data name="Auth_LockoutTitle" xml:space="preserve"><value>Account Temporarily Locked</value></data>
+  <data name="Auth_LockoutBadge" xml:space="preserve"><value>SECURITY LOCKOUT</value></data>
+  <data name="Auth_LockoutHeading" xml:space="preserve"><value>Account Temporarily Locked</value></data>
+  <data name="Auth_LockoutDesc" xml:space="preserve"><value>Due to multiple failed sign-in attempts, this account has been locked for 15 minutes for your security. Please try again later.</value></data>
+
+  <data name="Error_Title" xml:space="preserve"><value>An Error Occurred</value></data>
+  <data name="Error_Heading" xml:space="preserve"><value>An Unexpected Error Occurred</value></data>
+  <data name="Error_Desc" xml:space="preserve"><value>A temporary server issue occurred while processing your request.</value></data>
+  <data name="Error_RequestId" xml:space="preserve"><value>Request ID:</value></data>
+  <data name="Common_BackHome" xml:space="preserve"><value>✦ Return Home</value></data>
+  <data name="Common_BrowseProjects" xml:space="preserve"><value>Explore Projects</value></data>
+
+  <data name="Games_Easy" xml:space="preserve"><value>Easy</value></data>
+  <data name="Games_Medium" xml:space="preserve"><value>Medium</value></data>
+  <data name="Games_Hard" xml:space="preserve"><value>Hard</value></data>
+  <data name="Games_Impossible" xml:space="preserve"><value>Impossible</value></data>
+  <data name="Games_TopList" xml:space="preserve"><value>Game Leaderboard</value></data>
+  <data name="Games_GlobalTierList" xml:space="preserve"><value>Global Top Tier List</value></data>
+  <data name="Games_GuestWarning" xml:space="preserve"><value>You are playing as a guest; sign in to save your scores.</value></data>
+  <data name="Games_Notes" xml:space="preserve"><value>Notes</value></data>
+  <data name="Games_Undo" xml:space="preserve"><value>Undo</value></data>
+  <data name="Games_Mistakes" xml:space="preserve"><value>Mistakes</value></data>
+  <data name="Games_Time" xml:space="preserve"><value>Time</value></data>
+</root>

@@ -1,129 +1,264 @@
+@inject Nights.Services.Interfaces.ISettingService SettingService
 @{
-    ViewData["Title"] = "Ana Sayfa";
-    var featuredProjects = ViewBag.FeaturedProjects as List<Nights.Models.Entities.Project> ?? new();
-    var recentMemories = ViewBag.RecentMemories as List<Nights.Models.Entities.Memory> ?? new();
+    ViewData["Title"] = L["Home_Title"];
+    var settings = await SettingService.GetSettingsAsync();
+    var recentNotes = ViewBag.RecentNotes as List<Nights.Models.Entities.Note> ?? new();
+    var latestNote = recentNotes.FirstOrDefault();
 }
 
-<!-- Osmanlı Tezhip Çerçeveli Hero Alanı -->
-<div class="ottoman-frame hero-section" style="text-align: center; margin-bottom: 2.5rem; padding: 3.5rem 2rem;">
-    <!-- 4 Köşe Süslemesi (Köşebent) -->
-    <span class="ottoman-corner corner-tl"></span>
-    <span class="ottoman-corner corner-tr"></span>
-    <span class="ottoman-corner corner-bl"></span>
-    <span class="ottoman-corner corner-br"></span>
+<div style="max-width: 1440px; margin: 0 auto;">
 
-    <span class="badge-ottoman" style="margin-bottom: 1.25rem;">
-        <span>۞</span> Sadakat &amp; Zarafet <span>۞</span>
-    </span>
+    <!-- 1. HERO BÖLÜMÜ (BOĞAZ / AYASOFYA GECE SİLÜETİ - FERAH VE GÜVENLİ) -->
+    <section class="divan-hero" style="min-height: 480px; display: flex; align-items: center;">
+        <div class="divan-hero-bg"></div>
+        <div class="divan-hero-overlay"></div>
 
-    <h1 style="font-size: 2.35rem; font-weight: 700; color: var(--accent-sapphire); margin-bottom: 0.9rem; letter-spacing: -0.5px;">
-        Osmanlı Minimalizmi ile Tasarlanmış Dijital Sergi
-    </h1>
-    
-    <p style="max-width: 700px; margin: 0 auto 2rem; color: var(--text-muted); font-size: 1.05rem;">
-        Düşük donanımlı ve zorlu ağ koşullarına sahip sunucular için optimize edilmiş, MSSQL tabanlı, sıfır bellek sızıntılı ve yüksek performanslı kişisel portfolyo ve anı paylaşım platformu.
-    </p>
-
-    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a asp-area="" asp-controller="Projects" asp-action="Index" class="btn-ottoman">
-            <span>Projeleri İncele</span> <span>&rarr;</span>
-        </a>
-        <a asp-area="" asp-controller="Memories" asp-action="Index" class="btn-ottoman-outline">
-            <span>Bir Hatıra Bırak</span>
-        </a>
-    </div>
-</div>
-
-<div class="ottoman-divider">
-    <div class="ottoman-divider-crest">
-        <span>✦</span> ۞ <span>✦</span>
-    </div>
-</div>
-
-<!-- Öne Çıkan Projeler -->
-<section style="margin-bottom: 3.5rem;">
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.75rem;">
-        <div>
-            <h2 style="font-size: 1.55rem; color: var(--accent-sapphire);">Seçilmiş Çalışmalar &amp; Canlı Sistemler</h2>
-            <p style="color: var(--text-muted); font-size: 0.95rem;">Doğrudan tarayıcı içerisinden test edebileceğiniz canlı demo uygulamaları</p>
-        </div>
-        <a asp-area="" asp-controller="Projects" asp-action="Index" style="font-weight: 600; font-size: 0.92rem; color: var(--accent-gold);">Tümünü Gör &rarr;</a>
-    </div>
-
-    <div class="projects-grid">
-        @foreach (var project in featuredProjects)
-        {
-            <div class="project-card">
-                <!-- Mini Köşe Tezhipleri -->
-                <span class="ottoman-mini-corner corner-tl"></span>
-                <span class="ottoman-mini-corner corner-tr"></span>
-                <span class="ottoman-mini-corner corner-bl"></span>
-                <span class="ottoman-mini-corner corner-br"></span>
-
-                <div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.9rem;">
-                        <span class="badge-ottoman">✦ @project.BadgeText</span>
-                        <span style="font-size: 0.78rem; color: var(--text-muted);">@project.CreatedAt.ToString("yyyy")</span>
-                    </div>
-                    <h3 class="project-title">@project.Title</h3>
-                    <p class="project-summary">@project.Summary</p>
-                    <div class="tech-tags">
-                        @foreach (var tech in project.TechStack.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
-                        {
-                            <span class="tech-tag">@tech</span>
-                        }
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem;">
-                    <a asp-area="" asp-controller="Projects" asp-action="Detail" asp-route-id="@project.Id" class="btn-ottoman" style="flex: 1;">
-                        Rehber &amp; Canlı Demo
+        <div class="divan-hero-content" style="grid-template-columns: 1fr; max-width: 850px;">
+            <!-- Sol / Merkez Metin ve Aksiyon -->
+            <div class="divan-hero-left" style="max-width: 760px;">
+                <img src="~/images/bismillah.svg" alt="Besmele-i Şerif" class="divan-calligraphy" />
+                <h1 class="divan-hero-title">
+                    @L["Home_HeroLine1"]<br />@L["Home_HeroLine2"]
+                </h1>
+                <p class="divan-hero-desc" style="font-size: 1.15rem; max-width: 650px;">
+                    @L["Home_HeroDesc"]
+                </p>
+                <div style="display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap;">
+                    <a asp-controller="Projects" asp-action="Index" class="btn-divan-primary">
+                        <span>@L["Home_EnterArchive"]</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
                     </a>
-                    @if (!string.IsNullOrEmpty(project.GitHubUrl))
-                    {
-                        <a href="@project.GitHubUrl" target="_blank" rel="noopener noreferrer" class="btn-ottoman-outline" title="GitHub Kaynak Kodu">
-                            GitHub
-                        </a>
-                    }
+                    <a asp-controller="Memories" asp-action="Index" class="btn-ottoman-outline" style="border-radius: var(--radius-sm); padding: 0.85rem 1.6rem; font-weight: 500;">
+                        <span>@L["Home_LeaveMemory"]</span>
+                    </a>
                 </div>
             </div>
-        }
-    </div>
-</section>
-
-<!-- Son Ziyaretçi Hatıraları -->
-@if (recentMemories.Any())
-{
-    <section>
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.75rem;">
-            <div>
-                <h2 style="font-size: 1.55rem; color: var(--accent-sapphire);">Ziyaretçilerden Kalan Hatıralar</h2>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Ziyaretçilerin bıraktığı onaylı anılar ve izlenimler</p>
-            </div>
-            <a asp-area="" asp-controller="Memories" asp-action="Index" style="font-weight: 600; font-size: 0.92rem; color: var(--accent-gold);">Hatıra Defteri &rarr;</a>
         </div>
+    </section>
 
-        <div class="memories-grid">
-            @foreach (var item in recentMemories)
+    <!-- 2. 4'LÜ VİTRİN KARTLARI (KARTIN TAMAMI TIKLANABİLİR ROUTING) -->
+    <section class="divan-showcase-grid">
+        <!-- 01 / İmalathane (Projeler) -->
+        <a asp-controller="Projects" asp-action="Index" class="divan-card divan-corner-box">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
+            <div class="divan-card-bg" style="background-image: url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80');"></div>
+
+            <div class="divan-card-content">
+                <div class="divan-card-num">
+                    <span>01 / &gt;</span>
+                </div>
+                <h3 class="divan-card-title">@L["Home_Card1Title"]</h3>
+                <div class="divan-card-sub">@L["Home_Card1Sub"]</div>
+                <p class="divan-card-desc">@L["Home_Card1Desc"]</p>
+            </div>
+            <div class="divan-card-link">
+                <span>@L["Home_Explore"]</span>
+            </div>
+        </a>
+
+        <!-- 02 / Albüm-i Hâtıra (Hatıralar) -->
+        <a asp-controller="Memories" asp-action="Index" class="divan-card divan-corner-box">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
+            <div class="divan-card-bg" style="background-image: url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80');"></div>
+
+            <div class="divan-card-content">
+                <div class="divan-card-num">
+                    <span>02 / &gt;</span>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity: 0.8;">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </div>
+                <h3 class="divan-card-title">@L["Home_Card2Title"]</h3>
+                <div class="divan-card-sub">@L["Home_Card2Sub"]</div>
+                <p class="divan-card-desc">@L["Home_Card2Desc"]</p>
+            </div>
+            <div class="divan-card-link">
+                <span>@L["Home_Explore"]</span>
+            </div>
+        </a>
+
+        <!-- 03 / Oyunhane (Oyunlar / Deneyler) -->
+        <a asp-controller="Oyunhane" asp-action="Index" class="divan-card divan-corner-box" id="oyunlar">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
+            <div class="divan-card-bg" style="background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80');"></div>
+
+            <div class="divan-card-content">
+                <div class="divan-card-num">
+                    <span>03 / &gt;</span>
+                </div>
+                <h3 class="divan-card-title">@L["Home_Card3Title"]</h3>
+                <div class="divan-card-sub">@L["Home_Card3Sub"]</div>
+                <p class="divan-card-desc">@L["Home_Card3Desc"]</p>
+            </div>
+            <div class="divan-card-link">
+                <span>@L["Home_Explore"]</span>
+            </div>
+        </a>
+
+        <!-- 04 / Varaklar (Günlük & Notlar) -->
+        <a asp-controller="Notes" asp-action="Index" class="divan-card divan-corner-box">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
+            <div class="divan-card-bg" style="background-image: url('https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=600&q=80');"></div>
+
+            <div class="divan-card-content">
+                <div class="divan-card-num">
+                    <span>04 / &gt;</span>
+                </div>
+                <h3 class="divan-card-title">@L["Home_Card4Title"]</h3>
+                <div class="divan-card-sub">@L["Home_Card4Sub"]</div>
+                <p class="divan-card-desc">@L["Home_Card4Desc"]</p>
+            </div>
+            <div class="divan-card-link">
+                <span>@L["Home_Explore"]</span>
+            </div>
+        </a>
+    </section>
+
+    <!-- 3. ALT BİLGİ ALANI (3 SÜTUN - STATİK DUMMY VERİSİZ) -->
+    <section class="divan-bottom-grid">
+        <!-- Sol: Son Yazılar / Notlar (Gerçek Veri) -->
+        <div class="divan-info-box divan-corner-box">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-border); padding-bottom: 0.6rem; margin-bottom: 0.8rem;">
+                <span style="font-family: var(--font-serif); font-size: 1.15rem; color: var(--gold-bright); display: flex; align-items: center; gap: 0.45rem;">
+                    @L["Home_RecentNotes"]
+                </span>
+                <a asp-controller="Notes" asp-action="Index" style="font-size: 0.8rem; color: var(--text-muted);">@L["Home_ViewAll"]</a>
+            </div>
+
+            @if (latestNote != null)
             {
-                <div class="memory-card">
-                    <!-- Mini Köşe Tezhipleri -->
-                    <span class="ottoman-mini-corner corner-tl"></span>
-                    <span class="ottoman-mini-corner corner-tr"></span>
-
-                    <div class="memory-thumb-wrapper">
-                        <img src="@Url.Action("Image", "Memories", new { f = item.ImageFileName, area = "" })" 
-                             alt="Hatıra" class="memory-thumb" loading="lazy" />
+                <a asp-controller="Notes" asp-action="Index" class="divan-post-card" style="text-decoration: none;">
+                    <div class="divan-post-info">
+                        <h4>@latestNote.Title</h4>
+                        <p>
+                            @(latestNote.Content.Length > 120 ? latestNote.Content.Substring(0, 117) + "..." : latestNote.Content)
+                        </p>
+                        <time>🕒 @latestNote.CreatedAt.ToString("dd MMMM yyyy", CultureInfo.CurrentUICulture)</time>
                     </div>
-                    <div class="memory-body">
-                        <p class="memory-caption">@item.Description</p>
-                        <div class="memory-footer">
-                            <span>✦ Misafir Anısı</span>
-                            <time>@item.CreatedAt.ToString("dd.MM.yyyy")</time>
-                        </div>
-                    </div>
+                </a>
+            }
+            else
+            {
+                <div style="padding: 1.5rem 0; text-align: center; color: var(--text-dim); font-size: 0.88rem;">
+                    @L["Home_NoNotes"]
                 </div>
             }
         </div>
+
+        <!-- Orta: Alıntı Çerçevesi (Admin Panelinden Dinamik) -->
+        <div class="divan-info-box divan-quote-box divan-corner-box">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
+
+            <p class="divan-quote-text">
+                &ldquo;@settings.QuoteText&rdquo;
+            </p>
+            <span class="divan-quote-author">&mdash; @settings.QuoteAuthor &mdash;</span>
+        </div>
+
+        <!-- Sağ: Hızlı Erişim Butonları (Terminal boş '#' ve dinamik linkler) -->
+        <div class="divan-info-box divan-corner-box">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
+
+            <div style="border-bottom: 1px solid var(--gold-border); padding-bottom: 0.6rem; margin-bottom: 0.8rem;">
+                <span style="font-family: var(--font-serif); font-size: 1.15rem; color: var(--gold-bright); display: flex; align-items: center; gap: 0.45rem;">
+                    @L["Home_QuickAccess"]
+                </span>
+            </div>
+
+            <div class="divan-quick-grid">
+                <!-- Terminal: Kullanıcının isteği üzerine '#' boş bırakıldı -->
+                <a href="#" class="divan-quick-btn" title="@L["Home_TerminalSoon"]">
+                    <span style="font-family: monospace; font-weight: bold; color: var(--gold-bright);">&gt;_</span>
+                    <span>Terminal</span>
+                </a>
+
+                <!-- GitHub (Admin Paneli Ayarından Dinamik) -->
+                @if (!string.IsNullOrWhiteSpace(settings.GithubUrl))
+                {
+                    <a href="@settings.GithubUrl" target="_blank" rel="noopener noreferrer" class="divan-quick-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                        <span>GitHub</span>
+                    </a>
+                }
+                else
+                {
+                    <a href="#" class="divan-quick-btn" style="opacity: 0.5;"><span>GitHub</span></a>
+                }
+
+                <!-- LinkedIn (Admin Paneli Ayarından Dinamik) -->
+                @if (!string.IsNullOrWhiteSpace(settings.LinkedinUrl))
+                {
+                    <a href="@settings.LinkedinUrl" target="_blank" rel="noopener noreferrer" class="divan-quick-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                            <rect x="2" y="9" width="4" height="12"></rect>
+                            <circle cx="4" cy="4" r="2"></circle>
+                        </svg>
+                        <span>LinkedIn</span>
+                    </a>
+                }
+                else
+                {
+                    <a href="#" class="divan-quick-btn" style="opacity: 0.5;"><span>LinkedIn</span></a>
+                }
+
+                <!-- Sunumlar (Ayrı sayfaya yönlendirme hazır) -->
+                <a href="#sunumlar" class="divan-quick-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>@L["Home_Presentations"]</span>
+                </a>
+
+                <!-- Arşiv (Hatıralar Sayfası) -->
+                <a asp-controller="Memories" asp-action="Index" class="divan-quick-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="21 8 21 21 3 21 3 8"></polyline>
+                        <rect x="1" y="3" width="22" height="5"></rect>
+                        <line x1="10" y1="12" x2="14" y2="12"></line>
+                    </svg>
+                    <span>@L["Home_Archive"]</span>
+                </a>
+
+                <!-- İletişim (Admin Panelindeki E-posta ile) -->
+                <a href="mailto:@settings.ContactEmail" class="divan-quick-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <span>@L["Home_Contact"]</span>
+                </a>
+            </div>
+        </div>
     </section>
-}
+
+</div>

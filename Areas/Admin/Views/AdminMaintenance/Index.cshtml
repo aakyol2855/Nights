@@ -1,0 +1,218 @@
+@model Nights.Services.Interfaces.MaintenanceDiagnosticsDto
+@{
+    ViewData["Title"] = "Sistem & Veri Bakım";
+    var podman = Model.PodmanHealth;
+    var db = Model.DatabaseStats;
+    var totalOrphanMb = Math.Round(Model.TotalOrphanBytes / (1024.0 * 1024.0), 2);
+}
+
+<div class="divan-container" style="padding: 2rem 1rem 4rem;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.75rem;">
+        <div>
+            <span class="badge-ottoman" style="margin-bottom: 0.45rem;">✦ Sunucu Teşhisi &amp; Veri Hijyeni</span>
+            <h2 style="font-family: var(--font-serif); font-size: 2rem; color: var(--text-white); margin: 0;">
+                Sistem &amp; Veri Bakım Araçları
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.92rem; margin: 0.35rem 0 0;">
+                Son tarama: @Model.GeneratedAtUtc.ToLocalTime().ToString("dd.MM.yyyy HH:mm:ss")
+            </p>
+        </div>
+
+        <a asp-area="Admin" asp-controller="AdminMaintenance" asp-action="Index" class="btn-ottoman-outline" style="font-size: 0.84rem;">
+            ↻ Yeniden Tara
+        </a>
+    </div>
+
+    <!-- Canlı İşlem Bildirimi -->
+    <div id="adminActionBanner" style="display: none; margin-bottom: 1.25rem; padding: 0.85rem 1.15rem; border-radius: var(--radius-sm); font-size: 0.9rem;"></div>
+
+    <!-- Üst 2 Kart: Podman Sağlığı & Önbellek / Veritabanı Özeti -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+
+        <!-- 1. Podman / Demo Ortam Sağlık Kontrolü -->
+        <div class="divan-corner-box" style="padding: 1.5rem;">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
+
+            <h3 style="font-family: var(--font-serif); color: var(--gold-bright); font-size: 1.3rem; margin: 0 0 1rem;">
+                🐳 Podman / Demo Sağlık Teşhisi
+            </h3>
+
+            <div style="display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.88rem; margin-bottom: 1.25rem;">
+                <div style="display: flex; justify-content: space-between; gap: 0.5rem;">
+                    <span style="color: var(--text-muted);">CLI Durumu:</span>
+                    <strong style="color: @(podman.IsCliAvailable ? "#2ecc71" : "var(--danger-rose)");">
+                        @(podman.IsCliAvailable ? "Erişilebilir" : "Hata") (@podman.CliPath)
+                    </strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; gap: 0.5rem;">
+                    <span style="color: var(--text-muted);">Sürüm:</span>
+                    <span style="color: var(--text-white); font-family: monospace; font-size: 0.8rem;">@podman.CliVersion</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; gap: 0.5rem;">
+                    <span style="color: var(--text-muted);">İzole Ağ (@podman.SharedNetworkName):</span>
+                    <strong style="color: @(podman.IsSharedNetworkPresent ? "#2ecc71" : "var(--gold-bright)");">
+                        @(podman.IsSharedNetworkPresent ? "Aktif" : "Henüz Oluşturulmadı")
+                    </strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; gap: 0.5rem;">
+                    <span style="color: var(--text-muted);">Aktif Demo:</span>
+                    <span style="color: var(--text-white);">@(podman.ActiveDemoName ?? "Yok (Uyku Modunda)")</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; gap: 0.5rem;">
+                    <span style="color: var(--text-muted);">Yetim Container:</span>
+                    <strong style="color: @(podman.OrphanContainers.Any() ? "var(--danger-rose)" : "#2ecc71");">
+                        @podman.OrphanContainers.Count adet
+                    </strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; gap: 0.5rem;">
+                    <span style="color: var(--text-muted);">Disk Kullanımı:</span>
+                    <span style="color: var(--text-white);">%@podman.DiskUsagePercent (@podman.DiskFreeFormatted boş / @podman.DiskTotalFormatted)</span>
+                </div>
+            </div>
+
+            @if (podman.OrphanContainers.Any())
+            {
+                <div style="margin-bottom: 1rem; padding: 0.65rem 0.8rem; background: rgba(231, 76, 60, 0.12); border: 1px solid var(--danger-rose); border-radius: 4px; font-size: 0.78rem; font-family: monospace; color: #ffb8b8;">
+                    @foreach (var c in podman.OrphanContainers)
+                    {
+                        <div>• @c</div>
+                    }
+                </div>
+            }
+
+            <button type="button"
+                    class="btn-ottoman-outline"
+                    data-maintenance-action
+                    data-action-url="@Url.Action("CleanOrphanContainers", "AdminMaintenance", new { area = "Admin" })"
+                    data-confirm-title="Yetim Container'ları Temizle"
+                    data-confirm-body="Aktif oturum dışında kalan tüm divan-demo-* container'ları durdurulup silinecektir. Devam etmek istiyor musunuz?"
+                    style="width: 100%; font-size: 0.84rem;">
+                🧹 Yetim Container'ları Temizle
+            </button>
+        </div>
+
+        <!-- 2. Önbellek (MemoryCache) & Veritabanı İstatistikleri -->
+        <div class="divan-corner-box" style="padding: 1.5rem;">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
+
+            <h3 style="font-family: var(--font-serif); color: var(--gold-bright); font-size: 1.3rem; margin: 0 0 1rem;">
+                ⚡ Önbellek &amp; Veritabanı Özeti
+            </h3>
+
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.65rem; margin-bottom: 1.25rem; font-size: 0.86rem;">
+                <div style="padding: 0.65rem; background: var(--bg-surface); border: 1px solid var(--gold-border); border-radius: 4px;">
+                    <div style="color: var(--text-muted); font-size: 0.75rem;">DB Boyutu</div>
+                    <div style="color: var(--gold-bright); font-weight: 700; font-size: 1.05rem;">@db.DatabaseSizeFormatted</div>
+                </div>
+                <div style="padding: 0.65rem; background: var(--bg-surface); border: 1px solid var(--gold-border); border-radius: 4px;">
+                    <div style="color: var(--text-muted); font-size: 0.75rem;">Çöp Kutusu</div>
+                    <div style="color: var(--text-white); font-weight: 700; font-size: 1.05rem;">@db.TotalTrashItems kayıt</div>
+                </div>
+                <div style="padding: 0.65rem; background: var(--bg-surface); border: 1px solid var(--gold-border); border-radius: 4px;">
+                    <div style="color: var(--text-muted); font-size: 0.75rem;">Aktif İçerik</div>
+                    <div style="color: var(--text-white); font-weight: 600;">@db.ActiveMemories Anı • @db.ActiveProjects Proje • @db.ActiveNotes Not</div>
+                </div>
+                <div style="padding: 0.65rem; background: var(--bg-surface); border: 1px solid var(--gold-border); border-radius: 4px;">
+                    <div style="color: var(--text-muted); font-size: 0.75rem;">Sistem Günlüğü</div>
+                    <div style="color: var(--text-white); font-weight: 700; font-size: 1.05rem;">@db.TotalAuditLogs log</div>
+                </div>
+            </div>
+
+            <button type="button"
+                    class="btn-divan-primary"
+                    data-maintenance-action
+                    data-action-url="@Url.Action("PurgeCache", "AdminMaintenance", new { area = "Admin" })"
+                    data-confirm-title="Önbelleği (MemoryCache) Sıfırla"
+                    data-confirm-body="Tüm bellek içi önbellek anahtarları (anılar, projeler, notlar, site ayarları, sağlık metrikleri) sıfırlanacaktır. Devam edilsin mi?"
+                    style="width: 100%; font-size: 0.85rem;">
+                ⚡ Tüm Önbelleği Sıfırla (Cache Purge)
+            </button>
+        </div>
+    </div>
+
+    <!-- 3. Yetim Dosya Tarayıcı & Temizleyici -->
+    <div class="divan-corner-box" style="padding: 1.5rem; overflow-x: auto;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+            <div>
+                <h3 style="font-family: var(--font-serif); color: var(--gold-bright); font-size: 1.3rem; margin: 0;">
+                    📁 Yetim Dosya Tarayıcı (Orphan File Cleaner)
+                </h3>
+                <p style="color: var(--text-muted); font-size: 0.84rem; margin: 0.25rem 0 0;">
+                    Veritabanında karşılığı kalmamış <code>uploads/pending</code>, <code>uploads/approved</code>, <code>uploads/trash</code> görselleri ve geçici <code>.tar</code> artıkları:
+                    <strong style="color: var(--text-white);">@Model.OrphanFiles.Count dosya (@totalOrphanMb MB)</strong>
+                </p>
+            </div>
+
+            @if (Model.OrphanFiles.Any())
+            {
+                <button type="button"
+                        class="btn-ottoman-outline"
+                        data-maintenance-action
+                        data-action-url="@Url.Action("CleanOrphanFiles", "AdminMaintenance", new { area = "Admin" })"
+                        data-confirm-title="Yetim Dosyaları Temizle"
+                        data-confirm-body="Tespit edilen @Model.OrphanFiles.Count adet sahipsiz dosya (@totalOrphanMb MB) diskten kalıcı olarak silinecektir. Onaylıyor musunuz?"
+                        style="border-color: var(--danger-rose); color: var(--danger-rose); font-size: 0.84rem;">
+                    🗑 Tüm Yetim Dosyaları Temizle
+                </button>
+            }
+        </div>
+
+        @if (!Model.OrphanFiles.Any())
+        {
+            <div style="text-align: center; padding: 2rem 1rem; color: #2ecc71; font-size: 0.92rem;">
+                ✓ Disk üzerinde veritabanıyla eşleşmeyen yetim dosya tespit edilmedi.
+            </div>
+        }
+        else
+        {
+            <table style="width: 100%; border-collapse: collapse; min-width: 580px;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--gold-border); text-align: left; color: var(--gold-bright); font-size: 0.78rem; text-transform: uppercase;">
+                        <th style="padding: 0.6rem 0.5rem;">Klasör</th>
+                        <th style="padding: 0.6rem 0.5rem;">Dosya Adı</th>
+                        <th style="padding: 0.6rem 0.5rem;">Boyut</th>
+                        <th style="padding: 0.6rem 0.5rem;">Son Değişiklik</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var file in Model.OrphanFiles)
+                    {
+                        <tr style="border-bottom: 1px solid rgba(197, 160, 89, 0.14); font-size: 0.85rem;">
+                            <td style="padding: 0.65rem 0.5rem;"><span class="badge-ottoman" style="font-size: 0.72rem;">@file.Folder</span></td>
+                            <td style="padding: 0.65rem 0.5rem; font-family: monospace; color: var(--text-white);">@file.FileName</td>
+                            <td style="padding: 0.65rem 0.5rem; color: var(--text-main);">@(Math.Round(file.SizeBytes / 1024.0, 1)) KB</td>
+                            <td style="padding: 0.65rem 0.5rem; color: var(--text-muted);">@file.LastWriteUtc.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+<!-- Merkezi Onay Modalı -->
+<div id="divanConfirmModal" style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(4, 8, 15, 0.78); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem;">
+    <div class="divan-corner-box" style="max-width: 460px; width: 100%; padding: 1.75rem; background: var(--bg-card);">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
+        <h3 id="divanConfirmTitle" style="font-family: var(--font-serif); color: var(--gold-bright); margin: 0 0 0.65rem; font-size: 1.35rem;">Onay</h3>
+        <p id="divanConfirmBody" style="color: var(--text-main); font-size: 0.92rem; line-height: 1.6; margin: 0 0 1.4rem;"></p>
+        <div style="display: flex; justify-content: flex-end; gap: 0.65rem;">
+            <button type="button" id="divanConfirmCancel" class="btn-ottoman-outline" style="font-size: 0.84rem; padding: 0.45rem 1rem;">Vazgeç</button>
+            <button type="button" id="divanConfirmAccept" class="btn-divan-primary" style="font-size: 0.84rem; padding: 0.45rem 1.15rem;">Onayla</button>
+        </div>
+    </div>
+</div>

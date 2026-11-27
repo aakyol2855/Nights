@@ -1,6 +1,6 @@
 namespace Nights.Models.Entities;
 
-public class Memory
+public class Memory : ISoftDeletable
 {
     public int Id { get; set; }
     public string Description { get; set; } = string.Empty;
@@ -8,4 +8,9 @@ public class Memory
     public bool IsApproved { get; set; } = false;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public string SubmitterIpHash { get; set; } = string.Empty;
+
+    // Soft-Delete (Çöp Kutusu)
+    public bool IsDeleted { get; set; } = false;
+    public DateTime? DeletedAtUtc { get; set; }
+    public string? DeletedBy { get; set; }
 }

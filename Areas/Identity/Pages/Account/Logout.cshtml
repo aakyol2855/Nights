@@ -1,0 +1,38 @@
+@page
+@model Nights.Areas.Identity.Pages.Account.LogoutModel
+@{
+    ViewData["Title"] = "Güvenli Çıkış";
+}
+
+<div class="divan-auth-wrapper">
+    <div class="divan-auth-card divan-corner-box ottoman-frame" style="text-align: center;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
+
+        <span style="font-size: 2.8rem; color: var(--gold-primary); display: block; margin-bottom: 0.75rem;">۞</span>
+        <h1 class="divan-auth-title">Güvenli Çıkış</h1>
+
+        @if (User.Identity?.IsAuthenticated ?? false)
+        {
+            <p class="divan-auth-subtitle" style="margin-bottom: 1.75rem;">
+                Oturumunuzu güvenli bir şekilde sonlandırmak için aşağıdaki butona tıklayın.
+            </p>
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                <button type="submit" class="btn-divan-primary" style="width: 100%; justify-content: center;">
+                    <span>🚪 Oturumu Kapat</span>
+                </button>
+            </form>
+        }
+        else
+        {
+            <p class="divan-auth-subtitle" style="margin-bottom: 1.75rem;">
+                Oturumunuz başarıyla ve güvenle sonlandırıldı.
+            </p>
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="btn-divan-primary" style="width: 100%; justify-content: center;">
+                <span>✦ Ana Sayfaya Dön</span>
+            </a>
+        }
+    </div>
+</div>

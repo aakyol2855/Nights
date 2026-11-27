@@ -10,6 +10,7 @@ public class ProjectListViewModel
 public class ProjectDetailViewModel
 {
     public Project Project { get; set; } = null!;
+    public string? MarkdownGuideHtml { get; set; }
     public List<TutorialRenderedItem> RenderedTutorials { get; set; } = new();
 }
 

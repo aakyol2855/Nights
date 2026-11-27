@@ -1,32 +1,34 @@
 @model Nights.Models.ErrorViewModel
 @{
-    ViewData["Title"] = "Bir Hata Oluştu";
+    ViewData["Title"] = L["Error_Title"];
 }
 
-<div style="max-width: 700px; margin: 3rem auto; text-align: center;">
-    <div class="ottoman-frame" style="padding: 3rem 2rem;">
-        <span class="ottoman-corner corner-tl"></span>
-        <span class="ottoman-corner corner-tr"></span>
-        <span class="ottoman-corner corner-bl"></span>
-        <span class="ottoman-corner corner-br"></span>
+<div style="max-width: 700px; margin: 4rem auto; text-align: center;">
+    <div class="divan-corner-box ottoman-frame" style="padding: 3.5rem 2.5rem;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
 
-        <span style="font-size: 2.5rem; color: var(--danger-rose); display: block; margin-bottom: 0.5rem;">۞</span>
-        <h1 style="font-size: 2rem; color: var(--accent-sapphire); margin-bottom: 0.8rem;">Beklenmeyen Bir Hata Oluştu</h1>
-        <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; margin-bottom: 1.5rem;">
-            İsteğiniz işlenirken sunucu tarafında geçici bir aksaklık meydana geldi.
+        <span style="font-size: 2.8rem; color: var(--danger-rose); display: block; margin-bottom: 0.8rem;">۞</span>
+        <h1 style="font-family: var(--font-serif); font-size: 2.2rem; color: var(--text-white); margin-bottom: 0.8rem;">
+            @L["Error_Heading"]
+        </h1>
+        <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; margin-bottom: 1.8rem;">
+            @L["Error_Desc"]
         </p>
 
         @if (Model?.ShowRequestId == true)
         {
-            <div style="background: rgba(20, 34, 54, 0.05); padding: 0.75rem 1.25rem; border-radius: var(--radius-sm); display: inline-block; margin-bottom: 2rem; border: 1px dashed var(--accent-gold);">
-                <span style="font-size: 0.88rem; color: var(--text-muted);">İstek Kimliği (Request ID):</span>
-                <code style="font-family: monospace; font-weight: bold; color: var(--accent-sapphire); margin-left: 0.4rem;">@Model.RequestId</code>
+            <div style="background: rgba(7, 12, 19, 0.7); padding: 0.75rem 1.25rem; border-radius: var(--radius-sm); display: inline-block; margin-bottom: 2rem; border: 1px dashed var(--gold-border);">
+                <span style="font-size: 0.85rem; color: var(--text-muted);">@L["Error_RequestId"]</span>
+                <code style="font-family: monospace; font-weight: bold; color: var(--gold-bright); margin-left: 0.4rem;">@Model.RequestId</code>
             </div>
         }
 
         <div>
-            <a asp-area="" asp-controller="Home" asp-action="Index" class="btn-ottoman">
-                <span>✦ Ana Sayfaya Dön</span>
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="btn-divan-primary">
+                <span>@L["Common_BackHome"]</span>
             </a>
         </div>
     </div>

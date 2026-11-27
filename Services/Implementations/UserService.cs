@@ -87,8 +87,9 @@ public class UserService : IUserService
 
         if (result.Succeeded)
         {
+            await _userManager.UpdateSecurityStampAsync(user);
             var newState = !isContributor;
-            _logger.LogInformation("[UserService] Kullanıcı yetkisi güncellendi. UserId: {UserId}, HasAccess: {HasAccess}", userId, newState);
+            _logger.LogInformation("[UserService] Kullanıcı yetkisi ve SecurityStamp güncellendi. UserId: {UserId}, HasAccess: {HasAccess}", userId, newState);
             return (true, newState, newState ? "Kullanıcıya not defteri okuma/yazma izni verildi." : "Kullanıcının not defteri izni kaldırıldı.");
         }
 

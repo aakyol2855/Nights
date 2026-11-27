@@ -10,31 +10,38 @@ public class HomeController : Controller
 {
     private readonly IProjectService _projectService;
     private readonly IMemoryService _memoryService;
+    private readonly ISystemHealthService _healthService;
+    private readonly INoteService _noteService;
     private readonly ILogger<HomeController> _logger;
 
     public HomeController(
         IProjectService projectService,
         IMemoryService memoryService,
+        ISystemHealthService healthService,
+        INoteService noteService,
         ILogger<HomeController> logger)
     {
         _projectService = projectService;
         _memoryService = memoryService;
+        _healthService = healthService;
+        _noteService = noteService;
         _logger = logger;
     }
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        _logger.LogInformation("[HomeController] Ana sayfa talep edildi.");
+        _logger.LogInformation("[HomeController] Divan Ana Sayfası talep edildi.");
 
-        // SQL tarafında limitlenen öne çıkan projeler
         var featuredProjects = await _projectService.GetFeaturedProjectsAsync(3);
-
-        // Cache'li onaylanmış anılar (SQL seviyesinde Take(60) ile optimize edilmiş)
         var memories = await _memoryService.GetApprovedMemoriesAsync();
+        var healthStats = await _healthService.GetHealthStatsAsync();
+        var (notes, _, _) = await _noteService.GetNotesPagedAsync(1, 3);
 
         ViewBag.FeaturedProjects = featuredProjects;
-        ViewBag.RecentMemories = memories.Take(6).ToList();
+        ViewBag.RecentMemories = memories.Take(4).ToList();
+        ViewBag.HealthStats = healthStats;
+        ViewBag.RecentNotes = notes;
 
         return View();
     }

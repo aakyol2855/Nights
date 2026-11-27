@@ -36,6 +36,7 @@ public class ProjectService : IProjectService
         _cache = cache;
         _logger = logger;
         _markdownPipeline = new MarkdownPipelineBuilder()
+            .DisableHtml()
             .UseAutoLinks()
             .UseEmphasisExtras()
             .Build();
@@ -58,6 +59,7 @@ public class ProjectService : IProjectService
                 {
                     Id = p.Id,
                     Title = p.Title,
+                    Slug = p.Slug,
                     Summary = p.Summary,
                     Description = string.Empty, // Listelemede uzun açıklama yüklenmez
                     LiveDemoUrl = p.LiveDemoUrl,
@@ -68,6 +70,8 @@ public class ProjectService : IProjectService
                     DisplayOrder = p.DisplayOrder,
                     IsActive = p.IsActive,
                     IsFeatured = p.IsFeatured,
+                    IsDemoEnabled = p.IsDemoEnabled,
+                    DockerImageName = p.DockerImageName,
                     CreatedAt = p.CreatedAt
                 })
                 .ToListAsync();
@@ -165,9 +169,14 @@ public class ProjectService : IProjectService
                 })
                 .ToList();
 
+            var markdownGuideHtml = string.IsNullOrWhiteSpace(project.MarkdownGuide)
+                ? null
+                : Markdown.ToHtml(project.MarkdownGuide, _markdownPipeline);
+
             return new ProjectDetailViewModel
             {
                 Project = project,
+                MarkdownGuideHtml = markdownGuideHtml,
                 RenderedTutorials = tutorialVms
             };
         });
@@ -192,15 +201,17 @@ public class ProjectService : IProjectService
     }
 
     /// <inheritdoc/>
-    public async Task DeleteProjectAsync(int id)
+    public async Task DeleteProjectAsync(int id, string? deletedBy = null)
     {
         var project = await _context.Projects.FindAsync(id);
         if (project != null)
         {
-            _context.Projects.Remove(project);
+            project.IsDeleted = true;
+            project.DeletedAtUtc = DateTime.UtcNow;
+            project.DeletedBy = string.IsNullOrWhiteSpace(deletedBy) ? "Admin" : deletedBy;
             await _context.SaveChangesAsync();
             InvalidateCache(id);
-            _logger.LogInformation("[ProjectService] Proje silindi. ProjectId={Id}", id);
+            _logger.LogInformation("[ProjectService] Proje çöp kutusuna taşındı (Soft-Delete). ProjectId={Id}, DeletedBy={User}", id, project.DeletedBy);
         }
     }
 

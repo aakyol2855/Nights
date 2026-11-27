@@ -1,6 +1,6 @@
 namespace Nights.Models.Entities;
 
-public class Note
+public class Note : ISoftDeletable
 {
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
@@ -17,7 +17,9 @@ public class Note
     public DateTime? UpdatedAt { get; set; }
 
     /// <summary>
-    /// Soft-delete bayrağı. true ise not listelerinde gösterilmez; fiziksel satır silinmez.
+    /// Soft-delete bayrağı. true ise not listelerinde gösterilmez; Çöp Kutusu'nda tutulur.
     /// </summary>
     public bool IsDeleted { get; set; } = false;
+    public DateTime? DeletedAtUtc { get; set; }
+    public string? DeletedBy { get; set; }
 }

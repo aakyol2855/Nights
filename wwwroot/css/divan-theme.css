@@ -1,0 +1,1444 @@
+/* ==============================================================================
+   DİVAN - GELİŞMİŞ OSMANLI ESTETİĞİ VE DİJİTAL ARŞİV TEMASI
+   Desteklenen Modlar: Koyu Divan (Derin Lacivert & Altın) & Aydınlık Divan (Fildişi / Parşömen)
+   ============================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+/* 1. RENK PALETİ & TEMA DEĞİŞKENLERİ */
+:root, [data-theme="dark"] {
+    --theme-mode: dark;
+    --bg-deep: #080D14;
+    --bg-night: #0B111A;
+    --bg-surface: #0E1622;
+    --bg-glass: rgba(14, 22, 34, 0.88);
+    --bg-glass-hover: rgba(20, 32, 48, 0.95);
+    --bg-card: rgba(15, 24, 38, 0.90);
+    --bg-card-hover: rgba(22, 35, 54, 0.98);
+    --bg-input: #070D16;
+    --bg-nav: rgba(11, 17, 26, 0.95);
+    --bg-footer: rgba(7, 11, 16, 0.98);
+
+    --site-bg-image: url('/images/divan-hero-bg.jpg');
+    --site-bg-display: block;
+
+    --gold-primary: #C5A059;
+    --gold-bright: #F7D688;
+    --gold-dark: #8C6D32;
+    --gold-border: rgba(212, 175, 95, 0.42);
+    --gold-glow: rgba(247, 214, 136, 0.22);
+
+    --emerald-dark: #12332A;
+    --emerald-accent: #1E443F;
+    --emerald-bright: #2ECC71;
+    --emerald-border: rgba(46, 204, 113, 0.4);
+
+    --text-white: #FFFFFF;
+    --text-main: #F8F6F0;
+    --text-muted: #CBD5E1;
+    --text-dim: #94A3B8;
+    --danger-rose: #FF5A5F;
+
+    --card-thumb-opacity: 0.45;
+    --card-thumb-hover-opacity: 0.75;
+    --bg-body-vignette: radial-gradient(circle at 50% 15%, rgba(14, 22, 34, 0.25) 0%, rgba(8, 13, 20, 0.78) 65%, #06090E 100%),
+                        linear-gradient(180deg, rgba(8, 13, 20, 0.4) 0%, rgba(8, 13, 20, 0.92) 100%);
+    --bg-body-filter: blur(6px) brightness(0.40) saturate(1.1);
+    --box-shadow-elevated: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --hero-overlay-grad: linear-gradient(90deg, #070B10 32%, rgba(7, 11, 16, 0.82) 58%, rgba(7, 11, 16, 0.35) 100%),
+                         linear-gradient(0deg, #070B10 0%, transparent 40%);
+}
+
+[data-theme="light"] {
+    --theme-mode: light;
+    --bg-deep: #F8F5EE;
+    --bg-night: #FAF8F2;
+    --bg-surface: #EDE7DC;
+    --bg-glass: rgba(255, 255, 255, 0.95);
+    --bg-glass-hover: #FFFFFF;
+    --bg-card: rgba(255, 255, 255, 0.96);
+    --bg-card-hover: #FFFFFF;
+    --bg-input: #FFFFFF;
+    --bg-nav: rgba(248, 245, 238, 0.98);
+    --bg-footer: #EDE7DC;
+
+    --site-bg-image: url('/images/divan-hero-bg.jpg');
+    --site-bg-display: block;
+
+    --gold-primary: #946922;
+    --gold-bright: #755010;
+    --gold-dark: #503608;
+    --gold-border: rgba(148, 105, 34, 0.38);
+    --gold-glow: rgba(148, 105, 34, 0.16);
+
+    --emerald-dark: #15453A;
+    --emerald-accent: #1C5A4C;
+    --emerald-bright: #1E824C;
+    --emerald-border: rgba(30, 130, 76, 0.45);
+
+    --text-white: #0F172A;
+    --text-main: #1E293B;
+    --text-muted: #334155;
+    --text-dim: #64748B;
+    --danger-rose: #C5221F;
+
+    --card-thumb-opacity: 0.60;
+    --card-thumb-hover-opacity: 0.85;
+    --bg-body-vignette: radial-gradient(circle at 50% 15%, rgba(250, 247, 240, 0.45) 0%, rgba(245, 241, 232, 0.85) 65%, #EDE7D8 100%),
+                        linear-gradient(180deg, rgba(245, 241, 232, 0.55) 0%, rgba(237, 231, 216, 0.94) 100%);
+    --bg-body-filter: blur(8px) brightness(0.92) saturate(0.65) sepia(0.25);
+    --box-shadow-elevated: 0 10px 30px rgba(18, 26, 36, 0.08);
+    --hero-overlay-grad: linear-gradient(90deg, rgba(245, 241, 232, 0.95) 32%, rgba(245, 241, 232, 0.82) 58%, rgba(245, 241, 232, 0.35) 100%),
+                         linear-gradient(0deg, rgba(245, 241, 232, 0.95) 0%, transparent 40%);
+}
+
+:root {
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --transition-smooth: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 2. TEMEL YAPI VE BLURLU ARKA PLAN DUVAR KAĞIDI */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-deep);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Tüm Sayfayı Kaplayan Blurlu Boğaz & Ayasofya Arka Planı */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: var(--site-bg-image);
+    background-size: cover;
+    background-position: center 25%;
+    background-repeat: no-repeat;
+    filter: var(--bg-body-filter);
+    transform: scale(1.06);
+    z-index: -2;
+    pointer-events: none;
+    transition: filter 0.3s ease, background-image 0.3s ease;
+    display: var(--site-bg-display, block);
+}
+
+/* Vignette Maskesi */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: var(--bg-body-vignette);
+    z-index: -1;
+    pointer-events: none;
+    transition: background 0.3s ease, opacity 0.3s ease;
+    opacity: calc(1.35 - var(--bg-body-vignette-opacity, 0.75) * 0.7);
+}
+
+a {
+    color: var(--gold-bright);
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+a:hover {
+    color: var(--gold-primary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-white);
+    font-family: var(--font-serif);
+    font-weight: 600;
+}
+
+p {
+    color: var(--text-main);
+}
+
+label {
+    color: var(--gold-bright);
+}
+
+code, pre {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    background: rgba(197, 160, 89, 0.1);
+    color: var(--gold-bright);
+    border: 1px solid var(--gold-border);
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.88em;
+}
+
+input, textarea, select {
+    color: var(--text-main);
+    background: var(--bg-input);
+}
+
+::placeholder {
+    color: var(--text-dim) !important;
+    opacity: 0.9;
+}
+
+/* 3. TEZHİP / RUMİ KÖŞE MOTİFLERİ */
+.divan-corner-box {
+    position: relative;
+    border: 1px solid var(--gold-border);
+    background: var(--bg-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: var(--transition-smooth);
+}
+.divan-corner-box:hover {
+    border-color: var(--gold-bright);
+    box-shadow: var(--box-shadow-elevated), 0 0 16px var(--gold-glow);
+}
+
+.divan-corner {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M0 0 L18 0 C18 10 10 18 0 18 Z' fill='%23C5A059' opacity='0.75'/%3E%3Cpath d='M3 3 L12 3 C12 8 8 12 3 12 Z' fill='%23E2C17D' opacity='0.9'/%3E%3C/svg%3E");
+    z-index: 2;
+}
+.c-tl { top: -1px; left: -1px; }
+.c-tr { top: -1px; right: -1px; transform: scaleX(-1); }
+.c-bl { bottom: -1px; left: -1px; transform: scaleY(-1); }
+.c-br { bottom: -1px; right: -1px; transform: scale(-1); }
+
+/* 4. ÜST BAR (NAVBAR) */
+.divan-nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--bg-nav);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--gold-border);
+    padding: 0.65rem 2rem;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+.divan-nav-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.divan-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    text-decoration: none;
+}
+.divan-brand img {
+    height: 40px;
+    width: auto;
+    filter: drop-shadow(0 0 6px rgba(197, 160, 89, 0.3));
+}
+.divan-brand-text h1 {
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    color: var(--text-white);
+    line-height: 1;
+}
+.divan-brand-text span {
+    font-size: 0.68rem;
+    letter-spacing: 2.5px;
+    color: var(--gold-bright);
+    display: block;
+    margin-top: 3px;
+    font-weight: 600;
+}
+
+/* Menü Öğeleri */
+.divan-menu {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    list-style: none;
+}
+.divan-menu-link {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1.15rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    opacity: 0.88;
+    font-size: 0.88rem;
+    font-weight: 500;
+    border: 1px solid transparent;
+    transition: var(--transition-smooth);
+    text-decoration: none;
+}
+.divan-menu-link svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.85;
+}
+.divan-menu-link:hover {
+    color: var(--gold-bright);
+    opacity: 1;
+    background: rgba(197, 160, 89, 0.08);
+    border-color: var(--gold-border);
+}
+.divan-menu-link.active {
+    color: var(--gold-bright);
+    opacity: 1;
+    background: rgba(18, 51, 42, 0.55);
+    border: 1px solid var(--gold-border);
+    box-shadow: 0 0 14px var(--gold-glow), inset 0 0 10px rgba(18, 51, 42, 0.4);
+}
+[data-theme="light"] .divan-menu-link.active {
+    background: rgba(30, 130, 76, 0.12);
+    border: 1px solid var(--gold-primary);
+    box-shadow: 0 2px 8px var(--gold-glow);
+}
+.divan-menu-link.active svg {
+    opacity: 1;
+    filter: drop-shadow(0 0 4px var(--gold-primary));
+}
+
+.divan-admin-pill {
+    color: var(--gold-bright) !important;
+    border: 1px solid var(--gold-border) !important;
+    background: rgba(197, 160, 89, 0.12) !important;
+    font-weight: 600 !important;
+}
+.divan-admin-pill:hover {
+    background: rgba(197, 160, 89, 0.25) !important;
+    box-shadow: 0 0 12px var(--gold-glow) !important;
+}
+
+/* Sağ Alan (Tema Değişimi, Dil & Profil) */
+.divan-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+.divan-lang-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--gold-border);
+    border-radius: 20px;
+    background: var(--bg-glass);
+}
+
+/* Tema Değiştirme Butonu */
+.divan-theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--gold-border);
+    background: var(--bg-glass);
+    color: var(--gold-bright);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+.divan-theme-toggle:hover {
+    border-color: var(--gold-bright);
+    color: var(--text-white);
+    box-shadow: 0 0 12px var(--gold-glow);
+    transform: scale(1.06);
+}
+[data-theme="dark"] .theme-icon-moon { display: none; }
+[data-theme="dark"] .theme-icon-sun { display: block; }
+[data-theme="light"] .theme-icon-sun { display: none; }
+[data-theme="light"] .theme-icon-moon { display: block; }
+
+/* Kullanıcı Profil Menüsü & Dropdown */
+.divan-user-menu-wrapper {
+    position: relative;
+}
+.divan-user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--gold-border);
+    background: var(--bg-glass);
+    color: var(--gold-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+.divan-user-avatar:hover {
+    border-color: var(--gold-bright);
+    box-shadow: 0 0 10px var(--gold-glow);
+    transform: scale(1.05);
+}
+.divan-user-avatar.is-admin {
+    border-color: var(--gold-bright);
+    background: rgba(197, 160, 89, 0.15);
+    box-shadow: 0 0 10px var(--gold-glow);
+}
+.divan-login-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 1.05rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gold-border);
+    background: var(--bg-glass);
+    color: var(--gold-bright);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+.divan-login-btn:hover {
+    border-color: var(--gold-bright);
+    color: var(--text-white);
+    background: rgba(197, 160, 89, 0.2);
+    box-shadow: 0 0 12px var(--gold-glow);
+}
+.divan-user-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 240px;
+    background: var(--bg-surface);
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--box-shadow-elevated), 0 0 15px var(--gold-glow);
+    padding: 0.75rem 0;
+    z-index: 1050;
+    display: none;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+.divan-user-dropdown.show {
+    display: block;
+    animation: divanFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes divanFadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.divan-user-header {
+    padding: 0.6rem 1.15rem 0.75rem;
+    border-bottom: 1px solid var(--gold-border);
+    margin-bottom: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+.divan-user-header .user-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-white);
+    word-break: break-all;
+}
+.divan-user-links {
+    display: flex;
+    flex-direction: column;
+}
+.user-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.15rem;
+    color: var(--text-main);
+    font-size: 0.88rem;
+    transition: var(--transition-smooth);
+    text-decoration: none;
+}
+.user-dropdown-item:hover {
+    background: rgba(197, 160, 89, 0.12);
+    color: var(--gold-bright);
+    padding-left: 1.35rem;
+}
+.user-dropdown-item.logout-item:hover {
+    background: rgba(217, 83, 79, 0.12);
+    color: var(--danger-rose);
+}
+
+/* Mobil Menü Butonu */
+.divan-mobile-toggle {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--gold-border);
+    color: var(--gold-bright);
+    padding: 0.45rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+/* 5. HERO BÖLÜMÜ (BOĞAZ / AYASOFYA GECE SİLÜETİ) */
+.divan-hero {
+    position: relative;
+    max-width: 1440px;
+    margin: 1.5rem auto 2.5rem;
+    padding: 3.5rem 3rem;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--gold-border);
+    box-shadow: var(--box-shadow-elevated);
+}
+.divan-hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: var(--hero-bg-image, url('/images/divan-hero-bg.jpg'));
+    background-size: cover;
+    background-position: center 30%;
+    z-index: 0;
+    display: var(--hero-bg-display, block);
+}
+.divan-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--hero-overlay-grad);
+    z-index: 1;
+}
+.divan-hero-content {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 3rem;
+    align-items: center;
+}
+.divan-hero-left {
+    max-width: 650px;
+}
+.divan-calligraphy {
+    height: 32px;
+    margin-bottom: 0.85rem;
+    filter: drop-shadow(0 0 8px rgba(197, 160, 89, 0.4));
+}
+.divan-hero-title {
+    font-family: var(--font-serif);
+    font-size: 3.25rem;
+    line-height: 1.12;
+    font-weight: 600;
+    color: var(--text-white);
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.5px;
+}
+.divan-hero-desc {
+    font-size: 1.05rem;
+    color: var(--text-main);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+/* Aksiyon Butonları */
+.btn-divan-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.85rem 2rem;
+    background: linear-gradient(135deg, #163E33 0%, #0E2922 100%);
+    color: #FDFBF7 !important;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border: 1px solid var(--gold-primary);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 20px rgba(22, 62, 51, 0.5), 0 0 12px var(--gold-glow);
+    transition: var(--transition-smooth);
+    text-decoration: none;
+    cursor: pointer;
+}
+.btn-divan-primary:hover {
+    background: linear-gradient(135deg, #1C4D40 0%, #133930 100%);
+    border-color: #FFFFFF;
+    color: #FFFFFF !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 26px rgba(22, 62, 51, 0.7), 0 0 18px var(--gold-glow);
+}
+
+.btn-ottoman-outline {
+    background: rgba(197, 160, 89, 0.08);
+    color: var(--gold-bright) !important;
+    border: 1px solid var(--gold-border);
+    padding: 0.65rem 1.4rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    transition: var(--transition-smooth);
+    text-decoration: none;
+}
+.btn-ottoman-outline:hover {
+    background: rgba(197, 160, 89, 0.22);
+    border-color: var(--gold-bright);
+    color: var(--text-white) !important;
+    box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.btn-ottoman {
+    background: var(--emerald-accent);
+    color: #FFFFFF;
+    border: 1px solid var(--gold-primary);
+    padding: 0.65rem 1.4rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+.btn-ottoman:hover {
+    background: var(--emerald-dark);
+    border-color: var(--gold-bright);
+}
+
+.btn-danger-soft {
+    background: transparent;
+    color: var(--danger-rose);
+    border: 1px solid var(--danger-rose);
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition-smooth);
+}
+.btn-danger-soft:hover {
+    background: var(--danger-rose);
+    color: #FFFFFF;
+}
+
+/* 6. 4'LÜ VİTRİN KARTLARI */
+.divan-showcase-grid {
+    max-width: 1440px;
+    margin: 0 auto 3rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+.divan-card {
+    position: relative;
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 290px;
+    padding: 1.75rem 1.5rem;
+    transition: var(--transition-smooth);
+    text-decoration: none;
+    cursor: pointer;
+}
+.divan-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--gold-bright);
+    box-shadow: var(--box-shadow-elevated), 0 0 18px var(--gold-glow);
+}
+.divan-card-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: var(--card-thumb-opacity, 0.45);
+    transition: var(--transition-smooth);
+    z-index: 0;
+}
+.divan-card:hover .divan-card-bg {
+    opacity: var(--card-thumb-hover-opacity, 0.75);
+    transform: scale(1.05);
+}
+.divan-card-content {
+    position: relative;
+    z-index: 1;
+}
+.divan-card-num {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: var(--gold-bright);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.divan-card-title {
+    font-family: var(--font-serif);
+    font-size: 1.65rem;
+    font-weight: 600;
+    color: var(--text-white);
+    line-height: 1.15;
+    margin-bottom: 0.35rem;
+}
+.divan-card-sub {
+    font-size: 0.85rem;
+    color: var(--gold-bright);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+.divan-card-desc {
+    font-size: 0.9rem;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+.divan-card-link {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.88rem;
+    color: var(--gold-bright);
+    font-weight: 600;
+    margin-top: 1.5rem;
+    transition: var(--transition-smooth);
+}
+.divan-card:hover .divan-card-link {
+    color: var(--text-white);
+    gap: 0.65rem;
+}
+
+/* 7. ALT BİLGİ GRİDİ (3 SÜTUN) */
+.divan-bottom-grid {
+    max-width: 1440px;
+    margin: 0 auto 3.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+}
+.divan-info-box {
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    padding: 1.6rem 1.75rem;
+    position: relative;
+}
+
+/* Sol: Son Yazılar */
+.divan-post-card {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 0.75rem 0;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+.divan-post-card:hover {
+    transform: translateX(4px);
+}
+.divan-post-info h4 {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    color: var(--text-white);
+    margin-bottom: 0.25rem;
+}
+.divan-post-info p {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-bottom: 0.35rem;
+}
+.divan-post-info time {
+    font-size: 0.75rem;
+    color: var(--gold-bright);
+}
+
+/* Orta: Alıntı Çerçevesi */
+.divan-quote-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2.2rem 1.5rem;
+    background: radial-gradient(circle at center, rgba(197, 160, 89, 0.08) 0%, var(--bg-card) 100%);
+}
+.divan-quote-text {
+    font-family: var(--font-serif);
+    font-size: 1.45rem;
+    font-style: italic;
+    color: var(--text-white);
+    line-height: 1.4;
+    margin-bottom: 0.85rem;
+}
+.divan-quote-author {
+    font-size: 0.82rem;
+    letter-spacing: 1.5px;
+    color: var(--gold-bright);
+    text-transform: uppercase;
+}
+
+/* Sağ: Hızlı Erişim Butonları */
+.divan-quick-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+.divan-quick-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.65rem 0.85rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    font-size: 0.85rem;
+    transition: var(--transition-smooth);
+    text-decoration: none;
+}
+.divan-quick-btn:hover {
+    border-color: var(--gold-bright);
+    background: rgba(197, 160, 89, 0.12);
+    color: var(--text-white);
+}
+
+/* 8. FOOTER */
+.divan-footer {
+    margin-top: auto;
+    border-top: 1px solid var(--gold-border);
+    background: var(--bg-footer);
+    padding: 1.75rem 2rem;
+}
+.divan-footer-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+}
+.divan-socials {
+    display: flex;
+    gap: 1.25rem;
+}
+.divan-socials a {
+    color: var(--text-muted);
+}
+.divan-socials a:hover {
+    color: var(--gold-bright);
+}
+
+/* 9. OSMANLI FRAME, FORMLAR, ROZETLER & BİLEŞENLER */
+.ottoman-frame {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--gold-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--radius-sm);
+    padding: 2rem;
+    box-shadow: var(--box-shadow-elevated);
+}
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--bg-input);
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 0.92rem;
+    transition: var(--transition-smooth);
+}
+.form-control:focus {
+    outline: none;
+    border-color: var(--gold-bright);
+    box-shadow: 0 0 12px var(--gold-glow);
+}
+.form-label {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: var(--gold-bright);
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+.badge-ottoman {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.9rem;
+    background: rgba(197, 160, 89, 0.12);
+    border: 1px solid var(--gold-border);
+    color: var(--gold-bright);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+/* Bölücü Çizgiler & Rozet */
+.ottoman-divider {
+    height: 24px;
+    width: 100%;
+    margin: 2.5rem 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ottoman-divider::before, .ottoman-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-border), transparent);
+}
+.ottoman-divider-crest {
+    padding: 0 1.25rem;
+    color: var(--gold-bright);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+}
+.ottoman-divider-crest span {
+    color: var(--gold-primary);
+    font-size: 0.9rem;
+}
+
+/* Toast Bildirimi */
+#app-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--bg-surface);
+    color: var(--text-white);
+    padding: 14px 22px;
+    border-left: 4px solid var(--gold-bright);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--box-shadow-elevated);
+    border: 1px solid var(--gold-border);
+    display: none;
+    z-index: 99999;
+    font-size: 0.92rem;
+    max-width: 400px;
+    animation: divanFadeIn 0.3s ease;
+}
+
+/* Tablolar (Admin & Veri Listeleri) */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.95rem;
+    color: var(--text-main);
+}
+table th {
+    padding: 1rem 1.25rem;
+    color: var(--gold-bright);
+    border-bottom: 1px solid var(--gold-border);
+    font-weight: 600;
+}
+table td {
+    padding: 1rem 1.25rem;
+    color: var(--text-main);
+    border-bottom: 1px solid rgba(197, 160, 89, 0.15);
+}
+table tbody tr:hover td {
+    background: rgba(197, 160, 89, 0.05);
+}
+
+/* 10. MOBİL & DUYARLI TASARIM (RESPONSIVE & MOBILE-FIRST UYUMLULUK) */
+.divan-main-container {
+    flex: 1;
+    padding: 0 1.5rem;
+    width: 100%;
+}
+
+.divan-page-title {
+    font-family: var(--font-serif);
+    font-size: 2.6rem;
+    color: var(--text-white);
+    margin: 0.6rem 0;
+    line-height: 1.2;
+}
+
+.divan-projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.75rem;
+}
+
+.divan-project-detail-grid {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: 1.75rem;
+    align-items: start;
+}
+
+.divan-form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.divan-form-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.25rem;
+}
+
+@media (max-width: 1200px) {
+    .divan-showcase-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .divan-nav {
+        padding: 0.6rem 1.25rem;
+    }
+    .divan-nav-inner {
+        gap: 0.75rem;
+    }
+    .divan-hero-content {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+    .divan-bottom-grid {
+        grid-template-columns: 1fr;
+    }
+    .divan-project-detail-grid {
+        grid-template-columns: 1fr;
+    }
+    .divan-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--bg-surface);
+        border-bottom: 1px solid var(--gold-border);
+        box-shadow: var(--box-shadow-elevated);
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.85rem 1.25rem;
+        gap: 0.35rem;
+        z-index: 1040;
+    }
+    .divan-menu.show {
+        display: flex;
+    }
+    .divan-menu li {
+        width: 100%;
+    }
+    .divan-menu-link {
+        width: 100%;
+        padding: 0.75rem 1rem;
+    }
+    .divan-mobile-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        order: 3;
+    }
+    .divan-nav-right {
+        margin-left: auto;
+        gap: 0.6rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .divan-main-container {
+        padding: 0 1rem;
+    }
+    .divan-page-title {
+        font-size: 2rem;
+    }
+    .divan-form-row-2,
+    .divan-form-row-3 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .ottoman-frame {
+        padding: 1.5rem 1.25rem !important;
+    }
+    .divan-auth-wrapper {
+        margin: 1.5rem auto 2.5rem;
+    }
+    .divan-auth-card {
+        padding: 2rem 1.35rem !important;
+    }
+    .divan-auth-title {
+        font-size: 1.95rem;
+    }
+    .divan-footer {
+        padding: 1.35rem 1rem;
+    }
+    .divan-footer-inner {
+        flex-direction: column;
+        gap: 0.85rem;
+        text-align: center;
+    }
+    .demo-iframe {
+        height: 400px !important;
+    }
+    table th, table td {
+        padding: 0.75rem 0.85rem !important;
+        font-size: 0.86rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .divan-nav {
+        padding: 0.55rem 0.85rem;
+    }
+    .divan-brand {
+        gap: 0.6rem;
+    }
+    .divan-brand img {
+        height: 32px;
+    }
+    .divan-brand-text h1 {
+        font-size: 1.3rem;
+    }
+    .divan-brand-text span {
+        display: none;
+    }
+    .divan-lang-pill {
+        display: none;
+    }
+    .divan-login-btn {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
+    }
+    .divan-user-dropdown {
+        right: -40px;
+        width: min(250px, calc(100vw - 24px));
+    }
+    .divan-showcase-grid {
+        grid-template-columns: 1fr;
+    }
+    .divan-projects-grid,
+    .memories-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .divan-hero {
+        padding: 1.85rem 1.25rem;
+        min-height: 360px !important;
+        margin: 1rem auto 1.75rem;
+    }
+    .divan-hero-title {
+        font-size: 2rem;
+    }
+    .divan-hero-desc {
+        font-size: 0.98rem !important;
+        margin-bottom: 1.5rem;
+    }
+    .divan-quick-grid {
+        grid-template-columns: 1fr;
+    }
+    .btn-divan-primary,
+    .btn-ottoman-outline {
+        padding: 0.7rem 1.15rem;
+        font-size: 0.86rem;
+    }
+    #app-toast {
+        left: 12px;
+        right: 12px;
+        bottom: 14px;
+        max-width: none;
+    }
+}
+
+/* 11. ASP.NET Core Identity & Bootstrap Form Uyumluluğu */
+.form-floating {
+    position: relative;
+    margin-bottom: 1.25rem;
+}
+.form-floating > .form-control {
+    background: var(--bg-input) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--gold-border) !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 1.25rem 0.95rem 0.6rem !important;
+    height: auto !important;
+    font-size: 0.95rem !important;
+}
+.form-floating > .form-control:focus {
+    border-color: var(--gold-bright) !important;
+    box-shadow: 0 0 14px var(--gold-glow) !important;
+}
+.form-floating > label {
+    color: var(--text-muted) !important;
+    font-size: 0.88rem !important;
+    padding: 0.65rem 0.95rem !important;
+}
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    color: var(--gold-bright) !important;
+    opacity: 0.95 !important;
+    transform: scale(0.85) translateY(-0.55rem) translateX(0.15rem) !important;
+}
+.form-check-input {
+    background-color: var(--bg-input) !important;
+    border: 1px solid var(--gold-border) !important;
+}
+.form-check-input:checked {
+    background-color: var(--gold-primary) !important;
+    border-color: var(--gold-bright) !important;
+}
+.form-check-label {
+    color: var(--text-main) !important;
+    font-size: 0.9rem !important;
+}
+.text-danger, .validation-summary-errors, .field-validation-error {
+    color: var(--danger-rose) !important;
+    font-size: 0.88rem !important;
+    font-weight: 500 !important;
+}
+.validation-summary-errors ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+}
+.card {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--gold-border) !important;
+    color: var(--text-main) !important;
+    border-radius: var(--radius-sm) !important;
+}
+.btn-primary, .btn-primary:active, .btn-primary:focus {
+    background: linear-gradient(135deg, #163E33 0%, #0E2922 100%) !important;
+    border: 1px solid var(--gold-primary) !important;
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: var(--radius-sm) !important;
+    transition: var(--transition-smooth) !important;
+    box-shadow: 0 4px 15px rgba(22, 62, 51, 0.4) !important;
+    cursor: pointer !important;
+}
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1C4D40 0%, #133930 100%) !important;
+    border-color: #FFFFFF !important;
+    box-shadow: 0 6px 20px rgba(22, 62, 51, 0.6), 0 0 14px var(--gold-glow) !important;
+}
+
+/* 12. DİVAN GİRİŞ & KAYIT (AUTHENTICATION) ÖZEL TASARIM */
+.divan-auth-wrapper {
+    max-width: 520px;
+    margin: 2.5rem auto 4rem;
+    padding: 0 0.5rem;
+}
+.divan-auth-card {
+    padding: 2.75rem 2.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--gold-border);
+    box-shadow: var(--box-shadow-elevated), 0 0 28px rgba(197, 160, 89, 0.08);
+    position: relative;
+}
+.divan-auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.divan-auth-crest {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(197, 160, 89, 0.16) 0%, rgba(14, 22, 34, 0.4) 100%);
+    border: 1px solid var(--gold-border);
+    margin-bottom: 1rem;
+    box-shadow: 0 0 18px var(--gold-glow);
+}
+.divan-auth-tugra {
+    height: 42px;
+    width: auto;
+    filter: drop-shadow(0 0 8px rgba(197, 160, 89, 0.4));
+}
+.divan-auth-title {
+    font-family: var(--font-serif);
+    font-size: 2.35rem;
+    color: var(--text-white);
+    margin-bottom: 0.4rem;
+    line-height: 1.15;
+}
+.divan-auth-subtitle {
+    color: var(--text-muted);
+    font-size: 0.94rem;
+    line-height: 1.6;
+}
+.divan-auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+.divan-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+.divan-auth-input {
+    padding: 0.85rem 1.05rem;
+    font-size: 0.95rem;
+    background: var(--bg-input);
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    transition: var(--transition-smooth);
+}
+.divan-auth-input:focus {
+    border-color: var(--gold-bright);
+    box-shadow: 0 0 14px var(--gold-glow);
+}
+.divan-password-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.divan-password-box .divan-auth-input {
+    padding-right: 2.8rem;
+}
+.divan-password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    transition: var(--transition-smooth);
+}
+.divan-password-toggle:hover,
+.divan-password-toggle.active {
+    color: var(--gold-bright);
+}
+.divan-password-hint {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin-top: 0.15rem;
+}
+.divan-auth-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.15rem;
+}
+.divan-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    user-select: none;
+}
+.divan-checkbox-label input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--gold-primary);
+    cursor: pointer;
+}
+.divan-security-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.76rem;
+    color: var(--emerald-bright);
+    background: rgba(46, 204, 113, 0.1);
+    border: 1px solid var(--emerald-border);
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+    font-weight: 500;
+}
+.divan-turnstile-box {
+    display: flex;
+    justify-content: center;
+    margin: 0.35rem 0;
+    overflow-x: auto;
+}
+.divan-auth-submit {
+    width: 100%;
+    justify-content: center;
+    padding: 0.95rem 1.5rem;
+    font-size: 0.95rem;
+    margin-top: 0.25rem;
+}
+.divan-auth-alert:not(:empty) {
+    background: rgba(255, 90, 95, 0.12);
+    border: 1px solid var(--danger-rose);
+    color: var(--danger-rose);
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+}
+.divan-auth-alert ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.divan-auth-footer {
+    text-align: center;
+}
+.divan-auth-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+/* 12. ON-DEMAND DOCKER CANLI DEMO YÜKLEME ANİMASYONU */
+.divan-demo-spinner {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 2px solid var(--gold-border);
+    border-top-color: var(--gold-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--gold-bright);
+    box-shadow: 0 0 24px var(--gold-glow);
+    animation: divanSpinGlow 2.2s linear infinite;
+}
+
+@keyframes divanSpinGlow {
+    0% {
+        transform: rotate(0deg);
+        box-shadow: 0 0 16px var(--gold-glow);
+    }
+    50% {
+        box-shadow: 0 0 32px rgba(247, 214, 136, 0.45);
+    }
+    100% {
+        transform: rotate(360deg);
+        box-shadow: 0 0 16px var(--gold-glow);
+    }
+}

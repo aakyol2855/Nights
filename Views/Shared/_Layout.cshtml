@@ -1,77 +1,329 @@
+@inject Nights.Services.Interfaces.ISettingService SettingService
+@{
+    var settings = await SettingService.GetSettingsAsync();
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+    var isAdmin = isAuthenticated && (User.IsInRole("Admin") || string.Equals(User.Identity?.Name, "admin@nights.local", StringComparison.OrdinalIgnoreCase));
+    var currentCulture = CultureInfo.CurrentUICulture.Name;
+    var isEnglish = currentCulture.StartsWith("en", StringComparison.OrdinalIgnoreCase);
+    var nextCulture = isEnglish ? "tr-TR" : "en-US";
+    var currentReturnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+    if (string.IsNullOrWhiteSpace(currentReturnUrl)) currentReturnUrl = "/";
+}
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="@(isEnglish ? "en" : "tr")" data-theme="dark">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Kişisel Web & Sergi</title>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - @settings.LogoText | @settings.LogoSubText</title>
+    
+    <!-- Sayfa Yüklenirken Tema Flaşını Önleyen Hızlı Betik -->
+    <script>
+        (function() {
+            var saved = localStorage.getItem('divan-theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+
+    <!-- Divan Koyu / Aydınlık Çift Modlu Osmanlı Teması -->
+    <link rel="stylesheet" href="~/css/divan-theme.css" asp-append-version="true" />
+
+    <!-- Dinamik Arka Plan Yapılandırması (Admin Ayarları) -->
+    <style>
+        @if (string.Equals(settings.BackgroundMode, "color", StringComparison.OrdinalIgnoreCase))
+        {
+            <text>
+            :root, [data-theme="dark"] {
+                --site-bg-display: none !important;
+                --hero-bg-display: none !important;
+                --bg-deep: @(string.IsNullOrWhiteSpace(settings.DarkBackgroundColor) ? "#080D14" : settings.DarkBackgroundColor) !important;
+            }
+            [data-theme="light"] {
+                --site-bg-display: none !important;
+                --hero-bg-display: none !important;
+                --bg-deep: @(string.IsNullOrWhiteSpace(settings.LightBackgroundColor) ? "#F8F5EE" : settings.LightBackgroundColor) !important;
+            }
+            body::after {
+                display: none !important;
+            }
+            </text>
+        }
+        else
+        {
+            var darkImg = !string.IsNullOrWhiteSpace(settings.DarkBackgroundImageUrl) ? settings.DarkBackgroundImageUrl : "/images/divan-hero-bg.jpg";
+            var lightImg = !string.IsNullOrWhiteSpace(settings.LightBackgroundImageUrl) ? settings.LightBackgroundImageUrl : darkImg;
+            var blurPx = settings.BackgroundBlur + "px";
+            var opacityVal = settings.BackgroundOpacity > 0 ? (settings.BackgroundOpacity / 100.0).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) : "0.75";
+            var darkBrightness = (0.20 + (settings.BackgroundOpacity / 100.0) * 0.70).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+            <text>
+            :root, [data-theme="dark"] {
+                --site-bg-image: url('@darkImg') !important;
+                --hero-bg-image: url('@darkImg') !important;
+                --site-bg-display: block !important;
+                --hero-bg-display: block !important;
+                --bg-body-filter: blur(@blurPx) brightness(@darkBrightness) saturate(1.1) !important;
+                --bg-body-vignette-opacity: @opacityVal;
+            }
+            [data-theme="light"] {
+                --site-bg-image: url('@lightImg') !important;
+                --hero-bg-image: url('@lightImg') !important;
+                --site-bg-display: block !important;
+                --hero-bg-display: block !important;
+                --bg-body-filter: blur(@blurPx) brightness(0.96) saturate(0.85) !important;
+                --bg-body-vignette-opacity: @opacityVal;
+            }
+            body::before {
+                opacity: @opacityVal !important;
+            }
+            </text>
+        }
+    </style>
 </head>
 <body>
     @Html.AntiForgeryToken()
 
-    <header class="header-ottoman">
-        <div class="header-container">
-            <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-link">
-                <span class="brand-crest">۞</span>
-                <span>Kişisel Sergi</span>
+    <!-- Üst Bar (Navbar) -->
+    <header class="divan-nav">
+        <div class="divan-nav-inner">
+            <!-- Sol Logo & Tuğra (Admin Tarafından Değiştirilebilir) -->
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="divan-brand">
+                @if (!string.IsNullOrWhiteSpace(settings.CustomLogoUrl))
+                {
+                    <img src="@settings.CustomLogoUrl" alt="@settings.LogoText" style="max-height: 44px; width: auto;" />
+                }
+                else
+                {
+                    <img src="~/images/tugra.svg" alt="Tuğra" />
+                }
+                <div class="divan-brand-text">
+                    <h1>@settings.LogoText</h1>
+                    <span>@settings.LogoSubText</span>
+                </div>
             </a>
 
-            <button class="mobile-nav-toggle" data-nav-toggle aria-label="Menüyü Aç/Kapat">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <!-- Mobil Menü Toggle Butonu -->
+            <button class="divan-mobile-toggle" data-divan-toggle aria-label="@L["Nav_Menu"]">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="3" y1="12" x2="21" y2="12"></line>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
                     <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg>
             </button>
 
-            <ul class="nav-links">
-                <li><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link-item">Giriş</a></li>
-                <li><a asp-area="" asp-controller="Projects" asp-action="Index" class="nav-link-item">Projeler & Canlı Demo</a></li>
-                <li><a asp-area="" asp-controller="Memories" asp-action="Index" class="nav-link-item">Anılar & Hatıralar</a></li>
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    <li><a asp-area="" asp-controller="Notes" asp-action="Index" class="nav-link-item">Özel Notlar</a></li>
-                }
+            <!-- Orta Menü Sekmeleri -->
+            <ul class="divan-menu">
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" 
+                       class="divan-menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span>@L["Nav_Home"]</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Projects" asp-action="Index" 
+                       class="divan-menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Projects" ? "active" : "")">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                        <span>@L["Nav_Projects"]</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Memories" asp-action="Index" 
+                       class="divan-menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Memories" ? "active" : "")">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                        <span>@L["Nav_Memories"]</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Oyunhane" asp-action="Index"
+                       class="divan-menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Oyunhane" ? "active" : "")">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                            <path d="M6 12h4m-2-2v4m7-2h.01m3 0h.01"></path>
+                        </svg>
+                        <span>@L["Nav_Games"]</span>
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Notes" asp-action="Index" 
+                       class="divan-menu-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Notes" ? "active" : "")">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        <span>@L["Nav_Journal"]</span>
+                    </a>
+                </li>
 
-                @if (User.IsInRole("Admin"))
-                {
-                    <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="badge-ottoman" style="color: var(--accent-sapphire);">✦ Yönetim Paneli</a></li>
-                }
-
-                @if (User.Identity?.IsAuthenticated == true)
+                @if (isAdmin)
                 {
                     <li>
-                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" style="display:inline;">
-                            <button type="submit" class="btn-ottoman-outline" style="min-height: 36px; padding: 0.3rem 0.8rem; font-size: 0.85rem;">Çıkış</button>
-                        </form>
+                        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" 
+                           class="divan-menu-link divan-admin-pill @(ViewContext.RouteData.Values["area"]?.ToString() == "Admin" ? "active" : "")">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                            </svg>
+                            <span>@L["Nav_AdminPanel"]</span>
+                        </a>
                     </li>
+                }
+            </ul>
+
+            <!-- Sağ Alan: Tema Butonu, Dil & Profil Menüsü -->
+            <div class="divan-nav-right">
+                <!-- Karanlık / Aydınlık Mod Toggle -->
+                <button type="button" id="themeToggleBtn" class="divan-theme-toggle" aria-label="@L["Nav_ThemeToggle"]" title="@L["Nav_ThemeToggle"]">
+                    <!-- Güneş (Karanlık Modda Görünür) -->
+                    <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <!-- Ay (Aydınlık Modda Görünür) -->
+                    <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+
+                <!-- TR / EN Dil Seçici Formu (CSRF Korumalı, Sıfır Inline Script) -->
+                <form id="divanLangForm" action="/set-language" method="post" style="margin: 0; display: inline-flex;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="culture" value="@nextCulture" />
+                    <input type="hidden" name="returnUrl" value="@currentReturnUrl" />
+                    <button type="button" id="divanLangToggleBtn" class="divan-lang-pill" title="@L["Nav_LangSwitchTitle"]" aria-label="@L["Nav_LangSwitchTitle"]" style="cursor: pointer; font-family: inherit;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                        <span>
+                            <strong style="color: @(!isEnglish ? "var(--gold-bright)" : "var(--text-muted)"); font-weight: @(!isEnglish ? "700" : "400");">TR</strong>
+                            <span style="opacity: 0.5; margin: 0 2px;">/</span>
+                            <strong style="color: @(isEnglish ? "var(--gold-bright)" : "var(--text-muted)"); font-weight: @(isEnglish ? "700" : "400");">EN</strong>
+                        </span>
+                    </button>
+                </form>
+
+                @if (isAuthenticated)
+                {
+                    <!-- Kullanıcı Profil Menüsü Dropdown -->
+                    <div class="divan-user-menu-wrapper">
+                        <button type="button" class="divan-user-avatar @(isAdmin ? "is-admin" : "")" id="userMenuToggleBtn" aria-label="@L["Nav_AccountMenu"]" title="@User.Identity?.Name">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </button>
+
+                        <div class="divan-user-dropdown" id="userMenuDropdown">
+                            <div class="divan-user-header">
+                                <span class="user-name">@User.Identity?.Name</span>
+                                @if (isAdmin)
+                                {
+                                    <span class="badge-ottoman" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;">@L["Nav_SysAdmin"]</span>
+                                }
+                                else
+                                {
+                                    <span style="font-size: 0.75rem; color: var(--text-muted);">@L["Nav_SignedIn"]</span>
+                                }
+                            </div>
+                            <div class="divan-user-links">
+                                @if (isAdmin)
+                                {
+                                    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="user-dropdown-item">
+                                        <span>@L["Nav_AdminPanel"]</span>
+                                    </a>
+                                    <a asp-area="Admin" asp-controller="AdminSettings" asp-action="Index" class="user-dropdown-item">
+                                        <span>@L["Nav_SiteSettings"]</span>
+                                    </a>
+                                    <a asp-area="Admin" asp-controller="AdminUsers" asp-action="Index" class="user-dropdown-item">
+                                        <span>@L["Nav_UserPermissions"]</span>
+                                    </a>
+                                    <a asp-area="Admin" asp-controller="AdminProjects" asp-action="Index" class="user-dropdown-item">
+                                        <span>@L["Nav_ProjectsGuides"]</span>
+                                    </a>
+                                    <a asp-area="Admin" asp-controller="AdminMemories" asp-action="Index" class="user-dropdown-item">
+                                        <span>@L["Nav_PendingMemories"]</span>
+                                    </a>
+                                }
+                                <a asp-area="" asp-controller="Notes" asp-action="Index" class="user-dropdown-item">
+                                    <span>@L["Nav_MyNotes"]</span>
+                                </a>
+                                <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" style="margin: 0; width: 100%;">
+                                    <button type="submit" class="user-dropdown-item logout-item" style="width: 100%; text-align: left; background: none; border: none; font-family: inherit; font-size: 0.88rem; cursor: pointer;">
+                                        <span>@L["Nav_Logout"]</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 }
                 else
                 {
-                    <li><a asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="/Admin" class="nav-link-item" style="font-size: 0.88rem; opacity: 0.8;">Yönetici Girişi</a></li>
+                    <a asp-area="Identity" asp-page="/Account/Login" class="divan-login-btn" title="@L["Nav_LoginTitle"]">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>@L["Nav_Login"]</span>
+                    </a>
                 }
-            </ul>
+            </div>
         </div>
     </header>
 
-    <main class="site-main" role="main">
+    <!-- Ana İçerik -->
+    <main role="main" class="divan-main-container">
         @RenderBody()
     </main>
 
     <div id="app-toast"></div>
 
-    <footer class="site-footer">
-        <div class="header-container" style="justify-content: center; flex-direction: column; gap: 0.6rem;">
-            <div class="ottoman-divider" style="margin: 0 0 1.25rem 0;">
-                <div class="ottoman-divider-crest">
-                    <span>✦</span> ۞ <span>✦</span>
-                </div>
+    <!-- Footer -->
+    <footer class="divan-footer">
+        <div class="divan-footer-inner">
+            <div>
+                @L["Footer_Tagline"]
             </div>
-            <p>&copy; @DateTime.UtcNow.Year - Kişisel Web & Sergi Portalı. Geleneksel zarafet, modern performans.</p>
+            <div class="divan-socials">
+                @if (!string.IsNullOrWhiteSpace(settings.GithubUrl))
+                {
+                    <a href="@settings.GithubUrl" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                    </a>
+                }
+                @if (!string.IsNullOrWhiteSpace(settings.LinkedinUrl))
+                {
+                    <a href="@settings.LinkedinUrl" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                            <rect x="2" y="9" width="4" height="12"></rect>
+                            <circle cx="4" cy="4" r="2"></circle>
+                        </svg>
+                    </a>
+                }
+            </div>
         </div>
     </footer>
 
     <script src="~/js/main.js" asp-append-version="true"></script>
+    <script src="~/js/divan-ui.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

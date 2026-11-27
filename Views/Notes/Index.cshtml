@@ -4,32 +4,34 @@
     var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 }
 
-<div style="max-width: 1000px; margin: 0 auto;">
+<div style="max-width: 1050px; margin: 1.5rem auto 3.5rem;">
     <!-- Başlık ve Üst Çerçeve -->
-    <div style="text-align: center; margin-bottom: 2.25rem;">
+    <div style="text-align: center; margin-bottom: 2.5rem;">
         <span class="badge-ottoman">
-            <span>۞</span> Mahrem-i Esrâr <span>۞</span>
+            <span>۞</span> MAHREM-İ ESRÂR &amp; VARAKLAR <span>۞</span>
         </span>
-        <h1 style="font-size: 2.2rem; color: var(--accent-sapphire); margin: 0.6rem 0;">Özel Not Defteri</h1>
-        <p style="color: var(--text-muted); font-size: 1.05rem;">
-            Yalnızca yetkili kullanıcıların erişebildiği, sunucuda yerel olarak saklanan kişisel not ve kayıt alanı.
+        <h1 class="divan-page-title">
+            Özel Not Defteri &amp; Günlük
+        </h1>
+        <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 600px; margin: 0 auto;">
+            Yalnızca yetkili kullanıcıların erişebildiği, sunucuda yerel olarak saklanan kişisel not ve fikir kayıt alanı.
         </p>
     </div>
 
     <!-- Yeni Not Ekleme Kutusu -->
-    <div class="ottoman-frame upload-box">
-        <span class="ottoman-corner corner-tl"></span>
-        <span class="ottoman-corner corner-tr"></span>
-        <span class="ottoman-corner corner-bl"></span>
-        <span class="ottoman-corner corner-br"></span>
+    <div class="divan-corner-box ottoman-frame" style="padding: 2.25rem; margin-bottom: 3rem;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
-            <h3 style="color: var(--accent-sapphire); font-size: 1.25rem;">
-                ✦ Yeni Not Düşün
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem; border-bottom: 1px solid var(--gold-border); padding-bottom: 0.75rem;">
+            <h3 style="font-family: var(--font-serif); color: var(--gold-bright); font-size: 1.4rem;">
+                ✦ Yeni Bir Not Düşün
             </h3>
             @if (Model.IsAdmin)
             {
-                <span class="badge-ottoman" style="background: rgba(22, 38, 59, 0.08); border-color: var(--accent-gold);">
+                <span class="badge-ottoman" style="background: rgba(197, 160, 89, 0.15); border-color: var(--gold-primary);">
                     <span>۞</span> Yönetici: Sınırsız Yazım Yetkisi
                 </span>
             }
@@ -42,29 +44,29 @@
         </div>
 
         <form id="noteCreateForm">
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 1.25rem;">
                 <label for="noteTitle" class="form-label">Not Başlığı:</label>
-                <input type="text" id="noteTitle" class="form-control" maxlength="150" required placeholder="Örn: Sunucu Bakım Notları / Proje Fikirleri..." />
+                <input type="text" id="noteTitle" class="form-control" maxlength="150" required placeholder="Örn: Sunucu Mimarisi &amp; Proje Notları..." />
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 1.25rem;">
                 <label for="noteContent" class="form-label">Not İçeriği:</label>
                 <textarea id="noteContent" class="form-control" rows="6" required 
                           placeholder="@(Model.IsAdmin ? "Buraya dilediğiniz uzunlukta detaylı notlar, kod blokları veya sunucu yapılandırmaları yazabilirsiniz..." : "Notunuzu yazınız (En fazla 280 kelime)...")"></textarea>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem;">
                 <div>
                     @if (Model.IsAdmin)
                     {
-                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.92rem; font-weight: 500; color: var(--accent-sapphire);">
-                            <input type="checkbox" id="noteIsPinned" style="width: 18px; height: 18px;" />
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.92rem; color: var(--gold-bright);">
+                            <input type="checkbox" id="noteIsPinned" style="width: 18px; height: 18px; accent-color: var(--gold-primary);" />
                             <span>Bu notu en başa iğnele (Sabit Not)</span>
                         </label>
                     }
                 </div>
 
-                <button type="submit" id="noteSubmitBtn" class="btn-ottoman">
+                <button type="submit" id="noteSubmitBtn" class="btn-divan-primary" style="cursor: pointer;">
                     <span>✦ Notu Kaydet</span>
                 </button>
             </div>
@@ -78,9 +80,9 @@
     </div>
 
     <!-- Notlar Listesi -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h2 style="font-size: 1.45rem; color: var(--accent-sapphire);">
-            Kayıtlı Notlar (@Model.TotalCount)
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.75rem;">
+        <h2 style="font-family: var(--font-serif); font-size: 1.85rem; color: var(--text-white);">
+            Kayıtlı Varaklar (@Model.TotalCount)
         </h2>
         <span style="font-size: 0.88rem; color: var(--text-muted);">
             Sayfa @Model.CurrentPage / @Model.TotalPages
@@ -89,84 +91,81 @@
 
     @if (!Model.Notes.Any())
     {
-        <div class="ottoman-frame" style="text-align: center; padding: 3.5rem 1.5rem;">
-            <span class="ottoman-mini-corner corner-tl"></span>
-            <span class="ottoman-mini-corner corner-tr"></span>
-            <span class="ottoman-mini-corner corner-bl"></span>
-            <span class="ottoman-mini-corner corner-br"></span>
-            <span style="font-size: 2.2rem; color: var(--accent-gold); display: block; margin-bottom: 0.5rem;">۞</span>
-            <h3 style="color: var(--accent-sapphire); margin-bottom: 0.4rem;">Henüz Kayıtlı Not Yok</h3>
-            <p style="color: var(--text-muted);">Yukarıdaki formdan ilk notunuzu ekleyebilirsiniz.</p>
+        <div class="divan-corner-box ottoman-frame" style="text-align: center; padding: 3.5rem 1.5rem;">
+            <span class="divan-corner c-tl"></span>
+            <span class="divan-corner c-tr"></span>
+            <span class="divan-corner c-bl"></span>
+            <span class="divan-corner c-br"></span>
+            <span style="font-size: 2.2rem; color: var(--gold-primary); display: block; margin-bottom: 0.5rem;">۞</span>
+            <h3 style="color: var(--text-white); font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 0.4rem;">Henüz Kayıtlı Not Yok</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Yukarıdaki formdan ilk notunuzu düşebilirsiniz.</p>
         </div>
     }
     else
     {
-        <div style="display: flex; flex-direction: column; gap: 1.75rem;">
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
             @foreach (var note in Model.Notes)
             {
-                var isAuthor = note.UserId == currentUserId;
-                var canEditOrDelete = Model.IsAdmin || isAuthor;
+                var isAuthor = currentUserId == note.UserId;
+                var canEdit = Model.IsAdmin || isAuthor;
 
-                <div class="ottoman-frame" id="note-card-@note.Id" style="padding: 1.85rem; @(note.IsPinned ? "border: 1.5px solid var(--accent-gold); background: #FCFAF5;" : "")">
-                    <span class="ottoman-mini-corner corner-tl"></span>
-                    <span class="ottoman-mini-corner corner-tr"></span>
-                    <span class="ottoman-mini-corner corner-bl"></span>
-                    <span class="ottoman-mini-corner corner-br"></span>
+                <div class="divan-corner-box" id="note-card-@note.Id" style="padding: 1.6rem 2rem;">
+                    <span class="divan-corner c-tl"></span>
+                    <span class="divan-corner c-tr"></span>
+                    <span class="divan-corner c-bl"></span>
+                    <span class="divan-corner c-br"></span>
 
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
-                        <div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
                             @if (note.IsPinned)
                             {
-                                <span class="badge-ottoman" style="margin-bottom: 0.4rem; background: var(--accent-gold); color: #fff; border-color: var(--accent-gold);">
-                                    ✦ Sabit Not
+                                <span class="badge-ottoman" style="background: rgba(197, 160, 89, 0.2); border-color: var(--gold-primary);">
+                                    📌 Sabitlenmiş
                                 </span>
                             }
-                            <h3 style="font-size: 1.35rem; color: var(--accent-sapphire); margin-bottom: 0.2rem;">
+                            <h3 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--text-white); margin: 0;">
                                 @note.Title
                             </h3>
                         </div>
 
-                        <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <span class="badge-ottoman" style="font-size: 0.76rem;">
-                                @note.WordCount kelime
-                            </span>
-                            @if (canEditOrDelete)
-                            {
-                                <button type="button" class="btn-ottoman-outline" data-note-edit data-id="@note.Id" 
-                                        data-title="@note.Title" data-content="@note.Content" data-pinned="@(note.IsPinned ? "true" : "false")"
-                                        style="min-height: 32px; padding: 0.2rem 0.65rem; font-size: 0.8rem;">
+                        @if (canEdit)
+                        {
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button type="button" class="btn-ottoman-outline" 
+                                        data-note-edit
+                                        data-id="@note.Id"
+                                        data-title="@note.Title"
+                                        data-content="@note.Content"
+                                        data-pinned="@(note.IsPinned ? "true" : "false")"
+                                        style="min-height: 32px; padding: 0.25rem 0.65rem; font-size: 0.8rem;">
                                     Düzenle
                                 </button>
-                                <button type="button" class="btn-danger-soft" data-note-delete data-id="@note.Id"
-                                        style="min-height: 32px; padding: 0.2rem 0.65rem; font-size: 0.8rem;">
+                                <button type="button" class="btn-ottoman-outline" 
+                                        data-note-delete 
+                                        data-id="@note.Id"
+                                        style="min-height: 32px; padding: 0.25rem 0.65rem; font-size: 0.8rem; border-color: var(--danger-rose); color: var(--danger-rose);">
                                     Sil
                                 </button>
-                            }
-                        </div>
+                            </div>
+                        }
                     </div>
 
-                    <!-- Not Metni -->
-                    <div style="font-size: 0.98rem; color: var(--text-charcoal); white-space: pre-wrap; line-height: 1.65; margin: 1rem 0;">@note.Content</div>
+                    <div style="font-size: 0.95rem; color: var(--text-main); line-height: 1.7; white-space: pre-wrap; margin-bottom: 1.25rem;">@note.Content</div>
 
-                    <!-- Alt Meta Bilgileri: Tarih, Saat, Güncelleme Zamanı ve Yazar -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.85rem; border-top: 1px dashed var(--border-light); font-size: 0.82rem; color: var(--text-muted); flex-wrap: wrap; gap: 0.5rem;">
-                        <div>
-                            <span>Yazar: <strong>@note.AuthorName</strong></span>
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid rgba(197, 160, 89, 0.18); padding-top: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <span>Yazar: <strong style="color: var(--gold-bright);">@note.AuthorName</strong></span>
                             @if (note.IsAdminNote)
                             {
-                                <span style="color: var(--accent-gold); margin-left: 0.3rem;">(Yönetici)</span>
+                                <span style="color: var(--gold-primary); font-weight: 600;">(Yönetici)</span>
                             }
                         </div>
 
                         <div style="display: flex; gap: 1rem;">
-                            <span title="Oluşturulma Zamanı">
-                                🕒 @note.CreatedAt.ToString("dd MMMM yyyy, HH:mm")
-                            </span>
+                            <span>🕒 @note.CreatedAt.ToString("dd MMMM yyyy, HH:mm")</span>
                             @if (note.UpdatedAt.HasValue)
                             {
-                                <span title="Son Düzenleme Zamanı" style="color: var(--accent-tile);">
-                                    ✍ Düzenlendi: @note.UpdatedAt.Value.ToString("dd.MM.yyyy HH:mm")
-                                </span>
+                                <span style="color: #2ecc71;">✍ Düzenlendi: @note.UpdatedAt.Value.ToString("dd.MM.yyyy HH:mm")</span>
                             }
                         </div>
                     </div>
@@ -174,7 +173,6 @@
             }
         </div>
 
-        <!-- Sayfalama (Pagination) -->
         @if (Model.TotalPages > 1)
         {
             <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 2.5rem;">
@@ -187,7 +185,7 @@
 
                 @for (int i = 1; i <= Model.TotalPages; i++)
                 {
-                    <a asp-action="Index" asp-route-page="@i" class="@(i == Model.CurrentPage ? "btn-ottoman" : "btn-ottoman-outline")" style="min-height: 38px; padding: 0.35rem 0.9rem;">
+                    <a asp-action="Index" asp-route-page="@i" class="@(i == Model.CurrentPage ? "btn-divan-primary" : "btn-ottoman-outline")" style="min-height: 38px; padding: 0.35rem 0.9rem;">
                         @i
                     </a>
                 }
@@ -204,26 +202,26 @@
 </div>
 
 <!-- Not Düzenleme Modalı -->
-<div id="noteEditModal" style="display: none; position: fixed; inset: 0; background: rgba(20, 34, 54, 0.65); z-index: 10000; align-items: center; justify-content: center; padding: 1.5rem;">
-    <div class="ottoman-frame" style="max-width: 650px; width: 100%; max-height: 90vh; overflow-y: auto;">
-        <span class="ottoman-corner corner-tl"></span>
-        <span class="ottoman-corner corner-tr"></span>
-        <span class="ottoman-corner corner-bl"></span>
-        <span class="ottoman-corner corner-br"></span>
+<div id="noteEditModal" style="display: none; position: fixed; inset: 0; background: rgba(5, 9, 14, 0.85); backdrop-filter: blur(8px); z-index: 10000; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div class="divan-corner-box ottoman-frame" style="max-width: 650px; width: 100%; max-height: 90vh; overflow-y: auto;">
+        <span class="divan-corner c-tl"></span>
+        <span class="divan-corner c-tr"></span>
+        <span class="divan-corner c-bl"></span>
+        <span class="divan-corner c-br"></span>
 
-        <h3 style="font-size: 1.35rem; color: var(--accent-sapphire); margin-bottom: 1.25rem;">
+        <h3 style="font-family: var(--font-serif); font-size: 1.45rem; color: var(--gold-bright); margin-bottom: 1.25rem;">
             ✦ Notu Düzenle
         </h3>
 
         <form id="noteEditForm">
             <input type="hidden" id="editNoteId" />
 
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 1.25rem;">
                 <label for="editNoteTitle" class="form-label">Başlık:</label>
                 <input type="text" id="editNoteTitle" class="form-control" maxlength="150" required />
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 1.25rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
                     <label for="editNoteContent" class="form-label" style="margin-bottom: 0;">İçerik:</label>
                     @if (!Model.IsAdmin)
@@ -238,9 +236,9 @@
 
             @if (Model.IsAdmin)
             {
-                <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                        <input type="checkbox" id="editNoteIsPinned" style="width: 18px; height: 18px;" />
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--gold-bright);">
+                        <input type="checkbox" id="editNoteIsPinned" style="width: 18px; height: 18px; accent-color: var(--gold-primary);" />
                         <span>Başa iğnele</span>
                     </label>
                 </div>
@@ -248,7 +246,7 @@
 
             <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
                 <button type="button" id="closeEditModalBtn" class="btn-ottoman-outline">Vazgeç</button>
-                <button type="submit" id="saveEditNoteBtn" class="btn-ottoman">Değişiklikleri Kaydet</button>
+                <button type="submit" id="saveEditNoteBtn" class="btn-divan-primary">Değişiklikleri Kaydet</button>
             </div>
         </form>
     </div>

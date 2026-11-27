@@ -1,28 +1,55 @@
 @model IEnumerable<Nights.Models.Entities.Project>
 @{
     ViewData["Title"] = "Projeler Yönetimi";
+    var activeDemo = ViewBag.ActiveDemo as Nights.Services.Interfaces.ActiveDemoSnapshot;
 }
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
     <div>
-        <h1 style="font-size: 1.85rem; color: var(--accent-sapphire);">Proje ve Canlı Sistem Yönetimi</h1>
-        <p style="color: var(--text-muted); font-size: 0.95rem;">Canlı container yönlendirmeleri, test senaryoları ve rehber adımları</p>
+        <h1 style="font-family: var(--font-serif); font-size: 2.2rem; color: var(--text-white); margin-bottom: 0.35rem;">
+            ✦ Proje ve Canlı Sistem Yönetimi
+        </h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">On-Demand Docker container yükleme, YARP canlı yönlendirme ve test rehberleri</p>
     </div>
 
-    <a asp-area="Admin" asp-action="Create" class="btn-ottoman">
+    <a asp-area="Admin" asp-action="Create" class="btn-divan-primary">
         + Yeni Proje Ekle
     </a>
 </div>
 
-<div class="ottoman-frame" style="padding: 1.5rem; overflow-x: auto;">
-    <span class="ottoman-corner corner-tl"></span>
-    <span class="ottoman-corner corner-tr"></span>
-    <span class="ottoman-corner corner-bl"></span>
-    <span class="ottoman-corner corner-br"></span>
+@if (activeDemo != null)
+{
+    <div class="divan-corner-box ottoman-frame" style="padding: 1.25rem 1.75rem; margin-bottom: 1.75rem; border-color: var(--emerald-bright); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--emerald-bright); box-shadow: 0 0 8px var(--emerald-bright); display: inline-block;"></span>
+                <strong style="color: var(--text-white); font-size: 1rem;">Aktif Canlı Demo: @activeDemo.ProjectTitle</strong>
+                <span class="badge-ottoman" style="font-size: 0.72rem; padding: 0.15rem 0.5rem;">127.0.0.1:@activeDemo.HostPort</span>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">
+                İmaj: <code>@activeDemo.ImageName</code> &bull;
+                Yol: <a href="/live-demo/@activeDemo.Slug/" target="_blank">/live-demo/@activeDemo.Slug/</a> &bull;
+                Son Aktivite: @activeDemo.LastActivityUtc.ToLocalTime().ToString("HH:mm:ss")
+            </div>
+        </div>
+        <form asp-area="Admin" asp-action="StopActiveDemo" method="post" style="margin: 0;">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn-danger-soft">
+                ⏹ Demoyu Durdur &amp; Sil
+            </button>
+        </form>
+    </div>
+}
+
+<div class="divan-corner-box ottoman-frame" style="padding: 1.75rem; overflow-x: auto;">
+    <span class="divan-corner c-tl"></span>
+    <span class="divan-corner c-tr"></span>
+    <span class="divan-corner c-bl"></span>
+    <span class="divan-corner c-br"></span>
 
     <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
         <thead>
-            <tr style="background: var(--bg-parchment); border-bottom: 1px solid var(--border-cetvel); color: var(--accent-sapphire);">
+            <tr style="border-bottom: 1px solid var(--gold-border); color: var(--gold-bright);">
                 <th style="padding: 1rem 1.25rem;">Sıra</th>
                 <th style="padding: 1rem 1.25rem;">Proje Başlığı</th>
                 <th style="padding: 1rem 1.25rem;">Rozet</th>
@@ -34,26 +61,26 @@
         <tbody>
             @foreach (var p in Model)
             {
-                <tr id="project-row-@p.Id" style="border-bottom: 1px solid var(--border-light);">
-                    <td style="padding: 1rem 1.25rem; font-weight: 600;">#@p.DisplayOrder</td>
+                <tr id="project-row-@p.Id" style="border-bottom: 1px solid rgba(197, 160, 89, 0.15);">
+                    <td style="padding: 1rem 1.25rem; font-weight: 600; color: var(--gold-primary);">#@p.DisplayOrder</td>
                     <td style="padding: 1rem 1.25rem;">
-                        <strong>@p.Title</strong>
+                        <strong style="color: var(--text-white);">@p.Title</strong>
                         <div style="font-size: 0.8rem; color: var(--text-muted);">@p.TechStack</div>
                     </td>
                     <td style="padding: 1rem 1.25rem;">
                         <span class="badge-ottoman">✦ @p.BadgeText</span>
                     </td>
-                    <td style="padding: 1rem 1.25rem;">
-                        <span style="font-weight: 600;">@p.Tutorials.Count</span> Adım
+                    <td style="padding: 1rem 1.25rem; color: var(--text-main);">
+                        <span style="font-weight: 600; color: var(--gold-bright);">@p.Tutorials.Count</span> Adım
                     </td>
                     <td style="padding: 1rem 1.25rem;">
                         @if (p.IsActive)
                         {
-                            <span style="color: #137333; font-weight: 600; font-size: 0.85rem;">Aktif</span>
+                            <span style="color: #2ecc71; font-weight: 600; font-size: 0.85rem;">✓ Aktif</span>
                         }
                         else
                         {
-                            <span style="color: #c5221f; font-weight: 600; font-size: 0.85rem;">Pasif</span>
+                            <span style="color: var(--danger-rose); font-weight: 600; font-size: 0.85rem;">✕ Pasif</span>
                         }
                     </td>
                     <td style="padding: 1rem 1.25rem; text-align: right;">
@@ -61,7 +88,7 @@
                             <a asp-area="Admin" asp-action="Edit" asp-route-id="@p.Id" class="btn-ottoman-outline" style="min-height: 36px; padding: 0.35rem 0.8rem; font-size: 0.85rem;">
                                 Düzenle &amp; Rehber
                             </a>
-                            <button type="button" class="btn-danger-soft" data-project-delete data-id="@p.Id" style="min-height: 36px; padding: 0.35rem 0.8rem; font-size: 0.85rem;">
+                            <button type="button" class="btn-ottoman-outline" data-project-delete data-id="@p.Id" style="min-height: 36px; padding: 0.35rem 0.8rem; font-size: 0.85rem; border-color: var(--danger-rose); color: var(--danger-rose);">
                                 Sil
                             </button>
                         </div>
